@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:justclass/screens/login_screen.dart';
+import 'package:justclass/screens/auth_screen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
       title: "Justclass",
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        backgroundColor: Colors.blue[700],
+        backgroundColor: Color(0xff0c4da2), // hoa sen logo @@
         fontFamily: "OpenSans",
       ),
       initialRoute: AuthScreen.routeName,

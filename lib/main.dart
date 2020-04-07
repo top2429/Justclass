@@ -12,9 +12,14 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: "Justclass",
-      initialRoute: LoginScreen.screenName,
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        backgroundColor: Colors.blue[700],
+        fontFamily: "OpenSans",
+      ),
+      initialRoute: AuthScreen.routeName,
       routes: {
-        LoginScreen.screenName: (context) => LoginScreen(),
+        AuthScreen.routeName: (_) => AuthScreen(),
       },
     );
   }

@@ -4,21 +4,54 @@ class EmailAuthForm extends StatefulWidget {
   EmailAuthForm({Key key}) : super(key: key);
 
   @override
-  _EmailAuthFormState createState() => _EmailAuthFormState();
+  EmailAuthFormState createState() => EmailAuthFormState();
 }
 
-class _EmailAuthFormState extends State<EmailAuthForm> {
+class EmailAuthFormState extends State<EmailAuthForm> with SingleTickerProviderStateMixin {
+  bool isLogin = true;
+
   final _passwordFocusNode = FocusNode();
+  final _confirmFocusNode = FocusNode();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _confirmController = TextEditingController();
 
   bool _emptyEmail = true;
   bool _emptyPassword = true;
+  bool _emptyConfirm = true;
+
+  AnimationController _controller;
+  Animation<double> _sizeAnim;
+
+  @override
+  void initState() {
+    _controller = AnimationController(duration: const Duration(milliseconds: 200), vsync: this);
+    _sizeAnim = Tween<double>(begin: 0, end: 1).animate(_controller);
+
+    super.initState();
+  }
 
   @override
   void dispose() {
     _passwordFocusNode.dispose();
+    _controller.dispose();
     super.dispose();
+  }
+
+  void toSignUpMode() {
+    _controller.forward().then((_) {
+      setState(() {
+        isLogin = false;
+      });
+    });
+  }
+
+  void toLoginMode() {
+    _controller.reverse().then((_) {
+      setState(() {
+        isLogin = true;
+      });
+    });
   }
 
   @override
@@ -26,22 +59,22 @@ class _EmailAuthFormState extends State<EmailAuthForm> {
     final orientation = MediaQuery.of(context).orientation;
     final width = MediaQuery.of(context).size.width;
 
-    return IntrinsicWidth(
-      child: Padding(
-        padding: const EdgeInsets.all(15),
-        child: SizedBox(
-          width: (orientation == Orientation.portrait) ? width * 0.7 : width * 0.6,
-          child: Form(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                ..._buildEmailInput(),
-                const SizedBox(height: 20),
-                ..._buildPasswordInput(),
-                const SizedBox(height: 80),
-                _buildLoginButton(),
-              ],
-            ),
+    return Padding(
+      padding: const EdgeInsets.all(15),
+      child: SizedBox(
+        width: (orientation == Orientation.portrait) ? width * 0.7 : width * 0.6,
+        child: Form(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              ..._buildEmailInput(),
+              const SizedBox(height: 20),
+              ..._buildPasswordInput(),
+              const SizedBox(height: 20),
+              _buildConfirmInput(),
+              const SizedBox(height: 80),
+              _buildLoginButton(),
+            ],
           ),
         ),
       ),
@@ -54,14 +87,14 @@ class _EmailAuthFormState extends State<EmailAuthForm> {
       width: double.infinity,
       child: RaisedButton(
         child: Text(
-          "Login",
+          isLogin ? "Login" : "Sign Up",
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
             color: Colors.blue[800],
           ),
         ),
-        elevation: 3,
+        elevation: 5,
         color: Colors.white,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(22),
@@ -127,7 +160,7 @@ class _EmailAuthFormState extends State<EmailAuthForm> {
         obscureText: true,
         cursorColor: Colors.white70,
         style: const TextStyle(color: Colors.white70, fontSize: 17),
-        textInputAction: TextInputAction.done,
+        textInputAction: (isLogin) ? TextInputAction.done : TextInputAction.next,
         decoration: InputDecoration(
           filled: true,
           fillColor: Colors.white.withOpacity(0.1),
@@ -159,11 +192,66 @@ class _EmailAuthFormState extends State<EmailAuthForm> {
         ),
         focusNode: _passwordFocusNode,
         controller: _passwordController,
+        onEditingComplete: () => FocusScope.of(context).requestFocus(_confirmFocusNode),
         onChanged: (val) {
           if (val.length > 1) return;
           setState(() => _emptyPassword = val.isEmpty);
         },
       ),
     ];
+  }
+
+  Widget _buildConfirmInput() {
+    return SizeTransition(
+      sizeFactor: _sizeAnim,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          const Text("Confirm", style: TextStyle(color: Colors.white70, fontSize: 15)),
+          const SizedBox(height: 5),
+          TextFormField(
+            obscureText: true,
+            cursorColor: Colors.white70,
+            style: const TextStyle(color: Colors.white70, fontSize: 17),
+            textInputAction: TextInputAction.done,
+            decoration: InputDecoration(
+              filled: true,
+              fillColor: Colors.white.withOpacity(0.1),
+              contentPadding: const EdgeInsets.all(0),
+              enabledBorder: const OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.transparent),
+              ),
+              focusedBorder: const OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.white70),
+              ),
+              focusedErrorBorder: const OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.amberAccent),
+              ),
+              errorBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.amber[700]),
+              ),
+              prefixIcon: const Icon(Icons.beenhere, color: Colors.white60),
+              suffixIcon: (_emptyConfirm)
+                  ? const SizedBox(width: 0)
+                  : GestureDetector(
+                      child: const Icon(Icons.cancel, color: Colors.white54),
+                      onTap: () {
+                        _confirmController.text = "";
+                        setState(() => _emptyConfirm = true);
+                      },
+                    ),
+              errorStyle: const TextStyle(color: Colors.amberAccent, fontSize: 14),
+              errorText: null,
+            ),
+            focusNode: _confirmFocusNode,
+            controller: _confirmController,
+            onChanged: (val) {
+              if (val.length > 1) return;
+              setState(() => _emptyConfirm = val.isEmpty);
+            },
+          ),
+        ],
+      ),
+    );
   }
 }

@@ -1,10 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:justclass/widgets/email_auth_form.dart';
-import 'package:justclass/widgets/test_box.dart';
+import 'package:justclass/widgets/oauth_row.dart';
+import 'package:justclass/widgets/sign_button.dart';
 
 class AuthScreen extends StatelessWidget {
   static final routeName = "/auth";
+  final formKey = GlobalKey<EmailAuthFormState>();
+  final signKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -19,19 +22,21 @@ class AuthScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
                   Spacer(flex: 2),
-                  EmailAuthForm(),
+                  EmailAuthForm(key: formKey),
                   Spacer(),
-                  TestBox(height: 100, color: Colors.lightGreen, title: "OAuth"),
+                  OAuthRow(),
                   Spacer(),
-                  TestBox(height: 50, color: Colors.lightBlue, title: "Signup"),
+                  SignButton(formKey, key: signKey),
                 ],
               )
             : SingleChildScrollView(
                 child: Column(
                   children: <Widget>[
-                    TestBox(height: 50, color: Colors.lightBlue, title: "Signup"),
-                    EmailAuthForm(),
-                    TestBox(height: 100, color: Colors.lightGreen, title: "OAuth"),
+                    SignButton(formKey, key: signKey),
+                    EmailAuthForm(key: formKey),
+                    const SizedBox(height: 20),
+                    OAuthRow(),
+                    const SizedBox(height: 20),
                   ],
                 ),
               ),

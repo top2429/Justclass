@@ -20,13 +20,13 @@ class EmailAuthFormState extends State<EmailAuthForm> with SingleTickerProviderS
   bool _emptyPassword = true;
   bool _emptyConfirm = true;
 
-  AnimationController _controller;
+  AnimationController _AnimController;
   Animation<double> _sizeAnim;
 
   @override
   void initState() {
-    _controller = AnimationController(duration: const Duration(milliseconds: 200), vsync: this);
-    _sizeAnim = Tween<double>(begin: 0, end: 1).animate(_controller);
+    _AnimController = AnimationController(duration: const Duration(milliseconds: 200), vsync: this);
+    _sizeAnim = Tween<double>(begin: 0, end: 1).animate(_AnimController);
 
     super.initState();
   }
@@ -34,12 +34,16 @@ class EmailAuthFormState extends State<EmailAuthForm> with SingleTickerProviderS
   @override
   void dispose() {
     _passwordFocusNode.dispose();
-    _controller.dispose();
+    _confirmFocusNode.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    _confirmController.dispose();
+    _AnimController.dispose();
     super.dispose();
   }
 
   void toSignUpMode() {
-    _controller.forward().then((_) {
+    _AnimController.forward().then((_) {
       setState(() {
         isLogin = false;
       });
@@ -47,7 +51,7 @@ class EmailAuthFormState extends State<EmailAuthForm> with SingleTickerProviderS
   }
 
   void toLoginMode() {
-    _controller.reverse().then((_) {
+    _AnimController.reverse().then((_) {
       setState(() {
         isLogin = true;
       });
@@ -70,9 +74,8 @@ class EmailAuthFormState extends State<EmailAuthForm> with SingleTickerProviderS
               ..._buildEmailInput(),
               const SizedBox(height: 20),
               ..._buildPasswordInput(),
-              const SizedBox(height: 20),
               _buildConfirmInput(),
-              const SizedBox(height: 80),
+              const SizedBox(height: 70),
               _buildLoginButton(),
             ],
           ),
@@ -192,7 +195,8 @@ class EmailAuthFormState extends State<EmailAuthForm> with SingleTickerProviderS
         ),
         focusNode: _passwordFocusNode,
         controller: _passwordController,
-        onEditingComplete: () => FocusScope.of(context).requestFocus(_confirmFocusNode),
+        onEditingComplete:
+            isLogin ? null : () => FocusScope.of(context).requestFocus(_confirmFocusNode),
         onChanged: (val) {
           if (val.length > 1) return;
           setState(() => _emptyPassword = val.isEmpty);
@@ -207,6 +211,7 @@ class EmailAuthFormState extends State<EmailAuthForm> with SingleTickerProviderS
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
+          const SizedBox(height: 20),
           const Text("Confirm", style: TextStyle(color: Colors.white70, fontSize: 15)),
           const SizedBox(height: 5),
           TextFormField(

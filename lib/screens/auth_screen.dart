@@ -15,7 +15,7 @@ class AuthScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
-      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: orientation == Orientation.landscape,
       body: SafeArea(
         child: (orientation == Orientation.portrait)
             ? Column(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:justclass/utils/validator.dart';
 
 class EmailAuthForm extends StatefulWidget {
   EmailAuthForm({Key key}) : super(key: key);
@@ -8,8 +9,10 @@ class EmailAuthForm extends StatefulWidget {
 }
 
 class EmailAuthFormState extends State<EmailAuthForm> with SingleTickerProviderStateMixin {
+  final _form = GlobalKey<FormState>();
   bool isLogin = true;
 
+  final _emailFocusNode = FocusNode();
   final _passwordFocusNode = FocusNode();
   final _confirmFocusNode = FocusNode();
   final _emailController = TextEditingController();
@@ -20,30 +23,35 @@ class EmailAuthFormState extends State<EmailAuthForm> with SingleTickerProviderS
   bool _emptyPassword = true;
   bool _emptyConfirm = true;
 
-  AnimationController _AnimController;
+  AnimationController _animController;
   Animation<double> _sizeAnim;
+
+  final validator = Validator();
 
   @override
   void initState() {
-    _AnimController = AnimationController(duration: const Duration(milliseconds: 200), vsync: this);
-    _sizeAnim = Tween<double>(begin: 0, end: 1).animate(_AnimController);
+    _animController = AnimationController(duration: const Duration(milliseconds: 200), vsync: this);
+    _sizeAnim = Tween<double>(begin: 0, end: 1).animate(_animController);
 
     super.initState();
   }
 
   @override
   void dispose() {
+    _emailFocusNode.dispose();
     _passwordFocusNode.dispose();
     _confirmFocusNode.dispose();
     _emailController.dispose();
     _passwordController.dispose();
     _confirmController.dispose();
-    _AnimController.dispose();
+    _animController.dispose();
     super.dispose();
   }
 
   void toSignUpMode() {
-    _AnimController.forward().then((_) {
+    unFocus();
+    _form.currentState.reset();
+    _animController.forward().then((_) {
       setState(() {
         isLogin = false;
       });
@@ -51,11 +59,27 @@ class EmailAuthFormState extends State<EmailAuthForm> with SingleTickerProviderS
   }
 
   void toLoginMode() {
-    _AnimController.reverse().then((_) {
+    unFocus();
+    _form.currentState.reset();
+    _animController.reverse().then((_) {
       setState(() {
         isLogin = true;
       });
     });
+  }
+
+  void unFocus() {
+    _emailFocusNode.unfocus();
+    _passwordFocusNode.unfocus();
+    _confirmFocusNode.unfocus();
+  }
+
+  void login() {
+    if (!_form.currentState.validate()) return;
+  }
+
+  void signUp() {
+    if (!_form.currentState.validate()) return;
   }
 
   @override
@@ -68,6 +92,7 @@ class EmailAuthFormState extends State<EmailAuthForm> with SingleTickerProviderS
       child: SizedBox(
         width: (orientation == Orientation.portrait) ? width * 0.7 : width * 0.6,
         child: Form(
+          key: _form,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
@@ -76,7 +101,7 @@ class EmailAuthFormState extends State<EmailAuthForm> with SingleTickerProviderS
               ..._buildPasswordInput(),
               _buildConfirmInput(),
               const SizedBox(height: 70),
-              _buildLoginButton(),
+              _buildAuthButton(),
             ],
           ),
         ),
@@ -84,7 +109,7 @@ class EmailAuthFormState extends State<EmailAuthForm> with SingleTickerProviderS
     );
   }
 
-  Widget _buildLoginButton() {
+  Widget _buildAuthButton() {
     return SizedBox(
       height: 44,
       width: double.infinity,
@@ -102,7 +127,7 @@ class EmailAuthFormState extends State<EmailAuthForm> with SingleTickerProviderS
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(22),
         ),
-        onPressed: () {},
+        onPressed: isLogin ? login : signUp,
       ),
     );
   }
@@ -135,22 +160,24 @@ class EmailAuthFormState extends State<EmailAuthForm> with SingleTickerProviderS
           prefixIcon: const Icon(Icons.email, color: Colors.white60),
           suffixIcon: (_emptyEmail)
               ? const SizedBox(width: 0)
-              : GestureDetector(
-                  child: const Icon(Icons.cancel, color: Colors.white54),
-                  onTap: () {
-                    _emailController.text = "";
+              : IconButton(
+                  icon: const Icon(Icons.cancel, color: Colors.white54),
+                  onPressed: () {
+                    WidgetsBinding.instance.addPostFrameCallback((_) => _emailController.clear());
                     setState(() => _emptyEmail = true);
                   },
                 ),
           errorStyle: const TextStyle(color: Colors.amberAccent, fontSize: 14),
           errorText: null,
         ),
+        focusNode: _emailFocusNode,
         controller: _emailController,
         onFieldSubmitted: (_) => FocusScope.of(context).requestFocus(_passwordFocusNode),
         onChanged: (val) {
           if (val.length > 1) return;
           setState(() => _emptyEmail = val.isEmpty);
         },
+        validator: validator.validateEmail,
       ),
     ];
   }
@@ -183,10 +210,11 @@ class EmailAuthFormState extends State<EmailAuthForm> with SingleTickerProviderS
           prefixIcon: const Icon(Icons.vpn_key, color: Colors.white60),
           suffixIcon: (_emptyPassword)
               ? const SizedBox(width: 0)
-              : GestureDetector(
-                  child: const Icon(Icons.cancel, color: Colors.white54),
-                  onTap: () {
-                    _passwordController.text = "";
+              : IconButton(
+                  icon: const Icon(Icons.cancel, color: Colors.white54),
+                  onPressed: () {
+                    WidgetsBinding.instance
+                        .addPostFrameCallback((_) => _passwordController.clear());
                     setState(() => _emptyPassword = true);
                   },
                 ),
@@ -201,6 +229,7 @@ class EmailAuthFormState extends State<EmailAuthForm> with SingleTickerProviderS
           if (val.length > 1) return;
           setState(() => _emptyPassword = val.isEmpty);
         },
+        validator: validator.validatePassword,
       ),
     ];
   }
@@ -212,7 +241,7 @@ class EmailAuthFormState extends State<EmailAuthForm> with SingleTickerProviderS
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           const SizedBox(height: 20),
-          const Text("Confirm", style: TextStyle(color: Colors.white70, fontSize: 15)),
+          const Text("Confirm Password", style: TextStyle(color: Colors.white70, fontSize: 15)),
           const SizedBox(height: 5),
           TextFormField(
             obscureText: true,
@@ -238,10 +267,11 @@ class EmailAuthFormState extends State<EmailAuthForm> with SingleTickerProviderS
               prefixIcon: const Icon(Icons.beenhere, color: Colors.white60),
               suffixIcon: (_emptyConfirm)
                   ? const SizedBox(width: 0)
-                  : GestureDetector(
-                      child: const Icon(Icons.cancel, color: Colors.white54),
-                      onTap: () {
-                        _confirmController.text = "";
+                  : IconButton(
+                      icon: const Icon(Icons.cancel, color: Colors.white54),
+                      onPressed: () {
+                        WidgetsBinding.instance
+                            .addPostFrameCallback((_) => _confirmController.clear());
                         setState(() => _emptyConfirm = true);
                       },
                     ),
@@ -253,6 +283,9 @@ class EmailAuthFormState extends State<EmailAuthForm> with SingleTickerProviderS
             onChanged: (val) {
               if (val.length > 1) return;
               setState(() => _emptyConfirm = val.isEmpty);
+            },
+            validator: (val) {
+              return validator.validateConfirm(val, _passwordController.text);
             },
           ),
         ],

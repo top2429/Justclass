@@ -1,36 +1,19 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:justclass/models/user.dart';
+import 'package:justclass/utils/api_call.dart';
 
-class User {
-  final String id;
-  final String displayName;
-  final String email;
-  final String photoUrl;
-  final String lastName;
-  final String firstName;
-
-  const User({
-    @required this.id,
-    @required this.email,
-    @required this.displayName,
-    this.photoUrl,
-    this.firstName,
-    this.lastName,
-  });
-}
-
-enum AuthType { Email, OAuthGoogle, OAuthFacebook }
+enum AuthType { FirebaseEmailPassword, OAuthGoogle, OAuthFacebook }
 
 extension AuthTypeMethod on AuthType {
   String get name {
     switch (this) {
-      case AuthType.Email:
-        return "Email";
+      case AuthType.FirebaseEmailPassword:
+        return "Email and Password";
       case AuthType.OAuthGoogle:
-        return "Google";
+        return "Google Account";
       case AuthType.OAuthFacebook:
-        return "Facebook";
+        return "Facebook Account";
       default:
         return "";
     }
@@ -38,49 +21,57 @@ extension AuthTypeMethod on AuthType {
 }
 
 class Auth with ChangeNotifier {
-  final _firebaseAuth = FirebaseAuth.instance;
   final _googleSignIn = GoogleSignIn(scopes: ['email']);
-
-  User _user;
+  User currentUser;
   AuthType _type;
 
-  User get user => _user;
 
   AuthType get authType => _type;
 
   Future<void> signInGoogle() async {
     try {
-      await signOut();
+      print(_type.name);
       final user = await _googleSignIn.signIn();
-      if (user == null) return;
+      if (user == null) return Future.value();
 
       _type = AuthType.OAuthGoogle;
-      _user = User(
-        id: user.id,
-        email: user.email,
-        displayName: user.displayName,
-        photoUrl: user.photoUrl,
-      );
+      await _storeUserData(user);
+
       notifyListeners();
     } catch (error) {
       throw error;
     }
   }
 
-  Future<void> persistUserData(dynamic user) async {
-    
+  Future<void> _storeUserData(dynamic anyUser) async {
+    ;
+    switch (_type) {
+      case AuthType.OAuthGoogle:
+        final user = anyUser as GoogleSignInAccount;
+        currentUser = User(
+          id: user.id,
+          email: user.email,
+          displayName: user.displayName,
+          photoUrl: user.photoUrl,
+        );
+        break;
+      case AuthType.FirebaseEmailPassword:
+        // TODO: Handle this case.
+        break;
+      case AuthType.OAuthFacebook:
+        // TODO: Handle this case.
+        break;
+    }
+    await ApiCall.postUserData(currentUser);
   }
 
   Future<void> signOut() async {
-    _user = null;
-    _type = null;
-
     try {
       switch (_type) {
         case AuthType.OAuthGoogle:
           await _googleSignIn.signOut();
           break;
-        case AuthType.Email:
+        case AuthType.FirebaseEmailPassword:
           // TODO: Handle this case.
           break;
         case AuthType.OAuthFacebook:
@@ -89,7 +80,10 @@ class Auth with ChangeNotifier {
         default:
           return;
       }
-      _firebaseAuth.signOut();
-    } catch (error) {}
+    } finally {
+      currentUser = null;
+      _type = null;
+      notifyListeners();
+    }
   }
 }

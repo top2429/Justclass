@@ -10,6 +10,8 @@ class Validator {
 
   String validatePassword(String val) {
     if (val.isEmpty) return "Please provide a password";
+    // TODO check the number of characters
+    // TODO check password strength
     return null;
   }
 

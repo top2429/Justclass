@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:justclass/utils/validator.dart';
 
 class EmailAuthForm extends StatefulWidget {
-  EmailAuthForm({Key key}) : super(key: key);
+  final Function changeLoadingStatus;
+
+  EmailAuthForm({this.changeLoadingStatus, Key key}) : super(key: key);
 
   @override
   EmailAuthFormState createState() => EmailAuthFormState();
@@ -74,12 +76,14 @@ class EmailAuthFormState extends State<EmailAuthForm> with SingleTickerProviderS
     _confirmFocusNode.unfocus();
   }
 
-  void login() {
+  void signIn() {
     if (!_form.currentState.validate()) return;
+    // TODO add sign in code
   }
 
   void signUp() {
     if (!_form.currentState.validate()) return;
+    // TODO add sign in code
   }
 
   @override
@@ -127,7 +131,7 @@ class EmailAuthFormState extends State<EmailAuthForm> with SingleTickerProviderS
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(22),
         ),
-        onPressed: isLogin ? login : signUp,
+        onPressed: isLogin ? signIn : signUp,
       ),
     );
   }

@@ -28,11 +28,11 @@ class _SignButtonState extends State<SignButton> {
           children: <Widget>[
             Text(
               isLogin ? "New here? " : "Already have an account? ",
-              style: TextStyle(fontSize: 16, color: Colors.white70),
+              style: const TextStyle(fontSize: 16, color: Colors.white70),
             ),
             Text(
-              isLogin ? "Sign Up" : "Log In",
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.white),
+              isLogin ? "Sign Up" : "Sign In",
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.white),
             ),
           ],
         ),

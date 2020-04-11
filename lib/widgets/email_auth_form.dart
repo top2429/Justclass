@@ -115,7 +115,7 @@ class EmailAuthFormState extends State<EmailAuthForm> with SingleTickerProviderS
       width: double.infinity,
       child: RaisedButton(
         child: Text(
-          isLogin ? "Login" : "Sign Up",
+          isLogin ? "Sign In" : "Sign Up",
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
@@ -155,7 +155,7 @@ class EmailAuthFormState extends State<EmailAuthForm> with SingleTickerProviderS
             borderSide: BorderSide(color: Colors.amberAccent),
           ),
           errorBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.amber[700]),
+            borderSide: BorderSide(color: Colors.amberAccent.withOpacity(0.5)),
           ),
           prefixIcon: const Icon(Icons.email, color: Colors.white60),
           suffixIcon: (_emptyEmail)
@@ -205,7 +205,7 @@ class EmailAuthFormState extends State<EmailAuthForm> with SingleTickerProviderS
             borderSide: BorderSide(color: Colors.amberAccent),
           ),
           errorBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.amber[700]),
+            borderSide: BorderSide(color: Colors.amberAccent.withOpacity(0.5)),
           ),
           prefixIcon: const Icon(Icons.vpn_key, color: Colors.white60),
           suffixIcon: (_emptyPassword)
@@ -262,7 +262,7 @@ class EmailAuthFormState extends State<EmailAuthForm> with SingleTickerProviderS
                 borderSide: BorderSide(color: Colors.amberAccent),
               ),
               errorBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.amber[700]),
+                borderSide: BorderSide(color: Colors.amberAccent.withOpacity(0.5)),
               ),
               prefixIcon: const Icon(Icons.beenhere, color: Colors.white60),
               suffixIcon: (_emptyConfirm)

@@ -5,9 +5,9 @@ import 'package:justclass/widgets/oauth_row.dart';
 import 'package:justclass/widgets/sign_button.dart';
 
 class AuthScreen extends StatelessWidget {
-  static final routeName = "/auth";
+  static const routeName = "/auth";
   final formKey = GlobalKey<EmailAuthFormState>();
-  final signKey = GlobalKey();
+  final signBtnKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -26,13 +26,13 @@ class AuthScreen extends StatelessWidget {
                   Spacer(),
                   OAuthRow(),
                   Spacer(),
-                  SignButton(formKey, key: signKey),
+                  SignButton(formKey, key: signBtnKey),
                 ],
               )
             : SingleChildScrollView(
                 child: Column(
                   children: <Widget>[
-                    SignButton(formKey, key: signKey),
+                    SignButton(formKey, key: signBtnKey),
                     EmailAuthForm(key: formKey),
                     const SizedBox(height: 20),
                     OAuthRow(),

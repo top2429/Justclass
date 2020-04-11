@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:justclass/providers/auth.dart';
+import 'package:provider/provider.dart';
 
 class OAuthRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final userMgr = Provider.of<Auth>(context);
+
     return Padding(
       padding: const EdgeInsets.all(8),
       child: Row(
@@ -23,7 +27,9 @@ class OAuthRow extends StatelessWidget {
               padding: const EdgeInsets.all(15),
               child: Image.asset("assets/images/logo-gg.png", fit: BoxFit.contain),
             ),
-            onPressed: () {},
+            onPressed: () {
+              userMgr.signInGoogle();
+            },
           ),
         ],
       ),

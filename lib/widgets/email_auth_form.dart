@@ -123,7 +123,7 @@ class EmailAuthFormState extends State<EmailAuthForm> with SingleTickerProviderS
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
-            color: Colors.blue[800],
+            color: Colors.blue.shade800,
           ),
         ),
         elevation: 5,

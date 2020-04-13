@@ -50,6 +50,8 @@ flutter:
   assets:
     - assets/images/logo-gg.png
     - assets/images/logo-fb.png
+    - assets/images/student.png
+    - assets/images/teacher.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

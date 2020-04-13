@@ -25,12 +25,11 @@ class Auth with ChangeNotifier {
   User currentUser;
   AuthType _type;
 
-
   AuthType get authType => _type;
 
   Future<void> signInGoogle() async {
     try {
-      print(_type.name);
+      print('Auth Type: ${_type.name}');
       final user = await _googleSignIn.signIn();
       if (user == null) return Future.value();
 
@@ -44,7 +43,6 @@ class Auth with ChangeNotifier {
   }
 
   Future<void> _storeUserData(dynamic anyUser) async {
-    ;
     switch (_type) {
       case AuthType.OAuthGoogle:
         final user = anyUser as GoogleSignInAccount;

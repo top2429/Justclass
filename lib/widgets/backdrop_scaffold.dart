@@ -202,20 +202,22 @@ class _BackdropScaffoldState extends State<BackdropScaffold> with SingleTickerPr
               ? BackdropToggleButton()
               : widget.leading,
         ),
-        body: LayoutBuilder(
-          builder: (context, constraints) {
-            return Container(
-              child: Stack(
-                children: <Widget>[
-                  _buildBackPanel(),
-                  PositionedTransition(
-                    rect: getPanelAnimation(context, constraints),
-                    child: _buildFrontPanel(context),
-                  ),
-                ],
-              ),
-            );
-          },
+        body: SafeArea(
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              return Container(
+                child: Stack(
+                  children: <Widget>[
+                    _buildBackPanel(),
+                    PositionedTransition(
+                      rect: getPanelAnimation(context, constraints),
+                      child: _buildFrontPanel(context),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
         ),
       ),
     );

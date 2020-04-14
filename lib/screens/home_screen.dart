@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:justclass/widgets/backdrop_scaffold.dart';
 import 'package:justclass/widgets/create_class_button.dart';
 import 'package:justclass/widgets/join_class_button.dart';
 
 class HomeScreen extends StatelessWidget {
   static const routeName = '/home';
-
-  
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +48,9 @@ class HomeScreen extends StatelessWidget {
 
   Widget _buildFrontLayer() {
     return Container(
-      child: Center(child: Text('My Classes'),),
+      child: Center(
+        child: Text('My Classes'),
+      ),
     );
   }
 }

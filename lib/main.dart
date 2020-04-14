@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:justclass/models/user.dart';
 import 'package:justclass/providers/auth.dart';
 import 'package:justclass/providers/class_manager.dart';
@@ -11,7 +12,6 @@ import 'package:provider/provider.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-
   runApp(MyApp());
 }
 

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:justclass/all_themes.dart';
 import 'package:justclass/providers/auth.dart';
 import 'package:justclass/providers/class_manager.dart';
 import 'package:justclass/widgets/app_snack_bar.dart';
@@ -12,13 +14,17 @@ class CreateClassButton extends StatefulWidget {
 
 class _CreateClassButtonState extends State<CreateClassButton> {
   final data = NewClassData();
+  bool isLoading = false;
 
   void addNewClass() async {
     try {
+      setState(() => isLoading = true);
       final uid = Provider.of<Auth>(context, listen: false).currentUser.uid;
       await Provider.of<ClassManager>(context, listen: false).add(uid, data);
     } catch (error) {
       AppSnackBar.show(context, message: error.toString(), bgColor: Colors.amberAccent);
+    } finally {
+      setState(() => isLoading = false);
     }
   }
 
@@ -27,9 +33,7 @@ class _CreateClassButtonState extends State<CreateClassButton> {
       context: context,
       builder: (context) {
         return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(5),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
           child: CreateClassForm(data, addNewClass),
         );
       },
@@ -66,6 +70,8 @@ class _CreateClassButtonState extends State<CreateClassButton> {
               height: btnHeight,
               width: width,
               child: MaterialButton(
+                disabledColor: Colors.grey[100],
+                disabledElevation: 10,
                 height: btnHeight,
                 color: Colors.white,
                 elevation: 10,
@@ -76,13 +82,15 @@ class _CreateClassButtonState extends State<CreateClassButton> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
-                    Icon(Icons.add, color: Colors.blue.shade900),
+                    isLoading
+                        ? const SpinKitDualRing(color: AllThemes.darkBlue, size: 15, lineWidth: 2)
+                        : const Icon(Icons.add, color: AllThemes.darkBlue),
                     Flexible(
                       child: FittedBox(
                         child: Text(
-                          'Create class',
+                          isLoading ? 'Creating...' : 'Create class',
                           style: TextStyle(
-                            color: Colors.blue.shade900,
+                            color: AllThemes.darkBlue,
                             fontWeight: FontWeight.bold,
                             fontSize: btnHeight * 0.4,
                           ),
@@ -92,7 +100,7 @@ class _CreateClassButtonState extends State<CreateClassButton> {
                     const SizedBox(width: 5),
                   ],
                 ),
-                onPressed: showCreateClassDialog,
+                onPressed: isLoading ? null : showCreateClassDialog,
               ),
             ),
           ],

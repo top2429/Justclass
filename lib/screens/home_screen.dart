@@ -6,6 +6,8 @@ import 'package:justclass/widgets/join_class_button.dart';
 class HomeScreen extends StatelessWidget {
   static const routeName = '/home';
 
+  
+
   @override
   Widget build(BuildContext context) {
     final orientation = MediaQuery.of(context).orientation;

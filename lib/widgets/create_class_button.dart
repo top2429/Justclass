@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:justclass/providers/auth.dart';
+import 'package:justclass/providers/class_manager.dart';
+import 'package:justclass/widgets/app_snack_bar.dart';
 import 'package:justclass/widgets/create_class_form.dart';
+import 'package:provider/provider.dart';
 
 class CreateClassButton extends StatefulWidget {
   @override
@@ -9,7 +13,16 @@ class CreateClassButton extends StatefulWidget {
 class _CreateClassButtonState extends State<CreateClassButton> {
   final data = NewClassData();
 
-  void _showCreateClassDialog(BuildContext context) {
+  void addNewClass() async {
+    try {
+      final uid = Provider.of<Auth>(context, listen: false).currentUser.uid;
+      await Provider.of<ClassManager>(context, listen: false).add(uid, data);
+    } catch (error) {
+      AppSnackBar.show(context, message: error.toString(), bgColor: Colors.amberAccent);
+    }
+  }
+
+  void showCreateClassDialog() {
     showDialog(
       context: context,
       builder: (context) {
@@ -17,7 +30,7 @@ class _CreateClassButtonState extends State<CreateClassButton> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(5),
           ),
-          child: CreateClassForm(data),
+          child: CreateClassForm(data, addNewClass),
         );
       },
     );
@@ -79,7 +92,7 @@ class _CreateClassButtonState extends State<CreateClassButton> {
                     const SizedBox(width: 5),
                   ],
                 ),
-                onPressed: () => _showCreateClassDialog(context),
+                onPressed: showCreateClassDialog,
               ),
             ),
           ],

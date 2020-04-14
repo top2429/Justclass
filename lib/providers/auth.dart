@@ -5,7 +5,7 @@ import 'package:justclass/utils/api_call.dart';
 
 enum AuthType { FirebaseEmailPassword, OAuthGoogle, OAuthFacebook }
 
-extension AuthTypeMethod on AuthType {
+extension AuthTypes on AuthType {
   String get name {
     switch (this) {
       case AuthType.FirebaseEmailPassword:
@@ -22,7 +22,12 @@ extension AuthTypeMethod on AuthType {
 
 class Auth with ChangeNotifier {
   final _googleSignIn = GoogleSignIn(scopes: ['email']);
-  User currentUser;
+  User currentUser = User(
+    displayName: 'test',
+    uid: '11111111111111',
+    email: 'tes@gmail.com',
+    photoUrl: 'https://placekitten.com/200/200',
+  );
   AuthType _type;
 
   AuthType get authType => _type;
@@ -47,7 +52,7 @@ class Auth with ChangeNotifier {
       case AuthType.OAuthGoogle:
         final user = anyUser as GoogleSignInAccount;
         currentUser = User(
-          id: user.id,
+          uid: user.id,
           email: user.email,
           displayName: user.displayName,
           photoUrl: user.photoUrl,

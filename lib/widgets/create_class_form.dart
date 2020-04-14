@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:justclass/utils/validator.dart';
 
 class NewClassData {
-  String className;
+  String title;
   String subject;
   String section;
   String description;
@@ -10,7 +10,7 @@ class NewClassData {
   int theme;
 
   NewClassData({
-    this.className = '',
+    this.title = '',
     this.subject = '',
     this.section = '',
     this.description = '',
@@ -21,26 +21,26 @@ class NewClassData {
 
 class CreateClassForm extends StatefulWidget {
   final NewClassData data;
+  final Function sendNewClassRequest;
 
-  CreateClassForm(this.data);
+  CreateClassForm(this.data, this.sendNewClassRequest);
 
   @override
   _CreateClassFormState createState() => _CreateClassFormState();
 }
 
 class _CreateClassFormState extends State<CreateClassForm> {
-  bool isValid;
+  bool _isValid;
 
   @override
   void initState() {
-    isValid = CreateClassValidator.validateClassName(widget.data.className) == null;
-
+    _isValid = CreateClassValidator.validateClassName(widget.data.title) == null;
     super.initState();
   }
 
-  @override
-  void dispose() {
-    super.dispose();
+  _sendNewClassRequest() {
+    Navigator.of(context).pop();
+    widget.sendNewClassRequest();
   }
 
   @override
@@ -79,19 +79,19 @@ class _CreateClassFormState extends State<CreateClassForm> {
           fontWeight: FontWeight.bold,
         ),
       ),
-      onPressed: !isValid ? null : () {},
+      onPressed: !_isValid ? null : this._sendNewClassRequest,
     );
   }
 
   Widget _buildClassNameInput() {
     return TextFormField(
-      initialValue: widget.data.className,
+      initialValue: widget.data.title,
       textInputAction: TextInputAction.next,
       onFieldSubmitted: (_) => FocusScope.of(context).nextFocus(),
-      decoration: const InputDecoration(labelText: 'Class name (required)'),
+      decoration: const InputDecoration(labelText: 'Class title (required)'),
       onChanged: (val) {
-        widget.data.className = val;
-        setState(() => isValid = CreateClassValidator.validateClassName(val) == null);
+        widget.data.title = val;
+        setState(() => _isValid = CreateClassValidator.validateClassName(val) == null);
       },
     );
   }

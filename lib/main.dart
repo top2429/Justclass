@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:justclass/models/user.dart';
 import 'package:justclass/providers/auth.dart';
+import 'package:justclass/providers/class_manager.dart';
 import 'package:justclass/screens/auth_screen.dart';
 import 'package:justclass/screens/home_screen.dart';
 import 'package:justclass/screens/loading_screen.dart';
@@ -20,6 +21,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => Auth()),
+        ChangeNotifierProvider(create: (_) => ClassManager()),
       ],
       child: MaterialApp(
         title: "Justclass",

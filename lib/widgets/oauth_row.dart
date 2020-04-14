@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:justclass/providers/auth.dart';
 import 'package:justclass/screens/home_screen.dart';
 import 'package:justclass/screens/user_screen_test.dart';
+import 'package:justclass/widgets/app_snack_bar.dart';
 import 'package:provider/provider.dart';
 
 class OAuthRow extends StatelessWidget {
@@ -30,27 +31,10 @@ class OAuthRow extends StatelessWidget {
       await auth.signInGoogle();
       if (auth.currentUser != null) _toUserScreen(context);
     } catch (error) {
-      _showSnackBar(context, error.toString());
+      AppSnackBar.show(context, message: error.toString());
     } finally {
       _changeLoadingStatus(false);
     }
-  }
-
-  void _showSnackBar(BuildContext context, String error) {
-    Scaffold.of(context).hideCurrentSnackBar();
-    Scaffold.of(context).showSnackBar(SnackBar(
-      backgroundColor: Colors.white.withOpacity(0.9),
-      behavior: SnackBarBehavior.floating,
-      content: SizedBox(
-        width: double.infinity,
-        child: Text(
-          error,
-          style: const TextStyle(color: Colors.black),
-          textAlign: TextAlign.center,
-        ),
-      ),
-      duration: const Duration(seconds: 2),
-    ));
   }
 
   @override

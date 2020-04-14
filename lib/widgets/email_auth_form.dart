@@ -28,7 +28,7 @@ class EmailAuthFormState extends State<EmailAuthForm> with SingleTickerProviderS
   AnimationController _animController;
   Animation<double> _sizeAnim;
 
-  bool _autovalidate = false;
+  bool _autoValidate = false;
 
   @override
   void initState() {
@@ -51,7 +51,7 @@ class EmailAuthFormState extends State<EmailAuthForm> with SingleTickerProviderS
   }
 
   void toSignUpMode() {
-    unFocus();
+    _unFocus();
     _form.currentState.reset();
     _animController.forward().then((_) {
       setState(() {
@@ -61,7 +61,7 @@ class EmailAuthFormState extends State<EmailAuthForm> with SingleTickerProviderS
   }
 
   void toLoginMode() {
-    unFocus();
+    _unFocus();
     _form.currentState.reset();
     _animController.reverse().then((_) {
       setState(() {
@@ -70,7 +70,7 @@ class EmailAuthFormState extends State<EmailAuthForm> with SingleTickerProviderS
     });
   }
 
-  void unFocus() {
+  void _unFocus() {
     _emailFocusNode.unfocus();
     _passwordFocusNode.unfocus();
     _confirmFocusNode.unfocus();
@@ -133,7 +133,7 @@ class EmailAuthFormState extends State<EmailAuthForm> with SingleTickerProviderS
         ),
         onPressed: () {
           _isSigningIn ? signIn() : signUp();
-          setState(() => _autovalidate = true);
+          setState(() => _autoValidate = true);
         },
       ),
     );
@@ -144,7 +144,7 @@ class EmailAuthFormState extends State<EmailAuthForm> with SingleTickerProviderS
       const Text("Email", style: TextStyle(color: Colors.white70, fontSize: 15)),
       const SizedBox(height: 5),
       TextFormField(
-        autovalidate: _autovalidate,
+        autovalidate: _autoValidate,
         cursorColor: Colors.white70,
         style: const TextStyle(color: Colors.white70, fontSize: 17),
         keyboardType: TextInputType.emailAddress,
@@ -195,7 +195,7 @@ class EmailAuthFormState extends State<EmailAuthForm> with SingleTickerProviderS
       const Text("Password", style: TextStyle(color: Colors.white70, fontSize: 15)),
       const SizedBox(height: 5),
       TextFormField(
-        autovalidate: _autovalidate,
+        autovalidate: _autoValidate,
         obscureText: true,
         cursorColor: Colors.white70,
         style: const TextStyle(color: Colors.white70, fontSize: 17),
@@ -253,7 +253,7 @@ class EmailAuthFormState extends State<EmailAuthForm> with SingleTickerProviderS
           const Text("Confirm Password", style: TextStyle(color: Colors.white70, fontSize: 15)),
           const SizedBox(height: 5),
           TextFormField(
-            autovalidate: _autovalidate,
+            autovalidate: _autoValidate,
             obscureText: true,
             cursorColor: Colors.white70,
             style: const TextStyle(color: Colors.white70, fontSize: 17),

@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
           backgroundColor: const Color(0xff0c4da2), // hoa sen logo @@
           fontFamily: "OpenSans",
         ),
-        initialRoute: HomeScreen.routeName,
+        initialRoute: AuthScreen.routeName,
         routes: {
           LoadingScreen.routeName: (_) => LoadingScreen(),
           AuthScreen.routeName: (_) => AuthScreen(),

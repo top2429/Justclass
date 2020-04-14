@@ -40,8 +40,15 @@ class OAuthRow extends StatelessWidget {
     Scaffold.of(context).hideCurrentSnackBar();
     Scaffold.of(context).showSnackBar(SnackBar(
       backgroundColor: Colors.white.withOpacity(0.9),
-      content:
-          Text(error, style: const TextStyle(color: Colors.black), textAlign: TextAlign.center),
+      behavior: SnackBarBehavior.floating,
+      content: SizedBox(
+        width: double.infinity,
+        child: Text(
+          error,
+          style: const TextStyle(color: Colors.black),
+          textAlign: TextAlign.center,
+        ),
+      ),
       duration: const Duration(seconds: 2),
     ));
   }

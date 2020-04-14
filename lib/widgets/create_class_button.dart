@@ -1,6 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:justclass/widgets/create_class_form.dart';
 
-class ClassJoiningButton extends StatelessWidget {
+class CreateClassButton extends StatefulWidget {
+  @override
+  _CreateClassButtonState createState() => _CreateClassButtonState();
+}
+
+class _CreateClassButtonState extends State<CreateClassButton> {
+  final data = NewClassData();
+
+  void _showCreateClassDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(5),
+          ),
+          child: CreateClassForm(data),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext _) {
     return LayoutBuilder(
@@ -21,10 +43,9 @@ class ClassJoiningButton extends StatelessWidget {
             Positioned(
               width: width,
               child: Material(
-                elevation: 5,
-                color: Colors.transparent,
+                elevation: 8,
                 shape: CircleBorder(),
-                child: Image.asset('assets/images/student.png', fit: BoxFit.contain),
+                child: Image.asset('assets/images/teacher.png', fit: BoxFit.contain),
               ),
             ),
             Positioned(
@@ -46,7 +67,7 @@ class ClassJoiningButton extends StatelessWidget {
                     Flexible(
                       child: FittedBox(
                         child: Text(
-                          'Join class',
+                          'Create class',
                           style: TextStyle(
                             color: Colors.blue.shade900,
                             fontWeight: FontWeight.bold,
@@ -58,7 +79,7 @@ class ClassJoiningButton extends StatelessWidget {
                     const SizedBox(width: 5),
                   ],
                 ),
-                onPressed: () {},
+                onPressed: () => _showCreateClassDialog(context),
               ),
             ),
           ],

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:justclass/widgets/backdrop_scaffold.dart';
-import 'package:justclass/widgets/class_creating_button.dart';
-import 'package:justclass/widgets/class_joining_button.dart';
-import 'package:justclass/widgets/test_box.dart';
+import 'package:justclass/widgets/create_class_button.dart';
+import 'package:justclass/widgets/join_class_button.dart';
 
 class HomeScreen extends StatelessWidget {
   static const routeName = '/home';
@@ -20,7 +19,6 @@ class HomeScreen extends StatelessWidget {
       backlayerColor: Theme.of(context).backgroundColor,
       leading: IconButton(icon: const Icon(Icons.menu), onPressed: () {}),
       actions: <Widget>[IconButton(icon: const Icon(Icons.more_vert), onPressed: () {})],
-      frontLayer: _buildFrontLayer(),
       backLayer: LayoutBuilder(
         builder: (_, constraints) {
           final height = constraints.maxHeight - headerHeight;
@@ -30,11 +28,8 @@ class HomeScreen extends StatelessWidget {
           return _buildBackLayer(height, width);
         },
       ),
+      frontLayer: _buildFrontLayer(),
     );
-  }
-
-  Widget _buildFrontLayer() {
-    return Container();
   }
 
   Widget _buildBackLayer(double height, double width) {
@@ -43,10 +38,16 @@ class HomeScreen extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
-          Container(height: height, width: width, child: Center(child: ClassCreatingButton())),
-          Container(height: height, width: width, child: Center(child: ClassJoiningButton())),
+          Container(height: height, width: width, child: Center(child: CreateClassButton())),
+          Container(height: height, width: width, child: Center(child: JoinClassButton())),
         ],
       ),
+    );
+  }
+
+  Widget _buildFrontLayer() {
+    return Container(
+      child: Center(child: Text('My Classes'),),
     );
   }
 }

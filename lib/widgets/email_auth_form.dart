@@ -12,7 +12,7 @@ class EmailAuthForm extends StatefulWidget {
 
 class EmailAuthFormState extends State<EmailAuthForm> with SingleTickerProviderStateMixin {
   final _form = GlobalKey<FormState>();
-  bool isLogin = true;
+  bool _isSigningIn = true;
 
   final _emailFocusNode = FocusNode();
   final _passwordFocusNode = FocusNode();
@@ -28,7 +28,8 @@ class EmailAuthFormState extends State<EmailAuthForm> with SingleTickerProviderS
   AnimationController _animController;
   Animation<double> _sizeAnim;
 
-  final validator = Validator();
+  final _validator = Validator();
+  bool _autovalidate = false;
 
   @override
   void initState() {
@@ -55,7 +56,7 @@ class EmailAuthFormState extends State<EmailAuthForm> with SingleTickerProviderS
     _form.currentState.reset();
     _animController.forward().then((_) {
       setState(() {
-        isLogin = false;
+        _isSigningIn = false;
       });
     });
   }
@@ -65,7 +66,7 @@ class EmailAuthFormState extends State<EmailAuthForm> with SingleTickerProviderS
     _form.currentState.reset();
     _animController.reverse().then((_) {
       setState(() {
-        isLogin = true;
+        _isSigningIn = true;
       });
     });
   }
@@ -119,7 +120,7 @@ class EmailAuthFormState extends State<EmailAuthForm> with SingleTickerProviderS
       width: double.infinity,
       child: RaisedButton(
         child: Text(
-          isLogin ? "Sign In" : "Sign Up",
+          _isSigningIn ? "Sign In" : "Sign Up",
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
@@ -131,7 +132,10 @@ class EmailAuthFormState extends State<EmailAuthForm> with SingleTickerProviderS
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(22),
         ),
-        onPressed: isLogin ? signIn : signUp,
+        onPressed: () {
+          _isSigningIn ? signIn() : signUp();
+          setState(() => _autovalidate = true);
+        },
       ),
     );
   }
@@ -141,6 +145,7 @@ class EmailAuthFormState extends State<EmailAuthForm> with SingleTickerProviderS
       const Text("Email", style: TextStyle(color: Colors.white70, fontSize: 15)),
       const SizedBox(height: 5),
       TextFormField(
+        autovalidate: _autovalidate,
         cursorColor: Colors.white70,
         style: const TextStyle(color: Colors.white70, fontSize: 17),
         keyboardType: TextInputType.emailAddress,
@@ -181,7 +186,7 @@ class EmailAuthFormState extends State<EmailAuthForm> with SingleTickerProviderS
           if (val.length > 1) return;
           setState(() => _emptyEmail = val.isEmpty);
         },
-        validator: validator.validateEmail,
+        validator: _validator.validateEmail,
       ),
     ];
   }
@@ -191,10 +196,11 @@ class EmailAuthFormState extends State<EmailAuthForm> with SingleTickerProviderS
       const Text("Password", style: TextStyle(color: Colors.white70, fontSize: 15)),
       const SizedBox(height: 5),
       TextFormField(
+        autovalidate: _autovalidate,
         obscureText: true,
         cursorColor: Colors.white70,
         style: const TextStyle(color: Colors.white70, fontSize: 17),
-        textInputAction: (isLogin) ? TextInputAction.done : TextInputAction.next,
+        textInputAction: (_isSigningIn) ? TextInputAction.done : TextInputAction.next,
         decoration: InputDecoration(
           filled: true,
           fillColor: Colors.white.withOpacity(0.1),
@@ -228,12 +234,12 @@ class EmailAuthFormState extends State<EmailAuthForm> with SingleTickerProviderS
         focusNode: _passwordFocusNode,
         controller: _passwordController,
         onEditingComplete:
-            isLogin ? null : () => FocusScope.of(context).requestFocus(_confirmFocusNode),
+            _isSigningIn ? null : () => FocusScope.of(context).requestFocus(_confirmFocusNode),
         onChanged: (val) {
           if (val.length > 1) return;
           setState(() => _emptyPassword = val.isEmpty);
         },
-        validator: validator.validatePassword,
+        validator: _validator.validatePassword,
       ),
     ];
   }
@@ -248,6 +254,7 @@ class EmailAuthFormState extends State<EmailAuthForm> with SingleTickerProviderS
           const Text("Confirm Password", style: TextStyle(color: Colors.white70, fontSize: 15)),
           const SizedBox(height: 5),
           TextFormField(
+            autovalidate: _autovalidate,
             obscureText: true,
             cursorColor: Colors.white70,
             style: const TextStyle(color: Colors.white70, fontSize: 17),
@@ -289,7 +296,7 @@ class EmailAuthFormState extends State<EmailAuthForm> with SingleTickerProviderS
               setState(() => _emptyConfirm = val.isEmpty);
             },
             validator: (val) {
-              return validator.validateConfirm(val, _passwordController.text);
+              return _validator.validateConfirm(val, _passwordController.text);
             },
           ),
         ],

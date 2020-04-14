@@ -190,6 +190,7 @@ class _BackdropScaffoldState extends State<BackdropScaffold> with SingleTickerPr
       onWillPop: () => _willPopCallback(context),
       child: Scaffold(
         key: scaffoldKey,
+        resizeToAvoidBottomInset: false,
         appBar: AppBar(
           backgroundColor: widget.appBarColor,
           title: widget.title,

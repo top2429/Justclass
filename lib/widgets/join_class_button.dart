@@ -1,6 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:justclass/widgets/join_class_form.dart';
 
-class ClassCreatingButton extends StatelessWidget {
+class JoinClassButton extends StatelessWidget {
+  void _showJoinClassDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(5),
+          ),
+          child: JoinClassForm(),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext _) {
     return LayoutBuilder(
@@ -22,8 +38,9 @@ class ClassCreatingButton extends StatelessWidget {
               width: width,
               child: Material(
                 elevation: 5,
+                color: Colors.transparent,
                 shape: CircleBorder(),
-                child: Image.asset('assets/images/teacher.png', fit: BoxFit.contain),
+                child: Image.asset('assets/images/student.png', fit: BoxFit.contain),
               ),
             ),
             Positioned(
@@ -45,7 +62,7 @@ class ClassCreatingButton extends StatelessWidget {
                     Flexible(
                       child: FittedBox(
                         child: Text(
-                          'Create class',
+                          'Join class',
                           style: TextStyle(
                             color: Colors.blue.shade900,
                             fontWeight: FontWeight.bold,
@@ -57,7 +74,7 @@ class ClassCreatingButton extends StatelessWidget {
                     const SizedBox(width: 5),
                   ],
                 ),
-                onPressed: () {},
+                onPressed: () => this._showJoinClassDialog(context),
               ),
             ),
           ],
@@ -65,27 +82,4 @@ class ClassCreatingButton extends StatelessWidget {
       },
     );
   }
-
-//  Widget buildButton() {
-//    return RaisedButton.icon(
-//      elevation: 10,
-//      color: Colors.white,
-//      icon: Icon(Icons.add, color: Colors.blue.shade900),
-//      label: Flexible(
-//        child: FittedBox(
-//          child: Text(
-//            'Create class',
-//            style: TextStyle(
-//              color: Colors.blue.shade900,
-//              fontWeight: FontWeight.bold,
-//            ),
-//          ),
-//        ),
-//      ),
-//      shape: RoundedRectangleBorder(
-//        borderRadius: BorderRadius.circular(btnHeight * 0.5),
-//      ),
-//      onPressed: () {},
-//    );
-//  }
 }

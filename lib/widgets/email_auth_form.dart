@@ -28,7 +28,6 @@ class EmailAuthFormState extends State<EmailAuthForm> with SingleTickerProviderS
   AnimationController _animController;
   Animation<double> _sizeAnim;
 
-  final _validator = Validator();
   bool _autovalidate = false;
 
   @override
@@ -186,7 +185,7 @@ class EmailAuthFormState extends State<EmailAuthForm> with SingleTickerProviderS
           if (val.length > 1) return;
           setState(() => _emptyEmail = val.isEmpty);
         },
-        validator: _validator.validateEmail,
+        validator: EmailPassValidator.validateEmail,
       ),
     ];
   }
@@ -239,7 +238,7 @@ class EmailAuthFormState extends State<EmailAuthForm> with SingleTickerProviderS
           if (val.length > 1) return;
           setState(() => _emptyPassword = val.isEmpty);
         },
-        validator: _validator.validatePassword,
+        validator: EmailPassValidator.validatePassword,
       ),
     ];
   }
@@ -296,7 +295,7 @@ class EmailAuthFormState extends State<EmailAuthForm> with SingleTickerProviderS
               setState(() => _emptyConfirm = val.isEmpty);
             },
             validator: (val) {
-              return _validator.validateConfirm(val, _passwordController.text);
+              return EmailPassValidator.validateConfirm(val, _passwordController.text);
             },
           ),
         ],

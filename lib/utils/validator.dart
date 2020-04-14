@@ -1,23 +1,30 @@
-class Validator {
-  final _emailRegExp =
+class EmailPassValidator {
+  static final _emailRegExp =
       RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
 
-  String validateEmail(String val) {
-    if (val.isEmpty) return "Please provide an email";
-    if (!_emailRegExp.hasMatch(val)) return "Invalid email";
+  static String validateEmail(String email) {
+    if (email.isEmpty) return "Please provide an email";
+    if (!_emailRegExp.hasMatch(email)) return "Invalid email";
     return null;
   }
 
-  String validatePassword(String val) {
-    if (val.isEmpty) return "Please provide a password";
+  static String validatePassword(String pass) {
+    if (pass.isEmpty) return "Please provide a password";
     // TODO check the number of characters
     // TODO check password strength
     return null;
   }
 
-  String validateConfirm(String val, String pass) {
-    if (val.isEmpty) return "Please provide a confirm password";
-    if (val != pass) return "Confirm password does not match";
+  static String validateConfirm(String confirm, String pass) {
+    if (confirm.isEmpty) return "Please provide a confirm password";
+    if (confirm != pass) return "Confirm password does not match";
+    return null;
+  }
+}
+
+class CreateClassValidator {
+  static String validateClassName(String name) {
+    if (name.isEmpty) return "Please provide a class name";
     return null;
   }
 }

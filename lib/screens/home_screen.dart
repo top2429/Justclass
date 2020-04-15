@@ -24,7 +24,7 @@ class HomeScreen extends StatelessWidget {
           headerHeight: headerHeight,
           iconPosition: BackdropIconPosition.action,
           appBarColor: Theme.of(context).backgroundColor,
-          backlayerColor: Theme.of(context).backgroundColor,
+          backLayerColor: Theme.of(context).backgroundColor,
           leading: IconButton(icon: const Icon(Icons.menu), onPressed: () => _drawer.currentState.swap()),
           actions: <Widget>[IconButton(icon: const Icon(Icons.more_vert), onPressed: () {})],
           backLayer: LayoutBuilder(

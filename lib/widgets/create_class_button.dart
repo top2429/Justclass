@@ -83,7 +83,7 @@ class _CreateClassButtonState extends State<CreateClassButton> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
                     isLoading
-                        ? const SpinKitDualRing(color: AllThemes.primaryColor, size: 15, lineWidth: 2)
+                        ? const SpinKitDualRing(color: AllThemes.primaryColor, size: 15, lineWidth: 1.5)
                         : const Icon(Icons.add, color: AllThemes.primaryColor),
                     Flexible(
                       child: FittedBox(

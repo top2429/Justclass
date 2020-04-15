@@ -113,10 +113,10 @@ class ScaleDrawerWrapperState extends State<ScaleDrawerWrapper> with SingleTicke
                       decoration: BoxDecoration(
                         color: Colors.transparent,
                         boxShadow: [BoxShadow(color: Colors.black38, blurRadius: 15, offset: Offset(3, 3))],
-                        borderRadius: (_controller.value == 0) ? BorderRadius.zero : BorderRadius.circular(20),
+                        borderRadius: (_controller.value == 0) ? BorderRadius.zero : BorderRadius.circular(15),
                       ),
                       child: ClipRRect(
-                        borderRadius: (_controller.value == 0) ? BorderRadius.zero : BorderRadius.circular(20),
+                        borderRadius: (_controller.value == 0) ? BorderRadius.zero : BorderRadius.circular(15),
                         child: IgnorePointer(ignoring: !_controller.isDismissed, child: child),
                       ),
                     ),

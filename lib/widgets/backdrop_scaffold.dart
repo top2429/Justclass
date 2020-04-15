@@ -27,7 +27,7 @@ class BackdropScaffold extends StatefulWidget {
   final bool stickyFrontLayer;
   final Curve animationCurve;
   final Color appBarColor;
-  final Color backlayerColor;
+  final Color backLayerColor;
   final Widget leading;
 
   BackdropScaffold({
@@ -39,14 +39,14 @@ class BackdropScaffold extends StatefulWidget {
     this.actions = const <Widget>[],
     this.headerHeight = 32.0,
     this.frontLayerBorderRadius = const BorderRadius.only(
-      topLeft: Radius.circular(16.0),
-      topRight: Radius.circular(16.0),
+      topLeft: Radius.circular(15.0),
+      topRight: Radius.circular(15.0),
     ),
     this.iconPosition = BackdropIconPosition.leading,
     this.stickyFrontLayer = false,
     this.animationCurve = Curves.linear,
     this.appBarColor = Colors.blue,
-    this.backlayerColor = Colors.blue,
+    this.backLayerColor = Colors.blue,
   });
 
   @override
@@ -154,7 +154,7 @@ class _BackdropScaffoldState extends State<BackdropScaffold> with SingleTickerPr
       canRequestFocus: isBackPanelVisible,
       child: Container(
         width: double.infinity,
-        color: widget.backlayerColor,
+        color: widget.backLayerColor,
         child: Column(
           children: <Widget>[
             Flexible(key: _backLayerKey, child: widget.backLayer ?? Container()),
@@ -191,6 +191,7 @@ class _BackdropScaffoldState extends State<BackdropScaffold> with SingleTickerPr
       child: Scaffold(
         key: scaffoldKey,
         resizeToAvoidBottomInset: false,
+        backgroundColor: widget.backLayerColor,
         appBar: AppBar(
           backgroundColor: widget.appBarColor,
           title: widget.title,

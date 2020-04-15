@@ -83,14 +83,14 @@ class _CreateClassButtonState extends State<CreateClassButton> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
                     isLoading
-                        ? const SpinKitDualRing(color: AllThemes.darkBlue, size: 15, lineWidth: 2)
-                        : const Icon(Icons.add, color: AllThemes.darkBlue),
+                        ? const SpinKitDualRing(color: AllThemes.primaryColor, size: 15, lineWidth: 2)
+                        : const Icon(Icons.add, color: AllThemes.primaryColor),
                     Flexible(
                       child: FittedBox(
                         child: Text(
                           isLoading ? 'Creating...' : 'Create class',
                           style: TextStyle(
-                            color: AllThemes.darkBlue,
+                            color: AllThemes.primaryColor,
                             fontWeight: FontWeight.bold,
                             fontSize: btnHeight * 0.4,
                           ),

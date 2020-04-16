@@ -3,8 +3,7 @@ import 'package:justclass/providers/auth.dart';
 import 'package:justclass/providers/class_manager.dart';
 import 'package:justclass/screens/auth_screen.dart';
 import 'package:justclass/screens/home_screen.dart';
-import 'package:justclass/screens/loading_screen.dart';
-import 'package:justclass/screens/user_screen_test.dart';
+import 'package:justclass/screens/splash_screen.dart';
 import 'package:justclass/all_themes.dart';
 import 'package:provider/provider.dart';
 
@@ -21,18 +20,34 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => Auth()),
         ChangeNotifierProvider(create: (_) => ClassManager()),
       ],
-      child: MaterialApp(
-        title: "Justclass",
-        debugShowCheckedModeBanner: false,
-        theme: AllThemes.appTheme,
-        initialRoute: HomeScreen.routeName,
-        routes: {
-          LoadingScreen.routeName: (_) => LoadingScreen(),
-          AuthScreen.routeName: (_) => AuthScreen(),
-          HomeScreen.routeName: (_) => HomeScreen(),
-          UserScreen.routeName: (_) => UserScreen(),
+      child: Consumer<Auth>(
+        builder: (_, auth, __) {
+          return MaterialApp(
+            title: 'JustClass',
+            debugShowCheckedModeBanner: false,
+            theme: AllThemes.appTheme,
+            home: _buildFirstScreen(auth),
+            routes: {
+              AuthScreen.routeName: (_) => AuthScreen(),
+              HomeScreen.routeName: (_) => HomeScreen(),
+            },
+          );
         },
       ),
     );
+  }
+
+  Widget _buildFirstScreen(Auth auth) {
+    return (auth.user == null)
+        ? FutureBuilder(
+            future: auth.tryAutoSignIn(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting)
+                return SplashScreen();
+              else
+                return AuthScreen();
+            },
+          )
+        : HomeScreen();
   }
 }

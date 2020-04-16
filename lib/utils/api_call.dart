@@ -24,7 +24,7 @@ class ApiCall {
     if (response.statusCode != 200) throw HttpException();
 
     final isNew = json.decode(response.body)['newUser'];
-    return Future.value(isNew);
+    return isNew;
   }
 
   static Future<Class> createClass(String uid, NewClassData data) async {
@@ -57,7 +57,6 @@ class ApiCall {
       room: data.room,
       theme: data.theme,
     );
-
-    return Future.value(newClass);
+    return newClass;
   }
 }

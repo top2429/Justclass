@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:justclass/providers/auth.dart';
 import 'package:justclass/screens/home_screen.dart';
-import 'package:justclass/screens/user_screen_test.dart';
 import 'package:justclass/widgets/app_snack_bar.dart';
 import 'package:provider/provider.dart';
 
@@ -12,10 +11,6 @@ class OAuthRow extends StatelessWidget {
 
   void _toHomeScreen(BuildContext context) {
     Navigator.of(context).pushReplacementNamed(HomeScreen.routeName);
-  }
-
-  void _toUserScreen(BuildContext context) {
-    Navigator.of(context).pushReplacementNamed(UserScreen.routeName);
   }
 
   void _signInFacebook(Auth auth, BuildContext context) async {
@@ -29,7 +24,7 @@ class OAuthRow extends StatelessWidget {
     _changeLoadingStatus(true);
     try {
       await auth.signInGoogle();
-      if (auth.currentUser != null) _toUserScreen(context);
+      if (auth.user != null) _toHomeScreen(context);
     } catch (error) {
       AppSnackBar.show(context, message: error.toString());
     } finally {

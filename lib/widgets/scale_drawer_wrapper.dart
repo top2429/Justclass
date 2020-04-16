@@ -19,7 +19,7 @@ class ScaleDrawerWrapperState extends State<ScaleDrawerWrapper> with SingleTicke
   Animation<double> _translateAnim;
   Animation<double> _scaleAnim;
 
-  final _drawerWidth = 250.0;
+  final _drawerWidth = 300.0;
 
   bool _canBeDragged = true;
 

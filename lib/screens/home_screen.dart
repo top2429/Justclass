@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:justclass/all_themes.dart';
 import 'package:justclass/widgets/backdrop_scaffold.dart';
 import 'package:justclass/widgets/create_class_button.dart';
+import 'package:justclass/widgets/home_drawer_content.dart';
 import 'package:justclass/widgets/join_class_button.dart';
 import 'package:justclass/widgets/scale_drawer_wrapper.dart';
 
@@ -18,7 +19,7 @@ class HomeScreen extends StatelessWidget {
       backgroundColor: AllThemes.primaryColor,
       body: ScaleDrawerWrapper(
         key: _drawer,
-        drawerContent: Text('Drawer'),
+        drawerContent: HomeDrawerContent(),
         scaffold: BackdropScaffold(
           title: const Text("JustClass", style: TextStyle(fontWeight: FontWeight.bold)),
           headerHeight: headerHeight,

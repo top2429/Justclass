@@ -60,7 +60,7 @@ class EmailAuthFormState extends State<EmailAuthForm> with SingleTickerProviderS
     });
   }
 
-  void toLoginMode() {
+  void toSignInMode() {
     _unFocus();
     _form.currentState.reset();
     _animController.reverse().then((_) {
@@ -222,8 +222,7 @@ class EmailAuthFormState extends State<EmailAuthForm> with SingleTickerProviderS
               : IconButton(
                   icon: const Icon(Icons.cancel, color: Colors.white54),
                   onPressed: () {
-                    WidgetsBinding.instance
-                        .addPostFrameCallback((_) => _passwordController.clear());
+                    WidgetsBinding.instance.addPostFrameCallback((_) => _passwordController.clear());
                     setState(() => _emptyPassword = true);
                   },
                 ),
@@ -232,8 +231,7 @@ class EmailAuthFormState extends State<EmailAuthForm> with SingleTickerProviderS
         ),
         focusNode: _passwordFocusNode,
         controller: _passwordController,
-        onEditingComplete:
-            _isSigningIn ? null : () => FocusScope.of(context).requestFocus(_confirmFocusNode),
+        onEditingComplete: _isSigningIn ? null : () => FocusScope.of(context).requestFocus(_confirmFocusNode),
         onChanged: (val) {
           if (val.length > 1) return;
           setState(() => _emptyPassword = val.isEmpty);
@@ -280,8 +278,7 @@ class EmailAuthFormState extends State<EmailAuthForm> with SingleTickerProviderS
                   : IconButton(
                       icon: const Icon(Icons.cancel, color: Colors.white54),
                       onPressed: () {
-                        WidgetsBinding.instance
-                            .addPostFrameCallback((_) => _confirmController.clear());
+                        WidgetsBinding.instance.addPostFrameCallback((_) => _confirmController.clear());
                         setState(() => _emptyConfirm = true);
                       },
                     ),

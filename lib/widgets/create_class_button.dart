@@ -19,7 +19,7 @@ class _CreateClassButtonState extends State<CreateClassButton> {
   void addNewClass() async {
     try {
       setState(() => isLoading = true);
-      final uid = Provider.of<Auth>(context, listen: false).currentUser.uid;
+      final uid = Provider.of<Auth>(context, listen: false).user.uid;
       await Provider.of<ClassManager>(context, listen: false).add(uid, data);
     } catch (error) {
       AppSnackBar.show(context, message: error.toString(), bgColor: Colors.amberAccent);

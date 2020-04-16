@@ -244,58 +244,61 @@ class EmailAuthFormState extends State<EmailAuthForm> with SingleTickerProviderS
   Widget _buildConfirmInput() {
     return SizeTransition(
       sizeFactor: _sizeAnim,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          const SizedBox(height: 20),
-          const Text("Confirm Password", style: TextStyle(color: Colors.white70, fontSize: 15)),
-          const SizedBox(height: 5),
-          TextFormField(
-            autovalidate: _autoValidate,
-            obscureText: true,
-            cursorColor: Colors.white70,
-            style: const TextStyle(color: Colors.white70, fontSize: 17),
-            textInputAction: TextInputAction.done,
-            decoration: InputDecoration(
-              filled: true,
-              fillColor: Colors.white.withOpacity(0.1),
-              contentPadding: const EdgeInsets.all(0),
-              enabledBorder: const OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.transparent),
+      child: FadeTransition(
+        opacity: _animController,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            const SizedBox(height: 20),
+            const Text("Confirm Password", style: TextStyle(color: Colors.white70, fontSize: 15)),
+            const SizedBox(height: 5),
+            TextFormField(
+              autovalidate: _autoValidate,
+              obscureText: true,
+              cursorColor: Colors.white70,
+              style: const TextStyle(color: Colors.white70, fontSize: 17),
+              textInputAction: TextInputAction.done,
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: Colors.white.withOpacity(0.1),
+                contentPadding: const EdgeInsets.all(0),
+                enabledBorder: const OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.transparent),
+                ),
+                focusedBorder: const OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white70),
+                ),
+                focusedErrorBorder: const OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.amberAccent),
+                ),
+                errorBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.amberAccent.withOpacity(0.5)),
+                ),
+                prefixIcon: const Icon(Icons.beenhere, color: Colors.white60),
+                suffixIcon: (_emptyConfirm)
+                    ? const SizedBox(width: 0)
+                    : IconButton(
+                        icon: const Icon(Icons.cancel, color: Colors.white54),
+                        onPressed: () {
+                          WidgetsBinding.instance.addPostFrameCallback((_) => _confirmController.clear());
+                          setState(() => _emptyConfirm = true);
+                        },
+                      ),
+                errorStyle: const TextStyle(color: Colors.amberAccent, fontSize: 14),
+                errorText: null,
               ),
-              focusedBorder: const OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.white70),
-              ),
-              focusedErrorBorder: const OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.amberAccent),
-              ),
-              errorBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.amberAccent.withOpacity(0.5)),
-              ),
-              prefixIcon: const Icon(Icons.beenhere, color: Colors.white60),
-              suffixIcon: (_emptyConfirm)
-                  ? const SizedBox(width: 0)
-                  : IconButton(
-                      icon: const Icon(Icons.cancel, color: Colors.white54),
-                      onPressed: () {
-                        WidgetsBinding.instance.addPostFrameCallback((_) => _confirmController.clear());
-                        setState(() => _emptyConfirm = true);
-                      },
-                    ),
-              errorStyle: const TextStyle(color: Colors.amberAccent, fontSize: 14),
-              errorText: null,
+              focusNode: _confirmFocusNode,
+              controller: _confirmController,
+              onChanged: (val) {
+                if (val.length > 1) return;
+                setState(() => _emptyConfirm = val.isEmpty);
+              },
+              validator: (val) {
+                return EmailPassValidator.validateConfirm(val, _passwordController.text);
+              },
             ),
-            focusNode: _confirmFocusNode,
-            controller: _confirmController,
-            onChanged: (val) {
-              if (val.length > 1) return;
-              setState(() => _emptyConfirm = val.isEmpty);
-            },
-            validator: (val) {
-              return EmailPassValidator.validateConfirm(val, _passwordController.text);
-            },
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

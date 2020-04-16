@@ -27,6 +27,7 @@ class EmailAuthFormState extends State<EmailAuthForm> with SingleTickerProviderS
 
   AnimationController _animController;
   Animation<double> _sizeAnim;
+  Animation<double> _fadeAnim;
 
   bool _autoValidate = false;
 
@@ -34,6 +35,10 @@ class EmailAuthFormState extends State<EmailAuthForm> with SingleTickerProviderS
   void initState() {
     _animController = AnimationController(duration: const Duration(milliseconds: 200), vsync: this);
     _sizeAnim = Tween<double>(begin: 0, end: 1).animate(_animController);
+    _fadeAnim = Tween<double>(begin: 0, end: 1).animate(CurvedAnimation(
+      parent: _animController,
+      curve: Interval(0.4, 1),
+    ));
 
     super.initState();
   }
@@ -51,23 +56,23 @@ class EmailAuthFormState extends State<EmailAuthForm> with SingleTickerProviderS
   }
 
   void toSignUpMode() {
-    _unFocus();
-    _form.currentState.reset();
+    _setFormToInitState();
     _animController.forward().then((_) {
-      setState(() {
-        _isSigningIn = false;
-      });
+      setState(() => _isSigningIn = false);
     });
   }
 
   void toSignInMode() {
-    _unFocus();
-    _form.currentState.reset();
+    _setFormToInitState();
     _animController.reverse().then((_) {
-      setState(() {
-        _isSigningIn = true;
-      });
+      setState(() => _isSigningIn = true);
     });
+  }
+
+  void _setFormToInitState() {
+    _unFocus();
+    setState(() => _autoValidate = false);
+    _form.currentState.reset();
   }
 
   void _unFocus() {
@@ -245,7 +250,7 @@ class EmailAuthFormState extends State<EmailAuthForm> with SingleTickerProviderS
     return SizeTransition(
       sizeFactor: _sizeAnim,
       child: FadeTransition(
-        opacity: _animController,
+        opacity: _fadeAnim,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[

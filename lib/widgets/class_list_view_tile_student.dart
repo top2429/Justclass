@@ -10,18 +10,18 @@ class ClassListViewTileStudent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(10),
+      padding: const EdgeInsets.all(7),
       child: Stack(
         children: <Widget>[
           Container(
             height: 150,
             width: double.infinity,
-            child: Hero(
-              tag: 'theme',
-              child: ClipRRect(
-                borderRadius: _radius,
-                child: Consumer<Class>(
-                  builder: (_, data, __) => Image.asset(AllThemes.classTheme(data.theme).imageUrl, fit: BoxFit.cover),
+            child: ClipRRect(
+              borderRadius: _radius,
+              child: Consumer<Class>(
+                builder: (_, data, __) => Hero(
+                  tag: data.cid,
+                  child: Image.asset(AllThemes.classTheme(data.theme).imageUrl, fit: BoxFit.cover),
                 ),
               ),
             ),
@@ -60,12 +60,12 @@ class ClassListViewTileStudent extends StatelessWidget {
                         PopupMenuButton(
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
                           icon: const Icon(Icons.more_vert, color: Colors.white),
-                          offset: Offset(0, 40),
-                          onSelected: (val) {},
+                          offset: const Offset(0, 40),
                           itemBuilder: (_) => [
                             const PopupMenuItem(child: Text('Leave'), value: 'leave'),
                             const PopupMenuItem(child: Text('Report'), value: 'report'),
                           ],
+                          onSelected: (val) {},
                         ),
                       ],
                     ),

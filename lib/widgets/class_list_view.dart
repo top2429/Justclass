@@ -40,7 +40,7 @@ class ClassListView extends StatelessWidget {
             builder: (_, classMgr, __) {
               final classes = classMgr.getClasses(viewType);
               return ListView(
-                padding: const EdgeInsets.all(13),
+                padding: const EdgeInsets.all(10),
                 children: classes
                     .map((c) => ChangeNotifierProvider.value(
                           value: c,

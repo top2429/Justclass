@@ -141,7 +141,7 @@ class _BackdropScaffoldState extends State<BackdropScaffold> with SingleTickerPr
           child: Container(
             decoration: BoxDecoration(
               borderRadius: widget.frontLayerBorderRadius,
-              color: Colors.white38,
+              color: Colors.black12,
             ),
           ),
         ),

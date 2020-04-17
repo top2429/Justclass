@@ -19,6 +19,10 @@ class AllThemes {
       imageUrl: 'assets/images/themes/theme-03.jpg',
       primaryColor: Color(0xff8e44ad),
     ),
+    ClassTheme(
+      imageUrl: 'assets/images/themes/theme-04.jpg',
+      primaryColor: Color(0xff8e44ad),
+    ),
   ];
 
   static ClassTheme classTheme(int theme) => _classThemes[theme];

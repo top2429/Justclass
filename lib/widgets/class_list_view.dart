@@ -32,72 +32,80 @@ class ClassListView extends StatelessWidget {
               AppSnackBar.show(context, message: error.toString());
             }
           },
-          child: ListView(
-            padding: const EdgeInsets.all(20),
-            children: <Widget>[
-              Stack(
-                children: <Widget>[
-                  Container(
-                    height: 150,
-                    width: double.infinity,
-                    child: Hero(
-                      tag: 'theme',
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(8),
-                        child: Image.asset(AllThemes.classTheme(0).imageUrl, fit: BoxFit.cover),
-                      ),
-                    ),
-                  ),
-                  Positioned.fill(
-                    child: Material(
-                      borderRadius: BorderRadius.circular(8),
-                      color: Colors.black26,
-                      child: InkWell(
-                        splashColor: Colors.black12,
-                        borderRadius: BorderRadius.circular(8),
-                        onTap: () {},
-                      ),
-                    ),
-                  ),
-                  Positioned.fill(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.all(15),
-                          child: DefaultTextStyle.merge(
-                            style: TextStyle(color: Colors.white, fontSize: 17),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                Text('Title', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-                                Text('Section'),
-                                Spacer(),
-                                Text('Number of student'),
-                              ],
-                            ),
+          child: SingleChildScrollView(
+            child: Column(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Stack(
+                    children: <Widget>[
+                      Container(
+                        height: 150,
+                        width: double.infinity,
+                        child: Hero(
+                          tag: 'theme',
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: Image.asset(AllThemes.classTheme(0).imageUrl, fit: BoxFit.cover),
                           ),
                         ),
-                        Column(
-                          children: <Widget>[
-                            PopupMenuButton(
-                              onSelected: (val) {},
-                              itemBuilder: (_) => [
-                                PopupMenuItem(
-                                  child: Text('Leave'),
-                                ),
-                              ],
-                              offset: Offset(0, 50),
-                            ),
-                          ],
+                      ),
+                      Positioned.fill(
+                        child: Material(
+                          borderRadius: BorderRadius.circular(8),
+                          color: Colors.black26,
+                          child: InkWell(
+                            splashColor: Colors.black12,
+                            borderRadius: BorderRadius.circular(8),
+                            onTap: () {},
+                          ),
                         ),
-                      ],
-                    ),
+                      ),
+                      Positioned.fill(
+                        child: Padding(
+                          padding: const EdgeInsets.all(15),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              DefaultTextStyle.merge(
+                                style: TextStyle(color: Colors.white, fontSize: 17),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    Text('Title', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+                                    Text('Section'),
+                                    Spacer(),
+                                    Text('Number of student'),
+                                  ],
+                                ),
+                              ),
+                              Column(
+                                children: <Widget>[
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 5),
+                                    child: PopupMenuButton(
+                                      child: Icon(Icons.more_vert),
+                                      onSelected: (val) {},
+                                      itemBuilder: (_) => [
+                                        PopupMenuItem(
+                                          child: Text('Leave'),
+                                        ),
+                                      ],
+                                      offset: Offset(0, 50),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            ],
+                ),
+              ],
+            ),
           ),
         );
       },

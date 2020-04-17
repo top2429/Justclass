@@ -56,7 +56,7 @@ class Auth with ChangeNotifier {
   Future<void> signInGoogle() async {
     try {
       final user = await _googleSignIn.signIn();
-      if (user == null) return Future.value();
+      if (user == null) return;
 
       _type = AuthType.OAUTH_GOOGLE;
       print('Auth Type: ${_type.name}');

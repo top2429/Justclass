@@ -58,6 +58,6 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget _buildFrontLayer() {
-    return ClassListView();
+    return ClassListView(viewType: Filter.ALL);
   }
 }

@@ -22,7 +22,7 @@ class ApiCall {
           'photoUrl': user.photoUrl,
         }),
       );
-      if (response.statusCode != 200) throw HttpException();
+      if (response.statusCode >= 400) throw HttpException();
 
       final isNew = json.decode(response.body)['newUser'];
       return isNew;

@@ -7,6 +7,18 @@ class AllThemes {
       imageUrl: 'assets/images/themes/theme-00.jpg',
       primaryColor: primaryColor,
     ),
+    ClassTheme(
+      imageUrl: 'assets/images/themes/theme-01.jpg',
+      primaryColor: Color(0xff27ae60),
+    ),
+    ClassTheme(
+      imageUrl: 'assets/images/themes/theme-02.jpg',
+      primaryColor: Color(0xfff0932b),
+    ),
+    ClassTheme(
+      imageUrl: 'assets/images/themes/theme-03.jpg',
+      primaryColor: Color(0xff8e44ad),
+    ),
   ];
 
   static ClassTheme classTheme(int theme) => _classThemes[theme];

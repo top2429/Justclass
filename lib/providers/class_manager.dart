@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:justclass/providers/class.dart';
 import 'package:justclass/utils/api_call.dart';
-import 'package:justclass/utils/http_exception.dart';
 import 'package:justclass/utils/test.dart';
+import 'package:justclass/widgets/class_list_view.dart';
 import 'package:justclass/widgets/create_class_form.dart';
 
 class ClassManager with ChangeNotifier {
@@ -22,8 +22,59 @@ class ClassManager with ChangeNotifier {
 
   Future<void> fetchData() async {
     await Test.delay(1);
-//    throw HttpException();
-
+    _classes = testData;
     notifyListeners();
   }
+
+  List<Class> getClasses(Filter type) {
+    switch (type) {
+      case Filter.ALL:
+        return _classes;
+      case Filter.CREATED:
+        return _classes.where((c) => c.role == ClassRole.OWNER);
+      case Filter.JOINED:
+        return _classes.where((c) => c.role == ClassRole.STUDENT);
+      case Filter.ASSISTING:
+        return _classes.where((c) => c.role == ClassRole.TEACHER);
+      default:
+        return [];
+    }
+  }
+
+  static final testData = [
+    Class(
+      cid: '0',
+      title: 'KTPM_1234',
+      publicCode: '010ax31',
+      role: ClassRole.OWNER,
+      theme: 0,
+      studentCount: 12,
+      section: 'Môn: Kiến trúc phần mềm',
+    ),
+    Class(
+      cid: '1',
+      title: 'PPHDH_1996',
+      publicCode: '010ax31',
+      role: ClassRole.TEACHER,
+      theme: 1,
+      section: 'Môn: Phương pháp học đại học',
+      ownerName: 'Minh Ngoc',
+    ),
+    Class(
+      cid: '2',
+      title: 'Cơ thể học vận động',
+      publicCode: '010ax31',
+      role: ClassRole.STUDENT,
+      theme: 2,
+      ownerName: 'Hieu Pham',
+    ),
+    Class(
+      cid: '3',
+      title: 'THCNTT3_100',
+      publicCode: '010ax31',
+      role: ClassRole.STUDENT,
+      theme: 3,
+      ownerName: 'Hieu Pham',
+    ),
+  ];
 }

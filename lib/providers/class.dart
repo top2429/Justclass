@@ -25,6 +25,8 @@ class Class with ChangeNotifier {
   ClassRole role;
   String publicCode;
   String permissionCode;
+  int studentCount;
+  String ownerName;
   int theme;
 
   Class({
@@ -33,10 +35,12 @@ class Class with ChangeNotifier {
     @required this.publicCode,
     @required this.role,
     @required this.theme,
-    this.permissionCode,
-    this.subject,
-    this.section,
-    this.description,
-    this.room,
+    this.studentCount = 0,
+    this.permissionCode = '',
+    this.subject = '',
+    this.section = '',
+    this.description = '',
+    this.room = '',
+    this.ownerName = '',
   });
 }

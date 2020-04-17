@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
         builder: (_, auth, __) {
           return MaterialApp(
             title: 'JustClass',
-            debugShowCheckedModeBanner: false,
+//            debugShowCheckedModeBanner: false,
             theme: AllThemes.appTheme,
             home: _buildFirstScreen(auth),
             routes: {

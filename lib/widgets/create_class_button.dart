@@ -53,10 +53,7 @@ class _CreateClassButtonState extends State<CreateClassButton> {
 
         return Stack(
           children: <Widget>[
-            Container(
-              height: height,
-              width: width,
-            ),
+            Container(height: height, width: width),
             Positioned(
               width: width,
               child: Material(

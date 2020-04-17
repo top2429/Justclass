@@ -30,9 +30,9 @@ class Class with ChangeNotifier {
   Class({
     @required this.cid,
     @required this.title,
-    @required this.theme,
     @required this.publicCode,
     @required this.role,
+    @required this.theme,
     this.permissionCode,
     this.subject,
     this.section,

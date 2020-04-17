@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:justclass/providers/class.dart';
 import 'package:justclass/utils/api_call.dart';
+import 'package:justclass/utils/http_exception.dart';
+import 'package:justclass/utils/test.dart';
 import 'package:justclass/widgets/create_class_form.dart';
 
 class ClassManager with ChangeNotifier {
@@ -16,5 +18,12 @@ class ClassManager with ChangeNotifier {
     } catch (error) {
       throw error;
     }
+  }
+
+  Future<void> fetchData() async {
+    await Test.delay(1);
+//    throw HttpException();
+
+    notifyListeners();
   }
 }

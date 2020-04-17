@@ -6,16 +6,16 @@ import 'package:justclass/models/user.dart';
 import 'package:justclass/utils/api_call.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-enum AuthType { FirebaseEmailPassword, OAuthGoogle, OAuthFacebook }
+enum AuthType { FIREBASE_EMAIL_PASS, OAUTH_GOOGLE, OAUTH_FACEBOOK }
 
 extension AuthTypes on AuthType {
   String get name {
     switch (this) {
-      case AuthType.FirebaseEmailPassword:
+      case AuthType.FIREBASE_EMAIL_PASS:
         return "Email and Password";
-      case AuthType.OAuthGoogle:
+      case AuthType.OAUTH_GOOGLE:
         return "Google Account";
-      case AuthType.OAuthFacebook:
+      case AuthType.OAUTH_FACEBOOK:
         return "Facebook Account";
       default:
         return "";
@@ -58,7 +58,7 @@ class Auth with ChangeNotifier {
       final user = await _googleSignIn.signIn();
       if (user == null) return Future.value();
 
-      _type = AuthType.OAuthGoogle;
+      _type = AuthType.OAUTH_GOOGLE;
       print('Auth Type: ${_type.name}');
 
       await _storeUserData(user);
@@ -70,7 +70,7 @@ class Auth with ChangeNotifier {
 
   Future<void> _storeUserData(dynamic anyUser) async {
     switch (_type) {
-      case AuthType.OAuthGoogle:
+      case AuthType.OAUTH_GOOGLE:
         final ggUser = anyUser as GoogleSignInAccount;
         _user = User(
           uid: ggUser.id,
@@ -79,10 +79,10 @@ class Auth with ChangeNotifier {
           photoUrl: ggUser.photoUrl,
         );
         break;
-      case AuthType.FirebaseEmailPassword:
+      case AuthType.FIREBASE_EMAIL_PASS:
         // TODO: Handle this case.
         break;
-      case AuthType.OAuthFacebook:
+      case AuthType.OAUTH_FACEBOOK:
         // TODO: Handle this case.
         break;
     }
@@ -109,13 +109,13 @@ class Auth with ChangeNotifier {
 
     try {
       switch (_type) {
-        case AuthType.OAuthGoogle:
+        case AuthType.OAUTH_GOOGLE:
           await _googleSignIn.signOut();
           break;
-        case AuthType.FirebaseEmailPassword:
+        case AuthType.FIREBASE_EMAIL_PASS:
           // TODO: Handle this case.
           break;
-        case AuthType.OAuthFacebook:
+        case AuthType.OAUTH_FACEBOOK:
           // TODO: Handle this case.
           break;
         default:

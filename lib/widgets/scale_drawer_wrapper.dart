@@ -19,13 +19,19 @@ class ScaleDrawerWrapperState extends State<ScaleDrawerWrapper> with SingleTicke
   Animation<double> _translateAnim;
   Animation<double> _scaleAnim;
 
-  final _drawerWidth = 300.0;
+  final _drawerWidth = 275.0;
 
   bool _canBeDragged = true;
 
   @override
   void initState() {
     _controller = AnimationController(duration: const Duration(milliseconds: 200), vsync: this);
+    _translateAnim = Tween<double>(begin: 0, end: _drawerWidth).animate(_controller);
+    _scaleAnim = Tween<double>(begin: 1, end: 0.7).animate(CurvedAnimation(
+      parent: _controller,
+      curve: Interval(0, 0.6),
+    ));
+
     super.initState();
   }
 
@@ -83,9 +89,6 @@ class ScaleDrawerWrapperState extends State<ScaleDrawerWrapper> with SingleTicke
 
   @override
   Widget build(BuildContext context) {
-    _translateAnim = Tween<double>(begin: 0, end: _drawerWidth).animate(_controller);
-    _scaleAnim = Tween<double>(begin: 1, end: 0.7).animate(_controller);
-
     return GestureDetector(
       onHorizontalDragStart: _onHorizontalDragStart,
       onHorizontalDragUpdate: _onHorizontalDragUpdate,

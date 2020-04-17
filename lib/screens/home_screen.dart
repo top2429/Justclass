@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:justclass/all_themes.dart';
 import 'package:justclass/widgets/backdrop_scaffold.dart';
+import 'package:justclass/widgets/class_list_view.dart';
 import 'package:justclass/widgets/create_class_button.dart';
 import 'package:justclass/widgets/home_drawer_content.dart';
 import 'package:justclass/widgets/join_class_button.dart';
@@ -16,6 +17,7 @@ class HomeScreen extends StatelessWidget {
     final headerHeight = (orientation == Orientation.portrait) ? 400.0 : 100.0;
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: AllThemes.primaryColor,
       body: ScaleDrawerWrapper(
         key: _drawer,
@@ -56,10 +58,6 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget _buildFrontLayer() {
-    return Container(
-      child: Center(
-        child: Text('My Classes'),
-      ),
-    );
+    return ClassListView();
   }
 }

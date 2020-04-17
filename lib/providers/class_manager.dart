@@ -35,7 +35,7 @@ class ClassManager with ChangeNotifier {
       case Filter.JOINED:
         return _classes.where((c) => c.role == ClassRole.STUDENT);
       case Filter.ASSISTING:
-        return _classes.where((c) => c.role == ClassRole.TEACHER);
+        return _classes.where((c) => c.role == ClassRole.ASSISTANT);
       default:
         return [];
     }
@@ -55,18 +55,10 @@ class ClassManager with ChangeNotifier {
       cid: '1',
       title: 'PPHDH_1996',
       publicCode: '010ax31',
-      role: ClassRole.TEACHER,
+      role: ClassRole.ASSISTANT,
       theme: 1,
       section: 'Môn: Phương pháp học đại học',
       ownerName: 'Minh Ngoc',
-    ),
-    Class(
-      cid: '2',
-      title: 'Cơ thể học vận động',
-      publicCode: '010ax31',
-      role: ClassRole.STUDENT,
-      theme: 2,
-      ownerName: 'Hieu Pham',
     ),
     Class(
       cid: '3',

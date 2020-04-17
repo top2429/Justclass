@@ -4,17 +4,17 @@ import 'package:provider/provider.dart';
 
 import '../all_themes.dart';
 
-class ClassListViewTileStudent extends StatelessWidget {
+class ClassListViewTileOwner extends StatelessWidget {
   final _radius = BorderRadius.circular(8);
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(10),
+      padding: const EdgeInsets.all(7),
       child: Stack(
         children: <Widget>[
           Container(
-            height: 150,
+            height: 140,
             width: double.infinity,
             child: Hero(
               tag: 'theme',
@@ -29,7 +29,7 @@ class ClassListViewTileStudent extends StatelessWidget {
           Positioned.fill(
             child: Material(
               borderRadius: _radius,
-              color: Colors.black38,
+              color: Colors.black26,
               child: InkWell(
                 splashColor: Colors.black12,
                 borderRadius: _radius,
@@ -46,10 +46,10 @@ class ClassListViewTileStudent extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
-                                Text(data.title, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-                                Text(data.section, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+                                Text(data.title, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                                Text(data.section, style: const TextStyle(fontSize: 15)),
                                 Spacer(),
-                                Text(data.ownerName, style: const TextStyle(fontSize: 15)),
+                                Text(data.studentCount.toString(), style: const TextStyle(fontSize: 15)),
                               ],
                             ),
                           )),
@@ -63,9 +63,15 @@ class ClassListViewTileStudent extends StatelessWidget {
                           offset: Offset(0, 40),
                           onSelected: (val) {},
                           itemBuilder: (_) => [
-                            const PopupMenuItem(child: Text('Leave'), value: 'leave'),
-                            const PopupMenuItem(child: Text('Report'), value: 'report'),
+                            const PopupMenuItem(child: Text('Edit'), value: 'edit'),
+                            const PopupMenuItem(child: Text('Archive'), value: 'archive'),
                           ],
+                        ),
+                        Container(
+                          width: 10,
+                          height: 10,
+                          margin: const EdgeInsets.all(10),
+                          decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
                         ),
                       ],
                     ),

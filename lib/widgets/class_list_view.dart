@@ -1,9 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:justclass/all_themes.dart';
+import 'package:justclass/providers/class.dart';
 import 'package:justclass/providers/class_manager.dart';
 import 'package:justclass/widgets/app_snack_bar.dart';
-import 'package:justclass/widgets/class_list_view_tile.dart';
+import 'package:justclass/widgets/class_list_view_tile_assistant.dart';
+import 'package:justclass/widgets/class_list_view_tile_student.dart';
+import 'package:justclass/widgets/class_list_view_tile_owner.dart';
 import 'package:justclass/widgets/fetch_error_icon.dart';
 import 'package:justclass/widgets/fetch_progress_indicator.dart';
 import 'package:provider/provider.dart';
@@ -37,11 +40,11 @@ class ClassListView extends StatelessWidget {
             builder: (_, classMgr, __) {
               final classes = classMgr.getClasses(viewType);
               return ListView(
-                padding: const EdgeInsets.all(10),
+                padding: const EdgeInsets.all(13),
                 children: classes
                     .map((c) => ChangeNotifierProvider.value(
                           value: c,
-                          child: ClassListViewTile(),
+                          child: _buildTile(c.role),
                         ))
                     .toList(),
               );
@@ -50,5 +53,19 @@ class ClassListView extends StatelessWidget {
         );
       },
     );
+  }
+
+  Widget _buildTile(ClassRole role) {
+    switch (role) {
+      case ClassRole.OWNER:
+        return ClassListViewTileOwner();
+      case ClassRole.ASSISTANT:
+        return ClassListViewTileAssistant();
+      case ClassRole.STUDENT:
+        return ClassListViewTileStudent();
+      case ClassRole.NOBODY:
+      default:
+        return Container();
+    }
   }
 }

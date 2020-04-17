@@ -1,13 +1,13 @@
 import 'package:flutter/foundation.dart';
 
-enum ClassRole { OWNER, TEACHER, STUDENT, NOBODY }
+enum ClassRole { OWNER, ASSISTANT, STUDENT, NOBODY }
 
 extension ClassRoles on ClassRole {
   static ClassRole getType(String role) {
     if (role == 'OWNER')
       return ClassRole.OWNER;
     else if (role == 'TEACHER')
-      return ClassRole.TEACHER;
+      return ClassRole.ASSISTANT;
     else if (role == 'STUDENT')
       return ClassRole.STUDENT;
     else

@@ -8,25 +8,13 @@ import 'package:justclass/widgets/create_class_form.dart';
 class ClassManager with ChangeNotifier {
   List<Class> _classes = [];
 
+  String _uid;
+
+  set uid(String uid) => _uid = uid;
+
   List<Class> get classes => [..._classes];
 
-  Future<void> add(String uid, NewClassData data) async {
-    try {
-      final newClass = await ApiCall.createClass(uid, data);
-      _classes.add(newClass);
-      notifyListeners();
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  Future<void> fetchData() async {
-    await Test.delay(1);
-    _classes = testData;
-    notifyListeners();
-  }
-
-  List<Class> getClasses(ViewType type) {
+  List<Class> getClassesOnViewType(ViewType type) {
     switch (type) {
       case ViewType.ALL:
         return _classes;
@@ -38,6 +26,25 @@ class ClassManager with ChangeNotifier {
         return _classes.where((c) => c.role == ClassRole.ASSISTANT).toList();
       default:
         return [];
+    }
+  }
+
+  Future<void> add(CreateClassFormData data) async {
+    try {
+      final newClass = await ApiCall.createClass(_uid, data);
+      _classes.add(newClass);
+      notifyListeners();
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  Future<void> fetchData() async {
+    try {
+      _classes = await ApiCall.fetchClassList(_uid);
+      notifyListeners();
+    } catch (error) {
+      throw error;
     }
   }
 

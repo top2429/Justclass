@@ -55,7 +55,7 @@ class ClassListViewTileAssistant extends StatelessWidget {
                                     style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                                     overflow: TextOverflow.ellipsis,
                                   ),
-                                  Text(data.section,
+                                  Text(data.subject,
                                       style: const TextStyle(fontSize: 14), overflow: TextOverflow.ellipsis),
                                   Spacer(),
                                   Text(countStr, style: const TextStyle(fontSize: 14)),

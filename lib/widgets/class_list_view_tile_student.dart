@@ -52,7 +52,7 @@ class ClassListViewTileStudent extends StatelessWidget {
                                   overflow: TextOverflow.ellipsis,
                                 ),
                                 Text(
-                                  data.section,
+                                  data.subject,
                                   style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
                                   overflow: TextOverflow.ellipsis,
                                 ),

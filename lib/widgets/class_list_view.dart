@@ -50,7 +50,7 @@ class ClassListViewState extends State<ClassListView> {
       future: Provider.of<ClassManager>(context, listen: false).fetchData,
       builder: (_, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) return FetchProgressIndicator();
-        if (snapshot.error != null) return FetchErrorPrompt();
+        if (snapshot.hasError) return FetchErrorPrompt();
         return RefreshIndicator(
           color: Themes.primaryColor,
           onRefresh: () async {
@@ -62,12 +62,12 @@ class ClassListViewState extends State<ClassListView> {
           },
           child: Consumer<ClassManager>(
             builder: (_, classMgr, __) {
-              final classes = classMgr.getClasses(_type);
+              final classes = classMgr.getClassesOnViewType(_type);
               return ListView(
                 padding: const EdgeInsets.all(10),
                 children: <Widget>[
                   Text('${_type.name} Classes', style: TextStyle(fontSize: 18), textAlign: TextAlign.center),
-                  const Divider(),
+                  const Divider(indent: 50,endIndent: 50),
                   ...classes
                       .map((c) => ChangeNotifierProvider.value(
                             value: c,

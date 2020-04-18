@@ -32,9 +32,9 @@ class Class with ChangeNotifier {
   Class({
     @required this.cid,
     @required this.title,
-    @required this.publicCode,
     @required this.role,
     @required this.theme,
+    this.publicCode = 'Not assigned',
     this.studentCount = 0,
     this.permissionCode = '',
     this.subject = '',

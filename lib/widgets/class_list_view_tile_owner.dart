@@ -56,7 +56,7 @@ class ClassListViewTileOwner extends StatelessWidget {
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                   Text(
-                                    data.section,
+                                    data.subject,
                                     style: const TextStyle(fontSize: 14),
                                     overflow: TextOverflow.ellipsis,
                                   ),
@@ -76,6 +76,7 @@ class ClassListViewTileOwner extends StatelessWidget {
                           offset: const Offset(0, 40),
                           itemBuilder: (_) => [
                             const PopupMenuItem(child: Text('Edit'), value: 'edit', height: 40),
+                            const PopupMenuItem(child: Text('Archive'), value: 'archive', height: 40),
                           ],
                           onSelected: (val) {},
                         ),

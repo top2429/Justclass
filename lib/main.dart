@@ -19,13 +19,16 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => Auth()),
-        ChangeNotifierProvider(create: (_) => ClassManager()),
+        ChangeNotifierProxyProvider<Auth, ClassManager>(
+          create: (_) => ClassManager(),
+          update: (_, auth, classMgr) => classMgr..uid = auth.user.uid,
+        ),
       ],
       child: Consumer<Auth>(
         builder: (_, auth, __) {
           return MaterialApp(
             title: 'JustClass',
-            debugShowCheckedModeBanner: false,
+//            debugShowCheckedModeBanner: false,
             theme: Themes.appTheme,
             home: _buildFirstScreen(auth),
             routes: {
@@ -43,10 +46,17 @@ class MyApp extends StatelessWidget {
         ? FutureBuilder(
             future: auth.tryAutoSignIn(),
             builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting)
-                return SplashScreen();
-              else
-                return AuthScreen();
+              if (snapshot.connectionState == ConnectionState.waiting) return SplashScreen();
+              if (snapshot.hasError) {
+                return Scaffold(
+                  body: Container(
+                    width: double.infinity,
+                    height: double.infinity,
+                    color: Colors.red,
+                  ),
+                );
+              }
+              return AuthScreen();
             },
           )
         : HomeScreen();

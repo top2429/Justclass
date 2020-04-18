@@ -13,14 +13,13 @@ class CreateClassButton extends StatefulWidget {
 }
 
 class _CreateClassButtonState extends State<CreateClassButton> {
-  final data = NewClassData();
+  final data = CreateClassFormData();
   bool isLoading = false;
 
   void addNewClass() async {
     try {
       setState(() => isLoading = true);
-      final uid = Provider.of<Auth>(context, listen: false).user.uid;
-      await Provider.of<ClassManager>(context, listen: false).add(uid, data);
+      await Provider.of<ClassManager>(context, listen: false).add(data);
     } catch (error) {
       AppSnackBar.show(context, message: error.toString(), bgColor: Colors.amberAccent);
     } finally {

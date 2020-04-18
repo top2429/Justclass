@@ -40,7 +40,7 @@ class Auth with ChangeNotifier {
 
       final data = json.decode(prefs.getString(_prefsUserKey)) as Map<String, dynamic>;
       _user = User(
-        uid: data['id'],
+        uid: data['uid'],
         email: data['email'],
         displayName: data['displayName'],
         photoUrl: data['photoUrl'],

@@ -31,7 +31,7 @@ class ApiCall {
     }
   }
 
-  static Future<Class> createClass(String uid, NewClassData data) async {
+  static Future<Class> createClass(String uid, CreateClassFormData data) async {
     // TODO check internet connection
 
     try {
@@ -63,6 +63,32 @@ class ApiCall {
         theme: data.theme,
       );
       return newClass;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  static Future<List<Class>> fetchClassList(String uid) async {
+    try {
+      final url = 'https://justclass-da0b0.appspot.com/api/v1/classroom/$uid';
+      final response = await http.get(url, headers: {'Accept': 'application/json'});
+
+      if (response.statusCode >= 400) throw HttpException(message: 'Unable to fetch class data!');
+
+      final List<Class> classList = [];
+      final classesData = json.decode( utf8.decode(response.bodyBytes)) as List<dynamic>;
+
+      classesData.forEach((c) {
+        classList.add(Class(
+          cid: c['classroomId'],
+          title: c['title'],
+          subject: c['subject'],
+          role: ClassRoles.getType(c['role']),
+          theme: c['theme'],
+          studentCount: int.parse(c['studentCount'] ?? '0'),
+        ));
+      });
+      return classList;
     } catch (error) {
       throw error;
     }

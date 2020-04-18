@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:justclass/utils/validator.dart';
 
-class NewClassData {
+class CreateClassFormData {
   String title;
   String subject;
   String section;
@@ -9,7 +9,7 @@ class NewClassData {
   String room;
   int theme;
 
-  NewClassData({
+  CreateClassFormData({
     this.title = '',
     this.subject = '',
     this.section = '',
@@ -20,7 +20,7 @@ class NewClassData {
 }
 
 class CreateClassForm extends StatefulWidget {
-  final NewClassData data;
+  final CreateClassFormData data;
   final Function sendNewClassRequest;
 
   CreateClassForm(this.data, this.sendNewClassRequest);

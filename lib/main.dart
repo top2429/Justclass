@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
           return MaterialApp(
             title: 'JustClass',
 //            debugShowCheckedModeBanner: false,
-            theme: Themes.appTheme,
+            theme: Themes.forApp,
             home: _buildFirstScreen(auth),
             routes: {
               AuthScreen.routeName: (_) => AuthScreen(),
@@ -45,17 +45,8 @@ class MyApp extends StatelessWidget {
     return (auth.user == null)
         ? FutureBuilder(
             future: auth.tryAutoSignIn(),
-            builder: (context, snapshot) {
+            builder: (_, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) return SplashScreen();
-              if (snapshot.hasError) {
-                return Scaffold(
-                  body: Container(
-                    width: double.infinity,
-                    height: double.infinity,
-                    color: Colors.red,
-                  ),
-                );
-              }
               return AuthScreen();
             },
           )

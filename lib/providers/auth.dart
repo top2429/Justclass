@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:justclass/models/user.dart';
 import 'package:justclass/utils/api_call.dart';
+import 'package:justclass/utils/test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 enum AuthType { FIREBASE_EMAIL_PASS, OAUTH_GOOGLE, OAUTH_FACEBOOK }
@@ -12,14 +13,21 @@ extension AuthTypes on AuthType {
   String get name {
     switch (this) {
       case AuthType.FIREBASE_EMAIL_PASS:
-        return "Email and Password";
+        return 'Email and Password';
       case AuthType.OAUTH_GOOGLE:
-        return "Google Account";
+        return 'Google Account';
       case AuthType.OAUTH_FACEBOOK:
-        return "Facebook Account";
+        return 'Facebook Account';
       default:
         return "";
     }
+  }
+
+  static AuthType getType(String name) {
+    if (name == 'Email and Password') return AuthType.FIREBASE_EMAIL_PASS;
+    if (name == 'Google Account') return AuthType.OAUTH_GOOGLE;
+    if (name == 'Facebook Account') return AuthType.OAUTH_FACEBOOK;
+    return null;
   }
 }
 
@@ -28,6 +36,7 @@ class Auth with ChangeNotifier {
   User _user;
   AuthType _type;
   final _prefsUserKey = 'user';
+  final _prefsAuthTypeKey = 'authType';
 
   User get user => _user;
 
@@ -45,6 +54,11 @@ class Auth with ChangeNotifier {
         displayName: data['displayName'],
         photoUrl: data['photoUrl'],
       );
+      _type = AuthTypes.getType(prefs.getString(_prefsAuthTypeKey));
+
+//      // re-connect to google
+//      final val = await _googleSignIn.isSignedIn();
+//      await _googleSignIn.signInSilently();
 
       notifyListeners();
       return true;
@@ -61,14 +75,14 @@ class Auth with ChangeNotifier {
       _type = AuthType.OAUTH_GOOGLE;
       print('Auth Type: ${_type.name}');
 
-      await _storeUserData(user);
+      await _storeAuthData(user);
       notifyListeners();
     } catch (error) {
       throw error;
     }
   }
 
-  Future<void> _storeUserData(dynamic anyUser) async {
+  Future<void> _storeAuthData(dynamic anyUser) async {
     switch (_type) {
       case AuthType.OAUTH_GOOGLE:
         final ggUser = anyUser as GoogleSignInAccount;
@@ -87,12 +101,10 @@ class Auth with ChangeNotifier {
         break;
     }
     await ApiCall.postUserData(_user);
-    persistUserData();
+    await persistAuthData();
   }
 
-  Future<void> persistUserData() async {
-    if (_user == null) return;
-
+  Future<void> persistAuthData() async {
     final prefs = await SharedPreferences.getInstance();
     prefs.setString(
         _prefsUserKey,
@@ -102,6 +114,7 @@ class Auth with ChangeNotifier {
           'displayName': _user.displayName,
           'photoUrl': _user.photoUrl,
         }));
+    prefs.setString(_prefsAuthTypeKey, _type.name);
   }
 
   Future<void> signOut() async {

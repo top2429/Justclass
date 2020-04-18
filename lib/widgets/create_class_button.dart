@@ -13,7 +13,7 @@ class CreateClassButton extends StatefulWidget {
 }
 
 class _CreateClassButtonState extends State<CreateClassButton> {
-  final data = CreateClassFormData();
+  final data = CreateClassFormData(theme: Themes.getRandomTheme());
   bool isLoading = false;
 
   void addNewClass() async {

@@ -21,7 +21,7 @@ class ClassListViewTileAssistant extends StatelessWidget {
               child: Consumer<Class>(
                 builder: (_, data, __) => Hero(
                   tag: data.cid,
-                  child: Image.asset(Themes.classTheme(data.theme).imageUrl, fit: BoxFit.cover),
+                  child: Image.asset(Themes.forClass(data.theme).imageUrl, fit: BoxFit.cover),
                 ),
               ),
             ),

@@ -8,8 +8,8 @@ class SplashScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Themes.primaryColor,
       body: Center(
-        child: Container(),
-//        child: SpinKitCubeGrid(color: Colors.white70),
+//        child: Container(),
+        child: SpinKitWave(color: Colors.white70),
       ),
     );
   }

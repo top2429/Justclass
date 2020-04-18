@@ -76,7 +76,7 @@ class ApiCall {
       if (response.statusCode >= 400) throw HttpException(message: 'Unable to fetch class data!');
 
       final List<Class> classList = [];
-      final classesData = json.decode( utf8.decode(response.bodyBytes)) as List<dynamic>;
+      final classesData = json.decode( response.body) as List<dynamic>;
 
       classesData.forEach((c) {
         classList.add(Class(

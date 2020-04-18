@@ -19,7 +19,7 @@ extension ViewTypes on ViewType {
   String get name {
     switch (this) {
       case ViewType.ALL:
-        return 'All';
+        return 'All Classes';
       case ViewType.CREATED:
         return 'Created';
       case ViewType.JOINED:
@@ -66,7 +66,7 @@ class ClassListViewState extends State<ClassListView> {
               return ListView(
                 padding: const EdgeInsets.all(10),
                 children: <Widget>[
-                  Text('${_type.name} Classes', style: TextStyle(fontSize: 18), textAlign: TextAlign.center),
+                  Text('${_type.name}', style: TextStyle(fontSize: 18), textAlign: TextAlign.center),
                   const Divider(indent: 50,endIndent: 50),
                   ...classes
                       .map((c) => ChangeNotifierProvider.value(

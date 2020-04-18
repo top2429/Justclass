@@ -32,7 +32,7 @@ class ClassManager with ChangeNotifier {
   Future<void> add(CreateClassFormData data) async {
     try {
       final newClass = await ApiCall.createClass(_uid, data);
-      _classes.add(newClass);
+      _classes.insert(0, newClass);
       notifyListeners();
     } catch (error) {
       throw error;

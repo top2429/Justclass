@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 class Themes {
@@ -25,9 +27,13 @@ class Themes {
     ),
   ];
 
-  static ClassTheme classTheme(int theme) => _classThemes[theme];
+  static ClassTheme forClass(int theme) => _classThemes[theme];
 
-  static final appTheme = ThemeData(
+  static int getRandomTheme() {
+    return Random().nextInt(_classThemes.length);
+  }
+
+  static final forApp = ThemeData(
     backgroundColor: primaryColor,
     fontFamily: "OpenSans",
     inputDecorationTheme: InputDecorationTheme(

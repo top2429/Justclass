@@ -8,8 +8,7 @@ class Backdrop extends InheritedWidget {
 
   Backdrop({Key key, @required this.data, @required Widget child}) : super(key: key, child: child);
 
-  static _BackdropScaffoldState of(BuildContext context) =>
-      context.dependOnInheritedWidgetOfExactType<Backdrop>().data;
+  static _BackdropScaffoldState of(BuildContext context) => context.dependOnInheritedWidgetOfExactType<Backdrop>().data;
 
   @override
   bool updateShouldNotify(Backdrop old) => true;
@@ -67,8 +66,7 @@ class _BackdropScaffoldState extends State<BackdropScaffold> with SingleTickerPr
     super.initState();
     if (widget.controller == null) {
       _shouldDisposeController = true;
-      _controller =
-          AnimationController(vsync: this, duration: Duration(milliseconds: 200), value: 1.0);
+      _controller = AnimationController(vsync: this, duration: Duration(milliseconds: 200), value: 1.0);
     } else {
       _controller = widget.controller;
     }
@@ -87,8 +85,7 @@ class _BackdropScaffoldState extends State<BackdropScaffold> with SingleTickerPr
   }
 
   bool get isTopPanelVisible =>
-      controller.status == AnimationStatus.completed ||
-      controller.status == AnimationStatus.forward;
+      controller.status == AnimationStatus.completed || controller.status == AnimationStatus.forward;
 
   bool get isBackPanelVisible {
     final AnimationStatus status = controller.status;
@@ -111,8 +108,7 @@ class _BackdropScaffoldState extends State<BackdropScaffold> with SingleTickerPr
   Animation<RelativeRect> getPanelAnimation(BuildContext context, BoxConstraints constraints) {
     var backPanelHeight, frontPanelHeight;
 
-    if (widget.stickyFrontLayer &&
-        _backPanelHeight < constraints.biggest.height - widget.headerHeight) {
+    if (widget.stickyFrontLayer && _backPanelHeight < constraints.biggest.height - widget.headerHeight) {
       // height is adapted to the height of the back panel
       backPanelHeight = _backPanelHeight;
       frontPanelHeight = -_backPanelHeight;
@@ -164,15 +160,30 @@ class _BackdropScaffoldState extends State<BackdropScaffold> with SingleTickerPr
     );
   }
 
+//  Widget _buildFrontPanel(BuildContext context) {
+//    return Material(
+//      elevation: 12.0,
+//      borderRadius: widget.frontLayerBorderRadius,
+//      child: Stack(
+//        children: <Widget>[
+//          widget.frontLayer,
+//          _buildInactiveLayer(context),
+//        ],
+//      ),
+//    );
+//  }
+
   Widget _buildFrontPanel(BuildContext context) {
-    return Material(
-      elevation: 12.0,
+    return ClipRRect(
       borderRadius: widget.frontLayerBorderRadius,
-      child: Stack(
-        children: <Widget>[
-          widget.frontLayer,
-          _buildInactiveLayer(context),
-        ],
+      child: Container(
+        color: Colors.white,
+        child: Stack(
+          children: <Widget>[
+            widget.frontLayer,
+            _buildInactiveLayer(context),
+          ],
+        ),
       ),
     );
   }
@@ -199,9 +210,7 @@ class _BackdropScaffoldState extends State<BackdropScaffold> with SingleTickerPr
               ? <Widget>[BackdropToggleButton()] + widget.actions
               : widget.actions,
           elevation: 0.0,
-          leading: widget.iconPosition == BackdropIconPosition.leading
-              ? BackdropToggleButton()
-              : widget.leading,
+          leading: widget.iconPosition == BackdropIconPosition.leading ? BackdropToggleButton() : widget.leading,
         ),
         body: SafeArea(
           child: LayoutBuilder(

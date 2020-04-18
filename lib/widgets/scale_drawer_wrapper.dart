@@ -23,6 +23,8 @@ class ScaleDrawerWrapperState extends State<ScaleDrawerWrapper> with SingleTicke
 
   bool _canBeDragged = true;
 
+//  bool _isOffScreen = false;
+
   @override
   void initState() {
     _controller = AnimationController(duration: const Duration(milliseconds: 200), vsync: this);
@@ -42,11 +44,15 @@ class ScaleDrawerWrapperState extends State<ScaleDrawerWrapper> with SingleTicke
   }
 
   void open() {
+//    setState(() => _isOffScreen = true);
     _controller.forward();
   }
 
   void close() {
     _controller.reverse();
+//    _controller.reverse().then((_) {
+//      setState(() => _isOffScreen = false);
+//    });
   }
 
   void swap() {
@@ -103,27 +109,28 @@ class ScaleDrawerWrapperState extends State<ScaleDrawerWrapper> with SingleTicke
             ),
             AnimatedBuilder(
               animation: _controller,
-              child: widget.scaffold,
-              builder: (context, child) {
+              child: GestureDetector(
+                onTap: close,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.transparent,
+                    boxShadow: [BoxShadow(color: Colors.black38, blurRadius: 15, offset: Offset(3, 3))],
+//                    borderRadius: !_isOffScreen ? BorderRadius.zero : BorderRadius.circular(15),
+                  ),
+//                  child: ClipRRect(
+//                    borderRadius: !_isOffScreen ? BorderRadius.zero : BorderRadius.circular(15),
+//                  child: IgnorePointer(ignoring: !_controller.isDismissed, child: widget.scaffold),
+//                  ),
+                  child: widget.scaffold,
+                ),
+              ),
+              builder: (_, child) {
                 return Transform(
                   transform: Matrix4.identity()
                     ..translate(_translateAnim.value)
                     ..scale(_scaleAnim.value),
                   alignment: Alignment.centerLeft,
-                  child: GestureDetector(
-                    onTap: close,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.transparent,
-                        boxShadow: [BoxShadow(color: Colors.black38, blurRadius: 15, offset: Offset(3, 3))],
-                        borderRadius: (_controller.value == 0) ? BorderRadius.zero : BorderRadius.circular(15),
-                      ),
-                      child: ClipRRect(
-                        borderRadius: (_controller.value == 0) ? BorderRadius.zero : BorderRadius.circular(15),
-                        child: IgnorePointer(ignoring: !_controller.isDismissed, child: child),
-                      ),
-                    ),
-                  ),
+                  child: child,
                 );
               },
             ),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class AllThemes {
+class Themes {
   static const primaryColor = Color(0xff0c4da2); // hoa sen logo @@
   static const List<ClassTheme> _classThemes = [
     ClassTheme(

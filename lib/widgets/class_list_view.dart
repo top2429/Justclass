@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:justclass/all_themes.dart';
+import 'package:justclass/themes.dart';
 import 'package:justclass/providers/class.dart';
 import 'package:justclass/providers/class_manager.dart';
 import 'package:justclass/widgets/app_snack_bar.dart';
@@ -13,12 +13,36 @@ import 'package:provider/provider.dart';
 
 import 'once_future_builder.dart';
 
-enum Filter { ALL, CREATED, JOINED, ASSISTING }
+enum ViewType { ALL, CREATED, JOINED, ASSISTING }
 
-class ClassListView extends StatelessWidget {
-  final Filter viewType;
+extension ViewTypes on ViewType {
+  String get name {
+    switch (this) {
+      case ViewType.ALL:
+        return 'All';
+      case ViewType.CREATED:
+        return 'Created';
+      case ViewType.JOINED:
+        return 'Joined';
+      case ViewType.ASSISTING:
+        return 'Assisting';
+      default:
+        return '';
+    }
+  }
+}
 
-  const ClassListView({this.viewType});
+class ClassListView extends StatefulWidget {
+  ClassListView({Key key}) : super(key: key);
+
+  @override
+  ClassListViewState createState() => ClassListViewState();
+}
+
+class ClassListViewState extends State<ClassListView> {
+  ViewType _type = ViewType.ALL;
+
+  set viewType(ViewType type) => setState(() => _type = type);
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +52,7 @@ class ClassListView extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.waiting) return FetchProgressIndicator();
         if (snapshot.error != null) return FetchErrorPrompt();
         return RefreshIndicator(
-          color: AllThemes.primaryColor,
+          color: Themes.primaryColor,
           onRefresh: () async {
             try {
               await Provider.of<ClassManager>(context, listen: false).fetchData();
@@ -38,15 +62,19 @@ class ClassListView extends StatelessWidget {
           },
           child: Consumer<ClassManager>(
             builder: (_, classMgr, __) {
-              final classes = classMgr.getClasses(viewType);
+              final classes = classMgr.getClasses(_type);
               return ListView(
                 padding: const EdgeInsets.all(10),
-                children: classes
-                    .map((c) => ChangeNotifierProvider.value(
-                          value: c,
-                          child: _buildTile(c.role),
-                        ))
-                    .toList(),
+                children: <Widget>[
+                  Text('${_type.name} Classes', style: TextStyle(fontSize: 18), textAlign: TextAlign.center),
+                  const Divider(),
+                  ...classes
+                      .map((c) => ChangeNotifierProvider.value(
+                            value: c,
+                            child: _buildTile(c.role),
+                          ))
+                      .toList()
+                ],
               );
             },
           ),

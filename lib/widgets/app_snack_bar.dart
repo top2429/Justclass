@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:justclass/all_themes.dart';
+import 'package:justclass/themes.dart';
 
 class AppSnackBar {
   static void show(BuildContext context, {String message, Color bgColor}) {
@@ -16,7 +16,7 @@ class AppSnackBar {
         ),
         action: SnackBarAction(
           label: 'OK',
-          textColor: AllThemes.primaryColor,
+          textColor: Themes.primaryColor,
           onPressed: Scaffold.of(context).hideCurrentSnackBar,
         ),
       ),

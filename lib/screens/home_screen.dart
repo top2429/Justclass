@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:justclass/all_themes.dart';
+import 'package:justclass/themes.dart';
 import 'package:justclass/widgets/backdrop_scaffold.dart';
 import 'package:justclass/widgets/class_list_view.dart';
 import 'package:justclass/widgets/create_class_button.dart';
@@ -10,6 +10,7 @@ import 'package:justclass/widgets/scale_drawer_wrapper.dart';
 class HomeScreen extends StatelessWidget {
   static const routeName = '/home';
   final _drawer = GlobalKey<ScaleDrawerWrapperState>();
+  final _classListView = GlobalKey<ClassListViewState>();
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +19,7 @@ class HomeScreen extends StatelessWidget {
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      backgroundColor: AllThemes.primaryColor,
+      backgroundColor: Themes.primaryColor,
       body: ScaleDrawerWrapper(
         key: _drawer,
         drawerContent: HomeDrawerContent(),
@@ -29,7 +30,7 @@ class HomeScreen extends StatelessWidget {
           appBarColor: Theme.of(context).backgroundColor,
           backLayerColor: Theme.of(context).backgroundColor,
           leading: IconButton(icon: const Icon(Icons.menu), onPressed: () => _drawer.currentState.swap()),
-          actions: <Widget>[IconButton(icon: const Icon(Icons.more_vert), onPressed: () {})],
+          actions: <Widget>[_buildPopupMenu()],
           backLayer: LayoutBuilder(
             builder: (_, constraints) {
               final height = constraints.maxHeight - headerHeight;
@@ -38,7 +39,7 @@ class HomeScreen extends StatelessWidget {
               return _buildBackLayer(height, width);
             },
           ),
-          frontLayer: _buildFrontLayer(),
+          frontLayer: ClassListView(key: _classListView),
         ),
       ),
     );
@@ -57,7 +58,18 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildFrontLayer() {
-    return ClassListView(viewType: Filter.ALL);
+  Widget _buildPopupMenu() {
+    return PopupMenuButton(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+      icon: const Icon(Icons.more_vert, color: Colors.white),
+      offset: const Offset(0, 40),
+      itemBuilder: (_) => [
+        const PopupMenuItem(child: Text('Joined'), value: ViewType.JOINED, height: 40),
+        const PopupMenuItem(child: Text('Created'), value: ViewType.CREATED, height: 40),
+        const PopupMenuItem(child: Text('Assisting'), value: ViewType.ASSISTING, height: 40),
+        const PopupMenuItem(child: Text('All'), value: ViewType.ALL, height: 40),
+      ],
+      onSelected: (viewType) => _classListView.currentState.viewType = viewType,
+    );
   }
 }

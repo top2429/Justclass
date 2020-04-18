@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:justclass/all_themes.dart';
+import 'package:justclass/themes.dart';
 import 'package:justclass/providers/auth.dart';
 import 'package:justclass/providers/class_manager.dart';
 import 'package:justclass/widgets/app_snack_bar.dart';
@@ -80,14 +80,14 @@ class _CreateClassButtonState extends State<CreateClassButton> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
                     isLoading
-                        ? const SpinKitDualRing(color: AllThemes.primaryColor, size: 15, lineWidth: 1.5)
-                        : const Icon(Icons.add, color: AllThemes.primaryColor),
+                        ? const SpinKitDualRing(color: Themes.primaryColor, size: 15, lineWidth: 1.5)
+                        : const Icon(Icons.add, color: Themes.primaryColor),
                     Flexible(
                       child: FittedBox(
                         child: Text(
                           isLoading ? 'Creating...' : 'Create class',
                           style: TextStyle(
-                            color: AllThemes.primaryColor,
+                            color: Themes.primaryColor,
                             fontWeight: FontWeight.bold,
                             fontSize: btnHeight * 0.4,
                           ),

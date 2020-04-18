@@ -4,11 +4,12 @@ import 'package:justclass/providers/class_manager.dart';
 import 'package:justclass/screens/auth_screen.dart';
 import 'package:justclass/screens/home_screen.dart';
 import 'package:justclass/screens/splash_screen.dart';
-import 'package:justclass/all_themes.dart';
+import 'package:justclass/themes.dart';
 import 'package:provider/provider.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
+
   runApp(MyApp());
 }
 
@@ -24,8 +25,8 @@ class MyApp extends StatelessWidget {
         builder: (_, auth, __) {
           return MaterialApp(
             title: 'JustClass',
-//            debugShowCheckedModeBanner: false,
-            theme: AllThemes.appTheme,
+            debugShowCheckedModeBanner: false,
+            theme: Themes.appTheme,
             home: _buildFirstScreen(auth),
             routes: {
               AuthScreen.routeName: (_) => AuthScreen(),

@@ -26,16 +26,16 @@ class ClassManager with ChangeNotifier {
     notifyListeners();
   }
 
-  List<Class> getClasses(Filter type) {
+  List<Class> getClasses(ViewType type) {
     switch (type) {
-      case Filter.ALL:
+      case ViewType.ALL:
         return _classes;
-      case Filter.CREATED:
-        return _classes.where((c) => c.role == ClassRole.OWNER);
-      case Filter.JOINED:
-        return _classes.where((c) => c.role == ClassRole.STUDENT);
-      case Filter.ASSISTING:
-        return _classes.where((c) => c.role == ClassRole.ASSISTANT);
+      case ViewType.CREATED:
+        return _classes.where((c) => c.role == ClassRole.OWNER).toList();
+      case ViewType.JOINED:
+        return _classes.where((c) => c.role == ClassRole.STUDENT).toList();
+      case ViewType.ASSISTING:
+        return _classes.where((c) => c.role == ClassRole.ASSISTANT).toList();
       default:
         return [];
     }

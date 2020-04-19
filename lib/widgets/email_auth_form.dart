@@ -12,7 +12,7 @@ class EmailAuthForm extends StatefulWidget {
 
 class EmailAuthFormState extends State<EmailAuthForm> with SingleTickerProviderStateMixin {
   final _form = GlobalKey<FormState>();
-  bool isLogin = true;
+  bool _isSigningIn = true;
 
   final _emailFocusNode = FocusNode();
   final _passwordFocusNode = FocusNode();
@@ -27,13 +27,18 @@ class EmailAuthFormState extends State<EmailAuthForm> with SingleTickerProviderS
 
   AnimationController _animController;
   Animation<double> _sizeAnim;
+  Animation<double> _fadeAnim;
 
-  final validator = Validator();
+  bool _autoValidate = false;
 
   @override
   void initState() {
     _animController = AnimationController(duration: const Duration(milliseconds: 200), vsync: this);
     _sizeAnim = Tween<double>(begin: 0, end: 1).animate(_animController);
+    _fadeAnim = Tween<double>(begin: 0, end: 1).animate(CurvedAnimation(
+      parent: _animController,
+      curve: Interval(0.4, 1),
+    ));
 
     super.initState();
   }
@@ -51,26 +56,26 @@ class EmailAuthFormState extends State<EmailAuthForm> with SingleTickerProviderS
   }
 
   void toSignUpMode() {
-    unFocus();
-    _form.currentState.reset();
+    _setFormToInitState();
     _animController.forward().then((_) {
-      setState(() {
-        isLogin = false;
-      });
+      setState(() => _isSigningIn = false);
     });
   }
 
-  void toLoginMode() {
-    unFocus();
-    _form.currentState.reset();
+  void toSignInMode() {
+    _setFormToInitState();
     _animController.reverse().then((_) {
-      setState(() {
-        isLogin = true;
-      });
+      setState(() => _isSigningIn = true);
     });
   }
 
-  void unFocus() {
+  void _setFormToInitState() {
+    _unFocus();
+    setState(() => _autoValidate = false);
+    _form.currentState.reset();
+  }
+
+  void _unFocus() {
     _emailFocusNode.unfocus();
     _passwordFocusNode.unfocus();
     _confirmFocusNode.unfocus();
@@ -119,11 +124,11 @@ class EmailAuthFormState extends State<EmailAuthForm> with SingleTickerProviderS
       width: double.infinity,
       child: RaisedButton(
         child: Text(
-          isLogin ? "Sign In" : "Sign Up",
+          _isSigningIn ? "Sign In" : "Sign Up",
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.bold,
-            color: Colors.blue[800],
+            color: Colors.blue.shade800,
           ),
         ),
         elevation: 5,
@@ -131,7 +136,10 @@ class EmailAuthFormState extends State<EmailAuthForm> with SingleTickerProviderS
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(22),
         ),
-        onPressed: isLogin ? signIn : signUp,
+        onPressed: () {
+          _isSigningIn ? signIn() : signUp();
+          setState(() => _autoValidate = true);
+        },
       ),
     );
   }
@@ -141,6 +149,7 @@ class EmailAuthFormState extends State<EmailAuthForm> with SingleTickerProviderS
       const Text("Email", style: TextStyle(color: Colors.white70, fontSize: 15)),
       const SizedBox(height: 5),
       TextFormField(
+        autovalidate: _autoValidate,
         cursorColor: Colors.white70,
         style: const TextStyle(color: Colors.white70, fontSize: 17),
         keyboardType: TextInputType.emailAddress,
@@ -181,7 +190,7 @@ class EmailAuthFormState extends State<EmailAuthForm> with SingleTickerProviderS
           if (val.length > 1) return;
           setState(() => _emptyEmail = val.isEmpty);
         },
-        validator: validator.validateEmail,
+        validator: EmailPassValidator.validateEmail,
       ),
     ];
   }
@@ -191,10 +200,11 @@ class EmailAuthFormState extends State<EmailAuthForm> with SingleTickerProviderS
       const Text("Password", style: TextStyle(color: Colors.white70, fontSize: 15)),
       const SizedBox(height: 5),
       TextFormField(
+        autovalidate: _autoValidate,
         obscureText: true,
         cursorColor: Colors.white70,
         style: const TextStyle(color: Colors.white70, fontSize: 17),
-        textInputAction: (isLogin) ? TextInputAction.done : TextInputAction.next,
+        textInputAction: (_isSigningIn) ? TextInputAction.done : TextInputAction.next,
         decoration: InputDecoration(
           filled: true,
           fillColor: Colors.white.withOpacity(0.1),
@@ -217,8 +227,7 @@ class EmailAuthFormState extends State<EmailAuthForm> with SingleTickerProviderS
               : IconButton(
                   icon: const Icon(Icons.cancel, color: Colors.white54),
                   onPressed: () {
-                    WidgetsBinding.instance
-                        .addPostFrameCallback((_) => _passwordController.clear());
+                    WidgetsBinding.instance.addPostFrameCallback((_) => _passwordController.clear());
                     setState(() => _emptyPassword = true);
                   },
                 ),
@@ -227,13 +236,12 @@ class EmailAuthFormState extends State<EmailAuthForm> with SingleTickerProviderS
         ),
         focusNode: _passwordFocusNode,
         controller: _passwordController,
-        onEditingComplete:
-            isLogin ? null : () => FocusScope.of(context).requestFocus(_confirmFocusNode),
+        onEditingComplete: _isSigningIn ? null : () => FocusScope.of(context).requestFocus(_confirmFocusNode),
         onChanged: (val) {
           if (val.length > 1) return;
           setState(() => _emptyPassword = val.isEmpty);
         },
-        validator: validator.validatePassword,
+        validator: EmailPassValidator.validatePassword,
       ),
     ];
   }
@@ -241,58 +249,61 @@ class EmailAuthFormState extends State<EmailAuthForm> with SingleTickerProviderS
   Widget _buildConfirmInput() {
     return SizeTransition(
       sizeFactor: _sizeAnim,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          const SizedBox(height: 20),
-          const Text("Confirm Password", style: TextStyle(color: Colors.white70, fontSize: 15)),
-          const SizedBox(height: 5),
-          TextFormField(
-            obscureText: true,
-            cursorColor: Colors.white70,
-            style: const TextStyle(color: Colors.white70, fontSize: 17),
-            textInputAction: TextInputAction.done,
-            decoration: InputDecoration(
-              filled: true,
-              fillColor: Colors.white.withOpacity(0.1),
-              contentPadding: const EdgeInsets.all(0),
-              enabledBorder: const OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.transparent),
+      child: FadeTransition(
+        opacity: _fadeAnim,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            const SizedBox(height: 20),
+            const Text("Confirm Password", style: TextStyle(color: Colors.white70, fontSize: 15)),
+            const SizedBox(height: 5),
+            TextFormField(
+              autovalidate: _autoValidate,
+              obscureText: true,
+              cursorColor: Colors.white70,
+              style: const TextStyle(color: Colors.white70, fontSize: 17),
+              textInputAction: TextInputAction.done,
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: Colors.white.withOpacity(0.1),
+                contentPadding: const EdgeInsets.all(0),
+                enabledBorder: const OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.transparent),
+                ),
+                focusedBorder: const OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.white70),
+                ),
+                focusedErrorBorder: const OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.amberAccent),
+                ),
+                errorBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.amberAccent.withOpacity(0.5)),
+                ),
+                prefixIcon: const Icon(Icons.beenhere, color: Colors.white60),
+                suffixIcon: (_emptyConfirm)
+                    ? const SizedBox(width: 0)
+                    : IconButton(
+                        icon: const Icon(Icons.cancel, color: Colors.white54),
+                        onPressed: () {
+                          WidgetsBinding.instance.addPostFrameCallback((_) => _confirmController.clear());
+                          setState(() => _emptyConfirm = true);
+                        },
+                      ),
+                errorStyle: const TextStyle(color: Colors.amberAccent, fontSize: 14),
+                errorText: null,
               ),
-              focusedBorder: const OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.white70),
-              ),
-              focusedErrorBorder: const OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.amberAccent),
-              ),
-              errorBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.amberAccent.withOpacity(0.5)),
-              ),
-              prefixIcon: const Icon(Icons.beenhere, color: Colors.white60),
-              suffixIcon: (_emptyConfirm)
-                  ? const SizedBox(width: 0)
-                  : IconButton(
-                      icon: const Icon(Icons.cancel, color: Colors.white54),
-                      onPressed: () {
-                        WidgetsBinding.instance
-                            .addPostFrameCallback((_) => _confirmController.clear());
-                        setState(() => _emptyConfirm = true);
-                      },
-                    ),
-              errorStyle: const TextStyle(color: Colors.amberAccent, fontSize: 14),
-              errorText: null,
+              focusNode: _confirmFocusNode,
+              controller: _confirmController,
+              onChanged: (val) {
+                if (val.length > 1) return;
+                setState(() => _emptyConfirm = val.isEmpty);
+              },
+              validator: (val) {
+                return EmailPassValidator.validateConfirm(val, _passwordController.text);
+              },
             ),
-            focusNode: _confirmFocusNode,
-            controller: _confirmController,
-            onChanged: (val) {
-              if (val.length > 1) return;
-              setState(() => _emptyConfirm = val.isEmpty);
-            },
-            validator: (val) {
-              return validator.validateConfirm(val, _passwordController.text);
-            },
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

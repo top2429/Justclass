@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:justclass/providers/auth.dart';
 import 'package:justclass/screens/home_screen.dart';
-import 'package:justclass/screens/user_screen_test.dart';
+import 'package:justclass/widgets/app_snack_bar.dart';
 import 'package:provider/provider.dart';
 
 class OAuthRow extends StatelessWidget {
@@ -11,10 +11,6 @@ class OAuthRow extends StatelessWidget {
 
   void _toHomeScreen(BuildContext context) {
     Navigator.of(context).pushReplacementNamed(HomeScreen.routeName);
-  }
-
-  void _toUserScreen(BuildContext context) {
-    Navigator.of(context).pushReplacementNamed(UserScreen.routeName);
   }
 
   void _signInFacebook(Auth auth, BuildContext context) async {
@@ -28,22 +24,12 @@ class OAuthRow extends StatelessWidget {
     _changeLoadingStatus(true);
     try {
       await auth.signInGoogle();
-      if (auth.currentUser != null) _toUserScreen(context);
+      if (auth.user != null) _toHomeScreen(context);
     } catch (error) {
-      _showSnackBar(context, error.toString());
+      AppSnackBar.showError(context, message: error.toString(),bgColor: Colors.white.withOpacity(0.9));
     } finally {
       _changeLoadingStatus(false);
     }
-  }
-
-  void _showSnackBar(BuildContext context, String error) {
-    Scaffold.of(context).hideCurrentSnackBar();
-    Scaffold.of(context).showSnackBar(SnackBar(
-      backgroundColor: Colors.white.withOpacity(0.9),
-      content:
-          Text(error, style: const TextStyle(color: Colors.black), textAlign: TextAlign.center),
-      duration: const Duration(seconds: 2),
-    ));
   }
 
   @override

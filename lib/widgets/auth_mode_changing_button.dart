@@ -21,7 +21,7 @@ class _AuthModeChangingButtonState extends State<AuthModeChangingButton> {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
         onPressed: () {
           final state = widget.formKey.currentState as EmailAuthFormState;
-          isSigningIn ? state.toSignUpMode() : state.toLoginMode();
+          isSigningIn ? state.toSignUpMode() : state.toSignInMode();
           setState(() => isSigningIn = !isSigningIn);
         },
         child: Row(

@@ -1,8 +1,8 @@
 class HttpException implements Exception {
-  final String _message;
+  final String message;
 
-  HttpException(this._message);
+  HttpException({this.message = 'Something went wrong!'});
 
   @override
-  String toString() => _message;
+  String toString() => message;
 }

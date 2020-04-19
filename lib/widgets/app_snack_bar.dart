@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:justclass/themes.dart';
 
 class AppSnackBar {
-  static void show(BuildContext context, {String message, Color bgColor}) {
+  static void showError(BuildContext context, {String message, Color bgColor}) {
     Scaffold.of(context).hideCurrentSnackBar();
     Scaffold.of(context).showSnackBar(
       SnackBar(
         elevation: 1,
-        backgroundColor: bgColor == null ? Colors.white.withOpacity(0.9) : bgColor,
+        backgroundColor: bgColor == null ? Colors.amberAccent : bgColor,
         duration: const Duration(seconds: 3),
         behavior: SnackBarBehavior.floating,
         content: Text(

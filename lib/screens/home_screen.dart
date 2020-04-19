@@ -66,7 +66,7 @@ class HomeScreen extends StatelessWidget {
       itemBuilder: (_) => [
         const PopupMenuItem(child: Text('Joined'), value: ViewType.JOINED, height: 40),
         const PopupMenuItem(child: Text('Created'), value: ViewType.CREATED, height: 40),
-        const PopupMenuItem(child: Text('Assisting'), value: ViewType.ASSISTING, height: 40),
+        const PopupMenuItem(child: Text('Collaborating'), value: ViewType.COLLABORATING, height: 40),
         const PopupMenuItem(child: Text('All'), value: ViewType.ALL, height: 40),
       ],
       onSelected: (viewType) => _classListView.currentState.viewType = viewType,

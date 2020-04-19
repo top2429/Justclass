@@ -13,7 +13,7 @@ import 'package:provider/provider.dart';
 
 import 'once_future_builder.dart';
 
-enum ViewType { ALL, CREATED, JOINED, ASSISTING }
+enum ViewType { ALL, CREATED, JOINED, COLLABORATING }
 
 extension ViewTypes on ViewType {
   String get name {
@@ -24,8 +24,8 @@ extension ViewTypes on ViewType {
         return 'Created';
       case ViewType.JOINED:
         return 'Joined';
-      case ViewType.ASSISTING:
-        return 'Assisting';
+      case ViewType.COLLABORATING:
+        return 'Collaborating';
       default:
         return '';
     }
@@ -57,7 +57,7 @@ class ClassListViewState extends State<ClassListView> {
             try {
               await Provider.of<ClassManager>(context, listen: false).fetchData();
             } catch (error) {
-              AppSnackBar.show(context, message: error.toString());
+              AppSnackBar.showError(context, message: error.toString());
             }
           },
           child: Consumer<ClassManager>(
@@ -67,7 +67,7 @@ class ClassListViewState extends State<ClassListView> {
                 padding: const EdgeInsets.all(10),
                 children: <Widget>[
                   Text('${_type.name}', style: TextStyle(fontSize: 18), textAlign: TextAlign.center),
-                  const Divider(indent: 50,endIndent: 50),
+                  const Divider(indent: 50, endIndent: 50),
                   ...classes
                       .map((c) => ChangeNotifierProvider.value(
                             value: c,
@@ -87,7 +87,7 @@ class ClassListViewState extends State<ClassListView> {
     switch (role) {
       case ClassRole.OWNER:
         return ClassListViewTileOwner();
-      case ClassRole.ASSISTANT:
+      case ClassRole.TEACHER:
         return ClassListViewTileAssistant();
       case ClassRole.STUDENT:
         return ClassListViewTileStudent();

@@ -26,7 +26,7 @@ class OAuthRow extends StatelessWidget {
       await auth.signInGoogle();
       if (auth.user != null) _toHomeScreen(context);
     } catch (error) {
-      AppSnackBar.show(context, message: error.toString());
+      AppSnackBar.showError(context, message: error.toString(),bgColor: Colors.white.withOpacity(0.9));
     } finally {
       _changeLoadingStatus(false);
     }

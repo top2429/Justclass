@@ -21,7 +21,7 @@ class _CreateClassButtonState extends State<CreateClassButton> {
       setState(() => isLoading = true);
       await Provider.of<ClassManager>(context, listen: false).add(data);
     } catch (error) {
-      AppSnackBar.show(context, message: error.toString(), bgColor: Colors.amberAccent);
+      AppSnackBar.showError(context, message: error.toString());
     } finally {
       setState(() => isLoading = false);
     }

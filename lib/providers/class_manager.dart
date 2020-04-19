@@ -22,8 +22,8 @@ class ClassManager with ChangeNotifier {
         return _classes.where((c) => c.role == ClassRole.OWNER).toList();
       case ViewType.JOINED:
         return _classes.where((c) => c.role == ClassRole.STUDENT).toList();
-      case ViewType.ASSISTING:
-        return _classes.where((c) => c.role == ClassRole.ASSISTANT).toList();
+      case ViewType.COLLABORATING:
+        return _classes.where((c) => c.role == ClassRole.TEACHER).toList();
       default:
         return [];
     }
@@ -70,7 +70,7 @@ class ClassManager with ChangeNotifier {
       cid: '1',
       title: 'PPHDH_1996 day la test text input qua dai',
       publicCode: '010ax31',
-      role: ClassRole.ASSISTANT,
+      role: ClassRole.TEACHER,
       theme: 1,
       section: 'Môn: Phương pháp học đại học, nhung chua du dau, phai dai hon nua',
       ownerName: 'Minh Ngoc',

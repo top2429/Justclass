@@ -23,13 +23,20 @@ class TopicScreen extends StatelessWidget {
         secondaryColor: secondaryColor,
         actions: <Map<String, dynamic>>[
           {
+            'tooltip': 'New Assignment',
             'child': Icon(Icons.assignment),
             'onPressed': () {},
           },
           {
+            'tooltip': 'File Attachment',
             'child': Icon(Icons.attachment),
             'onPressed': () {},
-          }
+          },
+          {
+            'tooltip': 'New Topic',
+            'child': Icon(Icons.playlist_add),
+            'onPressed': () {},
+          },
         ],
       ),
     );

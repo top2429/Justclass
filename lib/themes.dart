@@ -12,19 +12,28 @@ class Themes {
     ),
     ClassTheme(
       imageUrl: 'assets/images/themes/theme-01.jpg',
-      primaryColor: Color(0xff27ae60),
+      primaryColor: Color(0xff2e7d32), // 800 material color
+      secondaryColor: Color(0xff43a047), // 500
     ),
     ClassTheme(
       imageUrl: 'assets/images/themes/theme-02.jpg',
-      primaryColor: Color(0xfff0932b),
+      primaryColor: Color(0xff4527a0),
+      secondaryColor: Color(0xff673ab7),
     ),
     ClassTheme(
       imageUrl: 'assets/images/themes/theme-03.jpg',
-      primaryColor: Color(0xff8e44ad),
+      primaryColor: Color(0xffad1457),
+      secondaryColor: Color(0xffe91e63),
     ),
     ClassTheme(
       imageUrl: 'assets/images/themes/theme-04.jpg',
-      primaryColor: Color(0xff8e44ad),
+      primaryColor: Color(0xff37474f),
+      secondaryColor: Color(0xff607d8b),
+    ),
+    ClassTheme(
+      imageUrl: 'assets/images/themes/theme-05.jpg',
+      primaryColor: Color(0xffef6c00),
+      secondaryColor: Color(0xffff9800),
     ),
   ];
 

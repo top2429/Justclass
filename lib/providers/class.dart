@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:justclass/themes.dart';
 import 'package:justclass/utils/api_call.dart';
 
 enum ClassRole { OWNER, TEACHER, STUDENT, NOBODY }
@@ -53,5 +54,10 @@ class Class with ChangeNotifier {
     } catch (error) {
       throw error;
     }
+  }
+
+  void changeTheme() {
+    theme = Themes.getRandomTheme();
+    notifyListeners();
   }
 }

@@ -68,11 +68,14 @@ class _TeacherFloatingActionButtonState extends State<TeacherFloatingActionButto
                 ),
                 child: SizedBox(
                   width: 50,
-                  child: FloatingActionButton(
-                    elevation: 2,
-                    backgroundColor: widget.secondaryColor,
-                    onPressed: action['onPressed'],
-                    child: action['child'],
+                  child: Tooltip(
+                    message: action['tooltip'], verticalOffset: -60,
+                    child: FloatingActionButton(
+                      elevation: 2,
+                      backgroundColor: widget.secondaryColor,
+                      onPressed: action['onPressed'],
+                      child: action['child'],
+                    ),
                   ),
                 ),
               ),
@@ -86,7 +89,7 @@ class _TeacherFloatingActionButtonState extends State<TeacherFloatingActionButto
           child: SizedBox(
             width: _btnHeight,
             child: FloatingActionButton(
-              elevation: 4,
+              elevation: 5,
               backgroundColor: widget.primaryColor,
               child: AnimatedBuilder(
                 animation: _controller,

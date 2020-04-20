@@ -5,7 +5,7 @@ class ScaleDrawerWrapper extends StatefulWidget {
   final Widget scaffold;
 
   ScaleDrawerWrapper({
-    @required Key key,
+    Key key,
     @required this.scaffold,
     @required this.drawerContent,
   }) : super(key: key);

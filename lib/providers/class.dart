@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:justclass/utils/api_call.dart';
 
 enum ClassRole { OWNER, TEACHER, STUDENT, NOBODY }
 
@@ -43,4 +44,14 @@ class Class with ChangeNotifier {
     this.room = '',
     this.ownerName = '',
   });
+
+  Future<void> fetchDetails() async {
+    try {
+      final data = await ApiCall.fetchClassDetails(cid);
+
+      notifyListeners();
+    } catch (error) {
+      throw error;
+    }
+  }
 }

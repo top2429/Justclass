@@ -121,7 +121,7 @@ class ScaleDrawerWrapperState extends State<ScaleDrawerWrapper> with SingleTicke
 //                    borderRadius: !_isOffScreen ? BorderRadius.zero : BorderRadius.circular(15),
 //                  child: IgnorePointer(ignoring: !_controller.isDismissed, child: widget.scaffold),
 //                  ),
-                  child: widget.scaffold,
+                  child: ClipRRect(child: widget.scaffold),
                 ),
               ),
               builder: (_, child) {

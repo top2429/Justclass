@@ -14,8 +14,8 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final orientation = MediaQuery.of(context).orientation;
-    final headerHeight = (orientation == Orientation.portrait) ? 400.0 : 100.0;
+    final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+    final headerHeight = isPortrait ? 400.0 : 100.0;
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -34,8 +34,7 @@ class HomeScreen extends StatelessWidget {
           backLayer: LayoutBuilder(
             builder: (_, constraints) {
               final height = constraints.maxHeight - headerHeight;
-              final width =
-                  (orientation == Orientation.portrait) ? constraints.maxWidth * 0.35 : constraints.maxWidth * 0.3;
+              final width = isPortrait ? constraints.maxWidth * 0.35 : constraints.maxWidth * 0.3;
               return _buildBackLayer(height, width);
             },
           ),

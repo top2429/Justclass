@@ -29,6 +29,8 @@ class ClassManager with ChangeNotifier {
     }
   }
 
+  Class getClass(String cid) => _classes.firstWhere((cls) => cls.cid == cid, orElse: () => null);
+
   Future<void> add(CreateClassFormData data) async {
     try {
       final newClass = await ApiCall.createClass(_uid, data);

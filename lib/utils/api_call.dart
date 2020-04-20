@@ -4,13 +4,16 @@ import 'package:http/http.dart' as http;
 import 'package:justclass/models/user.dart';
 import 'package:justclass/providers/class.dart';
 import 'package:justclass/utils/http_exception.dart';
+import 'package:justclass/utils/test.dart';
 import 'package:justclass/widgets/create_class_form.dart';
 
 class ApiCall {
-  static Future<bool> postUserData(User user) async {
-    // TODO check internet connection
+  static checkInternetConnection() {}
 
+  static Future<bool> postUserData(User user) async {
     try {
+      checkInternetConnection();
+
       const url = 'https://justclass-da0b0.appspot.com/api/v1/user';
       final response = await http.post(
         url,
@@ -22,7 +25,7 @@ class ApiCall {
           'photoUrl': user.photoUrl,
         }),
       );
-      if (response.statusCode >= 400) throw HttpException();
+      if (response.statusCode >= 400) throw HttpException(message: 'Unable to update user data');
 
       final isNew = json.decode(response.body)['newUser'];
       return isNew;
@@ -32,9 +35,9 @@ class ApiCall {
   }
 
   static Future<Class> createClass(String uid, CreateClassFormData data) async {
-    // TODO check internet connection
-
     try {
+      checkInternetConnection();
+
       final url = 'https://justclass-da0b0.appspot.com/api/v1/classroom/$uid';
       final response = await http.post(
         url,
@@ -70,25 +73,35 @@ class ApiCall {
 
   static Future<List<Class>> fetchClassList(String uid) async {
     try {
+      checkInternetConnection();
+
       final url = 'https://justclass-da0b0.appspot.com/api/v1/classroom/$uid';
       final response = await http.get(url, headers: {'Accept': 'application/json'});
 
       if (response.statusCode >= 400) throw HttpException(message: 'Unable to fetch class data!');
 
       final List<Class> classList = [];
-      final classesData = json.decode( response.body) as List<dynamic>;
+      final classesData = json.decode(response.body) as List<dynamic>;
 
-      classesData.forEach((c) {
+      classesData.forEach((cls) {
         classList.add(Class(
-          cid: c['classroomId'],
-          title: c['title'],
-          subject: c['subject'],
-          role: ClassRoles.getType(c['role']),
-          theme: c['theme'],
-          studentCount: int.parse(c['studentCount'] ?? '0'),
+          cid: cls['classroomId'],
+          title: cls['title'],
+          subject: cls['subject'],
+          role: ClassRoles.getType(cls['role']),
+          theme: cls['theme'],
+          studentCount: int.parse(cls['studentCount'] ?? '0'),
         ));
       });
       return classList;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  static Future<Class> fetchClassDetails(String cid) async {
+    try {
+      await Test.delay(1);
     } catch (error) {
       throw error;
     }

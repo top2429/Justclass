@@ -8,6 +8,7 @@ class Themes {
     ClassTheme(
       imageUrl: 'assets/images/themes/theme-00.jpg',
       primaryColor: primaryColor,
+      secondaryColor: Color(0xff1e88e5),
     ),
     ClassTheme(
       imageUrl: 'assets/images/themes/theme-01.jpg',
@@ -46,9 +47,13 @@ class Themes {
 class ClassTheme {
   final String imageUrl;
   final Color primaryColor;
+  final Color secondaryColor;
+  final Color accentColor;
 
   const ClassTheme({
     this.imageUrl,
     this.primaryColor,
+    this.secondaryColor,
+    this.accentColor,
   });
 }

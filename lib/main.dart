@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:justclass/providers/auth.dart';
 import 'package:justclass/providers/class_manager.dart';
 import 'package:justclass/screens/auth_screen.dart';
+import 'package:justclass/screens/class_screen.dart';
 import 'package:justclass/screens/home_screen.dart';
 import 'package:justclass/screens/splash_screen.dart';
 import 'package:justclass/themes.dart';
 import 'package:provider/provider.dart';
 
 void main() {
-  WidgetsFlutterBinding.ensureInitialized();
-
+//  WidgetsFlutterBinding.ensureInitialized();
   runApp(MyApp());
 }
 
@@ -31,9 +31,11 @@ class MyApp extends StatelessWidget {
 //            debugShowCheckedModeBanner: false,
             theme: Themes.forApp,
             home: _buildFirstScreen(auth),
+            initialRoute: ClassScreen.routeName,
             routes: {
               AuthScreen.routeName: (_) => AuthScreen(),
               HomeScreen.routeName: (_) => HomeScreen(),
+              ClassScreen.routeName: (_) => ClassScreen(),
             },
           );
         },

@@ -31,11 +31,9 @@ class MyApp extends StatelessWidget {
 //            debugShowCheckedModeBanner: false,
             theme: Themes.forApp,
             home: _buildFirstScreen(auth),
-            initialRoute: ClassScreen.routeName,
             routes: {
               AuthScreen.routeName: (_) => AuthScreen(),
               HomeScreen.routeName: (_) => HomeScreen(),
-              ClassScreen.routeName: (_) => ClassScreen(),
             },
           );
         },

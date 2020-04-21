@@ -93,6 +93,7 @@ class ApiCall {
           studentCount: int.parse(cls['studentCount'] ?? '0'),
         ));
       });
+
       return classList;
     } catch (error) {
       throw error;

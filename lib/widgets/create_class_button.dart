@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:justclass/themes.dart';
-import 'package:justclass/providers/auth.dart';
 import 'package:justclass/providers/class_manager.dart';
 import 'package:justclass/widgets/app_snack_bar.dart';
 import 'package:justclass/widgets/create_class_form.dart';
@@ -32,7 +31,7 @@ class _CreateClassButtonState extends State<CreateClassButton> {
       context: context,
       builder: (context) {
         return Dialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+          shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5))),
           child: CreateClassForm(data, addNewClass),
         );
       },
@@ -57,7 +56,7 @@ class _CreateClassButtonState extends State<CreateClassButton> {
               width: width,
               child: Material(
                 elevation: 8,
-                shape: CircleBorder(),
+                shape: const CircleBorder(),
                 child: Image.asset('assets/images/teacher.png', fit: BoxFit.contain),
               ),
             ),
@@ -71,9 +70,7 @@ class _CreateClassButtonState extends State<CreateClassButton> {
                 height: btnHeight,
                 color: Colors.white,
                 elevation: 10,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(btnHeight * 0.5),
-                ),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(btnHeight * 0.5)),
                 padding: EdgeInsets.zero,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,

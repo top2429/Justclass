@@ -4,7 +4,7 @@ import 'package:justclass/themes.dart';
 import 'package:justclass/providers/class.dart';
 import 'package:justclass/providers/class_manager.dart';
 import 'package:justclass/widgets/app_snack_bar.dart';
-import 'package:justclass/widgets/class_list_view_tile_assistant.dart';
+import 'package:justclass/widgets/class_list_view_tile_collaborator.dart';
 import 'package:justclass/widgets/class_list_view_tile_student.dart';
 import 'package:justclass/widgets/class_list_view_tile_owner.dart';
 import 'package:justclass/widgets/fetch_error_icon.dart';
@@ -69,9 +69,9 @@ class ClassListViewState extends State<ClassListView> {
                   Text('${_type.name}', style: TextStyle(fontSize: 18), textAlign: TextAlign.center),
                   const Divider(indent: 50, endIndent: 50),
                   ...classes
-                      .map((c) => ChangeNotifierProvider.value(
-                            value: c,
-                            child: _buildTile(c.role),
+                      .map((cls) => ChangeNotifierProvider.value(
+                            value: cls,
+                            child: _buildTile(cls.role),
                           ))
                       .toList()
                 ],
@@ -88,7 +88,7 @@ class ClassListViewState extends State<ClassListView> {
       case ClassRole.OWNER:
         return ClassListViewTileOwner();
       case ClassRole.TEACHER:
-        return ClassListViewTileAssistant();
+        return ClassListViewTileCollaborator();
       case ClassRole.STUDENT:
         return ClassListViewTileStudent();
       case ClassRole.NOBODY:

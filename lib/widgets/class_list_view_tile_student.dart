@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import '../themes.dart';
 
 class ClassListViewTileStudent extends StatelessWidget {
-  final _radius = BorderRadius.circular(8);
+  static const _radius = BorderRadius.all(Radius.circular(8));
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +29,7 @@ class ClassListViewTileStudent extends StatelessWidget {
           Positioned.fill(
             child: Material(
               borderRadius: _radius,
-              color: Colors.black12,
+              color: Colors.transparent,
               child: InkWell(
                 splashColor: Colors.black12,
                 borderRadius: _radius,
@@ -66,7 +66,7 @@ class ClassListViewTileStudent extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         PopupMenuButton(
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                          shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4))),
                           icon: const Icon(Icons.more_vert, color: Colors.white),
                           offset: const Offset(0, 40),
                           itemBuilder: (_) => [

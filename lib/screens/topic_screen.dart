@@ -9,18 +9,15 @@ import '../themes.dart';
 class TopicScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final theme = Themes.forClass(Provider.of<Class>(context).theme);
     final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
-    final double distance = isPortrait ? 130 : 100;
-
-    final theme = Provider.of<Class>(context).theme;
-    final primaryColor = Themes.forClass(theme).primaryColor;
-    final secondaryColor = Themes.forClass(theme).secondaryColor;
+    final double distance = isPortrait ? 120 : 100;
 
     return Scaffold(
       floatingActionButton: TeacherFloatingActionButton(
         bottomDistance: distance,
-        primaryColor: primaryColor,
-        secondaryColor: secondaryColor,
+        primaryColor: theme.primaryColor,
+        secondaryColor: theme.secondaryColor,
         actions: <Map<String, dynamic>>[
           {
             'tooltip': 'New Assignment',
@@ -28,7 +25,7 @@ class TopicScreen extends StatelessWidget {
             'onPressed': () {},
           },
           {
-            'tooltip': 'File Attachment',
+            'tooltip': 'New Material',
             'child': Icon(Icons.attachment),
             'onPressed': () {},
           },

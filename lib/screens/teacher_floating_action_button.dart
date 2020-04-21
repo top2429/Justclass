@@ -6,7 +6,7 @@ class TeacherFloatingActionButton extends StatefulWidget {
   final double bottomDistance;
   final Color primaryColor;
   final Color secondaryColor;
-  final List<Map<String, dynamic>> actions; // child and onPressed
+  final List<Map<String, dynamic>> actions; // tooltip, child and onPressed
 
   const TeacherFloatingActionButton({
     this.bottomDistance = 0,
@@ -72,6 +72,7 @@ class _TeacherFloatingActionButtonState extends State<TeacherFloatingActionButto
                     message: action['tooltip'], verticalOffset: -60,
                     child: FloatingActionButton(
                       elevation: 2,
+                      heroTag: action['tooltip'],
                       backgroundColor: widget.secondaryColor,
                       onPressed: action['onPressed'],
                       child: action['child'],
@@ -90,6 +91,7 @@ class _TeacherFloatingActionButtonState extends State<TeacherFloatingActionButto
             width: _btnHeight,
             child: FloatingActionButton(
               elevation: 5,
+              heroTag: 'New Component',
               backgroundColor: widget.primaryColor,
               child: AnimatedBuilder(
                 animation: _controller,

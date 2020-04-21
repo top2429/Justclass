@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:justclass/themes.dart';
 import 'package:justclass/widgets/backdrop_scaffold.dart';
@@ -15,7 +16,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
-    final headerHeight = isPortrait ? 400.0 : 100.0;
+    final double headerHeight = isPortrait ? 400 : 100;
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -23,7 +24,7 @@ class HomeScreen extends StatelessWidget {
       body: ScaleDrawerWrapper(
         key: _drawer,
         drawerContent: HomeDrawerContent(),
-        scaffold: BackdropScaffold(
+        topScaffold: BackdropScaffold(
           title: const Text("JustClass", style: TextStyle(fontWeight: FontWeight.bold)),
           headerHeight: headerHeight,
           iconPosition: BackdropIconPosition.action,
@@ -59,7 +60,7 @@ class HomeScreen extends StatelessWidget {
 
   Widget _buildPopupMenu() {
     return PopupMenuButton(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5))),
       icon: const Icon(Icons.more_vert, color: Colors.white),
       offset: const Offset(0, 40),
       itemBuilder: (_) => [

@@ -4,6 +4,7 @@ import 'package:justclass/screens/auth_screen.dart';
 import 'package:provider/provider.dart';
 
 class HomeDrawerContent extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(

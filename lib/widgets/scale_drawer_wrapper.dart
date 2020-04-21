@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 
 class ScaleDrawerWrapper extends StatefulWidget {
   final Widget drawerContent;
-  final Widget scaffold;
+  final Widget topScaffold;
 
-  ScaleDrawerWrapper({
+  const ScaleDrawerWrapper({
     Key key,
-    @required this.scaffold,
+    @required this.topScaffold,
     @required this.drawerContent,
   }) : super(key: key);
 
@@ -19,7 +19,7 @@ class ScaleDrawerWrapperState extends State<ScaleDrawerWrapper> with SingleTicke
   Animation<double> _translateAnim;
   Animation<double> _scaleAnim;
 
-  final _drawerWidth = 275.0;
+  static const _drawerWidth = 275.0;
 
   bool _canBeDragged = true;
 
@@ -109,21 +109,6 @@ class ScaleDrawerWrapperState extends State<ScaleDrawerWrapper> with SingleTicke
             ),
             AnimatedBuilder(
               animation: _controller,
-              child: GestureDetector(
-                onTap: close,
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.transparent,
-                    boxShadow: [BoxShadow(color: Colors.black38, blurRadius: 15, offset: Offset(3, 3))],
-//                    borderRadius: !_isOffScreen ? BorderRadius.zero : BorderRadius.circular(15),
-                  ),
-//                  child: ClipRRect(
-//                    borderRadius: !_isOffScreen ? BorderRadius.zero : BorderRadius.circular(15),
-//                  child: IgnorePointer(ignoring: !_controller.isDismissed, child: widget.scaffold),
-//                  ),
-                  child: ClipRRect(child: widget.scaffold),
-                ),
-              ),
               builder: (_, child) {
                 return Transform(
                   transform: Matrix4.identity()
@@ -133,6 +118,21 @@ class ScaleDrawerWrapperState extends State<ScaleDrawerWrapper> with SingleTicke
                   child: child,
                 );
               },
+              child: GestureDetector(
+                onTap: close,
+                child: Container(
+                  decoration: const BoxDecoration(
+                    color: Colors.transparent,
+                    boxShadow: [BoxShadow(color: Colors.black38, blurRadius: 15, offset: Offset(3, 3))],
+//                    borderRadius: !_isOffScreen ? BorderRadius.zero : BorderRadius.circular(15),
+                  ),
+//                  child: ClipRRect(
+//                    borderRadius: !_isOffScreen ? BorderRadius.zero : BorderRadius.circular(15),
+//                  child: IgnorePointer(ignoring: !_controller.isDismissed, child: widget.scaffold),
+//                  ),
+                  child: ClipRRect(child: widget.topScaffold),
+                ),
+              ),
             ),
           ],
         ),

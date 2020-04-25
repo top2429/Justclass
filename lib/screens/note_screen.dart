@@ -78,45 +78,44 @@ class _NoteScreenTopBarState extends State<NoteScreenTopBar> {
       elevation: 5,
       expandedHeight: 130,
       forceElevated: true,
-      backgroundColor: Colors.transparent,
-      flexibleSpace: Stack(
-        children: <Widget>[
-          Positioned.fill(
-            child: Hero(tag: cls.cid, child: Image.asset(Themes.forClass(cls.theme).imageUrl, fit: BoxFit.cover)),
-          ),
-          Container(
-            height: double.infinity,
-            width: double.infinity,
-            padding: const EdgeInsets.all(25),
-            alignment: Alignment.bottomLeft,
-            child: LayoutBuilder(builder: (context, constraint) {
-              return AnimatedOpacity(
-                opacity: (constraint.maxHeight <= 80) ? 0 : 1,
-                duration: const Duration(milliseconds: 300),
-                child: DefaultTextStyle.merge(
-                  style: const TextStyle(color: Colors.white),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        cls.title,
-                        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      if (cls.subject.isNotEmpty)
-                        Text(
-                          cls.subject,
-                          style: const TextStyle(fontSize: 15),
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                    ],
-                  ),
+      backgroundColor: Themes.forClass(cls.theme).primaryColor,
+      flexibleSpace: FlexibleSpaceBar(
+        background: Stack(
+          children: <Widget>[
+            Positioned.fill(
+              child: Hero(
+                tag: cls.cid,
+                child: Image.asset(
+                  Themes.forClass(cls.theme).imageUrl,
+                  fit: BoxFit.cover,
                 ),
-              );
-            }),
-          )
-        ],
+              ),
+            ),
+            Container(
+              height: double.infinity,
+              width: double.infinity,
+              padding: const EdgeInsets.all(25),
+              alignment: Alignment.bottomLeft,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    cls.title,
+                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  if (cls.subject.isNotEmpty)
+                    Text(
+                      cls.subject,
+                      style: const TextStyle(fontSize: 15, color: Colors.white),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                ],
+              ),
+            )
+          ],
+        ),
       ),
       actions: <Widget>[
         AppIconButton(

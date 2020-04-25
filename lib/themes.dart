@@ -7,8 +7,8 @@ class Themes {
   static const List<ClassTheme> _classThemes = [
     ClassTheme(
       imageUrl: 'assets/images/themes/theme-00.jpg',
-      primaryColor: primaryColor,
-      secondaryColor: Color(0xff1e88e5),
+      primaryColor:  Color(0xff02579a),
+      secondaryColor: Color(0xff007dde),
     ),
     ClassTheme(
       imageUrl: 'assets/images/themes/theme-01.jpg',

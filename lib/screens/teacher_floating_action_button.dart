@@ -69,7 +69,8 @@ class _TeacherFloatingActionButtonState extends State<TeacherFloatingActionButto
                 child: SizedBox(
                   width: 50,
                   child: Tooltip(
-                    message: action['tooltip'], verticalOffset: -60,
+                    message: action['tooltip'],
+                    verticalOffset: -60,
                     child: FloatingActionButton(
                       elevation: 2,
                       heroTag: action['tooltip'],

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:justclass/providers/class.dart';
+import 'package:justclass/widgets/app_icon_button.dart';
 import 'package:provider/provider.dart';
 
 import '../themes.dart';
@@ -10,24 +11,119 @@ class NoteScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final cls = Provider.of<Class>(context);
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.transparent,
       body: Container(
-        child: Column(
-          children: <Widget>[
-            Hero(
-              tag: cls.cid,
-              child: Image.asset(Themes.forClass(cls.theme).imageUrl, fit: BoxFit.cover),
-            ),
-            Center(
-              child: RaisedButton(
-                onPressed: () {
-                  cls.changeTheme();
-                },
-              ),
-            ),
-          ],
+        color: Colors.white,
+        child: RefreshIndicator(
+          onRefresh: () {
+            return Future.value(null);
+          },
+          displacement: 63,
+          child: CustomScrollView(
+            slivers: <Widget>[
+              NoteScreenTopBar(),
+              SliverList(
+                delegate: SliverChildListDelegate([
+                  const SizedBox(height: 10),
+                  buildChangeBtn(context),
+                  buildTestNote(context),
+                  buildTestNote(context),
+                  buildTestNote(context),
+                  buildTestNote(context),
+                  buildTestNote(context),
+                  const SizedBox(height: 70),
+                ]),
+              )
+            ],
+          ),
         ),
       ),
+    );
+  }
+
+  Widget buildTestNote(BuildContext context) {
+    final cls = Provider.of<Class>(context);
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        border: Border.all(color: Themes.forClass(cls.theme).primaryColor),
+        borderRadius: const BorderRadius.all(Radius.circular(5)),
+      ),
+      child: Container(height: 150),
+    );
+  }
+
+  Widget buildChangeBtn(BuildContext context) {
+    final cls = Provider.of<Class>(context);
+    return Center(
+      child: RaisedButton(
+        onPressed: cls.changeTheme,
+      ),
+    );
+  }
+}
+
+class NoteScreenTopBar extends StatefulWidget {
+  @override
+  _NoteScreenTopBarState createState() => _NoteScreenTopBarState();
+}
+
+class _NoteScreenTopBarState extends State<NoteScreenTopBar> {
+  @override
+  Widget build(BuildContext context) {
+    final cls = Provider.of<Class>(context);
+
+    return SliverAppBar(
+      elevation: 5,
+      expandedHeight: 130,
+      forceElevated: true,
+      backgroundColor: Colors.transparent,
+      flexibleSpace: Stack(
+        children: <Widget>[
+          Positioned.fill(
+            child: Hero(tag: cls.cid, child: Image.asset(Themes.forClass(cls.theme).imageUrl, fit: BoxFit.cover)),
+          ),
+          Container(
+            height: double.infinity,
+            width: double.infinity,
+            padding: const EdgeInsets.all(25),
+            alignment: Alignment.bottomLeft,
+            child: LayoutBuilder(builder: (context, constraint) {
+              return AnimatedOpacity(
+                opacity: (constraint.maxHeight <= 80) ? 0 : 1,
+                duration: const Duration(milliseconds: 300),
+                child: DefaultTextStyle.merge(
+                  style: const TextStyle(color: Colors.white),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        cls.title,
+                        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      if (cls.subject.isNotEmpty)
+                        Text(
+                          cls.subject,
+                          style: const TextStyle(fontSize: 15),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                    ],
+                  ),
+                ),
+              );
+            }),
+          )
+        ],
+      ),
+      actions: <Widget>[
+        AppIconButton(
+          icon: Icon(Icons.settings),
+          onPressed: () {},
+        ),
+      ],
     );
   }
 }

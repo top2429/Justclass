@@ -87,7 +87,7 @@ class ClassListViewState extends State<ClassListView> {
     switch (role) {
       case ClassRole.OWNER:
         return ClassListViewTileOwner();
-      case ClassRole.TEACHER:
+      case ClassRole.COLLABORATOR:
         return ClassListViewTileCollaborator();
       case ClassRole.STUDENT:
         return ClassListViewTileStudent();

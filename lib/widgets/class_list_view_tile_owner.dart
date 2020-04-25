@@ -43,27 +43,29 @@ class ClassListViewTileOwner extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.all(15),
-                          child: DefaultTextStyle.merge(
-                            style: const TextStyle(color: Colors.white),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                Text(
-                                  cls.title,
-                                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                Text(
-                                  cls.subject,
-                                  style: const TextStyle(fontSize: 14),
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                Spacer(),
-                                Text(countStr, style: const TextStyle(fontSize: 14)),
-                              ],
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.all(15),
+                            child: DefaultTextStyle.merge(
+                              style: const TextStyle(color: Colors.white),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  Text(
+                                    cls.title,
+                                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  Text(
+                                    cls.subject,
+                                    style: const TextStyle(fontSize: 14),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  Spacer(),
+                                  Text(countStr, style: const TextStyle(fontSize: 14)),
+                                ],
+                              ),
                             ),
                           ),
                         ),

@@ -2,14 +2,14 @@ import 'package:flutter/foundation.dart';
 import 'package:justclass/themes.dart';
 import 'package:justclass/utils/api_call.dart';
 
-enum ClassRole { OWNER, TEACHER, STUDENT, NOBODY }
+enum ClassRole { OWNER, COLLABORATOR, STUDENT, NOBODY }
 
 extension ClassRoles on ClassRole {
   static ClassRole getType(String role) {
     if (role == 'OWNER')
       return ClassRole.OWNER;
     else if (role == 'TEACHER')
-      return ClassRole.TEACHER;
+      return ClassRole.COLLABORATOR;
     else if (role == 'STUDENT')
       return ClassRole.STUDENT;
     else

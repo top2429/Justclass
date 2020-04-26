@@ -11,7 +11,7 @@ class TopicScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Themes.forClass(Provider.of<Class>(context).theme);
     final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
-    final double distance = isPortrait ? 120 : 100;
+    final double distance = isPortrait ? 110 : 100;
 
     return Scaffold(
       floatingActionButton: TeacherFloatingActionButton(

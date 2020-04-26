@@ -25,7 +25,7 @@ class ClassListViewTileStudent extends StatelessWidget {
                 child: ClipRRect(
                   borderRadius: _radius,
                   child: Hero(
-                    tag: cls.cid,
+                    tag: 'background${cls.cid}',
                     child: Image.asset(Themes.forClass(cls.theme).imageUrl, fit: BoxFit.cover),
                   ),
                 ),

@@ -64,16 +64,11 @@ class NoteScreen extends StatelessWidget {
   }
 }
 
-class NoteScreenTopBar extends StatefulWidget {
-  @override
-  _NoteScreenTopBarState createState() => _NoteScreenTopBarState();
-}
-
-class _NoteScreenTopBarState extends State<NoteScreenTopBar> {
+class NoteScreenTopBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+//    final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
     final cls = Provider.of<Class>(context);
-
     return SliverAppBar(
       elevation: 5,
       expandedHeight: 130,
@@ -84,11 +79,8 @@ class _NoteScreenTopBarState extends State<NoteScreenTopBar> {
           children: <Widget>[
             Positioned.fill(
               child: Hero(
-                tag: cls.cid,
-                child: Image.asset(
-                  Themes.forClass(cls.theme).imageUrl,
-                  fit: BoxFit.cover,
-                ),
+                tag: 'background${cls.cid}',
+                child: Image.asset(Themes.forClass(cls.theme).imageUrl, fit: BoxFit.cover),
               ),
             ),
             Container(
@@ -117,8 +109,10 @@ class _NoteScreenTopBarState extends State<NoteScreenTopBar> {
           ],
         ),
       ),
+      leading: AppIconButton.back(onPressed: () => Navigator.of(context).pop()),
       actions: <Widget>[
         AppIconButton(
+          tooltip: 'Edit Class Info',
           icon: Icon(Icons.settings),
           onPressed: () {},
         ),

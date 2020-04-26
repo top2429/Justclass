@@ -3,17 +3,23 @@ import 'package:flutter/material.dart';
 class AppIconButton extends StatelessWidget {
   final Icon icon;
   final Function onPressed;
+  final String tooltip;
 
-  const AppIconButton({this.icon, this.onPressed});
+  const AppIconButton({this.icon, this.onPressed, this.tooltip = 'Show menu'});
+
+  AppIconButton.back({this.onPressed, this.icon = const Icon(Icons.arrow_back), this.tooltip = 'Back'});
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 50,
-      width: 50,
-      child: IconButton(
+    return Tooltip(
+      message: tooltip,
+      child: MaterialButton(
+        height: 50,
+        minWidth: 50,
+        textColor: Colors.white,
+        shape: const CircleBorder(),
         onPressed: onPressed,
-        icon: icon,
+        child: Center(child: icon),
       ),
     );
   }

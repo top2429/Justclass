@@ -1,9 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:justclass/themes.dart';
-import 'package:justclass/widgets/backdrop_scaffold.dart';
+import 'package:justclass/widgets/app_icon_button.dart';
 import 'package:justclass/widgets/class_list_view.dart';
 import 'package:justclass/widgets/create_class_button.dart';
+import 'package:justclass/widgets/home_backdrop_scaffold.dart';
 import 'package:justclass/widgets/home_drawer_content.dart';
 import 'package:justclass/widgets/join_class_button.dart';
 import 'package:justclass/widgets/scale_drawer_wrapper.dart';
@@ -16,7 +17,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
-    final double headerHeight = isPortrait ? 400 : 100;
+    final double dropDistance = isPortrait ? 230 : 200;
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -24,19 +25,16 @@ class HomeScreen extends StatelessWidget {
       body: ScaleDrawerWrapper(
         key: _drawer,
         drawerContent: HomeDrawerContent(),
-        topScaffold: BackdropScaffold(
+        topScaffold: HomeBackdropScaffold(
           title: const Text("JustClass", style: TextStyle(fontWeight: FontWeight.bold)),
-          headerHeight: headerHeight,
-          iconPosition: BackdropIconPosition.action,
-          appBarColor: Theme.of(context).backgroundColor,
-          backLayerColor: Theme.of(context).backgroundColor,
-          leading: IconButton(icon: const Icon(Icons.menu), onPressed: () => _drawer.currentState.swap()),
+          dropDistance: dropDistance,
+          backColor: Theme.of(context).backgroundColor,
+          leading: AppIconButton(icon: const Icon(Icons.menu), onPressed: () => _drawer.currentState.swap()),
           actions: <Widget>[_buildPopupMenu()],
           backLayer: LayoutBuilder(
             builder: (_, constraints) {
-              final height = constraints.maxHeight - headerHeight;
               final width = isPortrait ? constraints.maxWidth * 0.35 : constraints.maxWidth * 0.3;
-              return _buildBackLayer(height, width);
+              return _buildBackLayer(dropDistance, width);
             },
           ),
           frontLayer: ClassListView(key: _classListView),
@@ -59,17 +57,25 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget _buildPopupMenu() {
-    return PopupMenuButton(
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5))),
-      icon: const Icon(Icons.more_vert, color: Colors.white),
-      offset: const Offset(0, 40),
-      itemBuilder: (_) => [
-        const PopupMenuItem(child: Text('Joined'), value: ViewType.JOINED, height: 40),
-        const PopupMenuItem(child: Text('Created'), value: ViewType.CREATED, height: 40),
-        const PopupMenuItem(child: Text('Collaborating'), value: ViewType.COLLABORATING, height: 40),
-        const PopupMenuItem(child: Text('All'), value: ViewType.ALL, height: 40),
-      ],
-      onSelected: (viewType) => _classListView.currentState.viewType = viewType,
+    return ClipRRect(
+      borderRadius: const BorderRadius.all(Radius.circular(kToolbarHeight / 2)),
+      child: SizedBox(
+        width: kToolbarHeight,
+        child: Material(
+          color: Colors.transparent,
+          child: PopupMenuButton(
+            shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5))),
+            offset: const Offset(0, 40),
+            itemBuilder: (_) => [
+              const PopupMenuItem(child: Text('Joined'), value: ViewType.JOINED, height: 40),
+              const PopupMenuItem(child: Text('Created'), value: ViewType.CREATED, height: 40),
+              const PopupMenuItem(child: Text('Collaborating'), value: ViewType.COLLABORATING, height: 40),
+              const PopupMenuItem(child: Text('All'), value: ViewType.ALL, height: 40),
+            ],
+            onSelected: (viewType) => _classListView.currentState.viewType = viewType,
+          ),
+        ),
+      ),
     );
   }
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class AppIconButton extends StatelessWidget {
-  final Icon icon;
+  final Widget icon;
   final Function onPressed;
   final String tooltip;
 

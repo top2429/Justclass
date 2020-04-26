@@ -36,6 +36,9 @@ class TopicScreen extends StatelessWidget {
           },
         ],
       ),
+      body: SafeArea(
+        child: Container(),
+      ),
     );
   }
 }

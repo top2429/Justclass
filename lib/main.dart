@@ -6,10 +6,11 @@ import 'package:justclass/screens/class_screen.dart';
 import 'package:justclass/screens/home_screen.dart';
 import 'package:justclass/screens/splash_screen.dart';
 import 'package:justclass/themes.dart';
+import 'package:justclass/widgets/app_icon_button.dart';
+import 'package:justclass/widgets/home_backdrop_scaffold.dart';
 import 'package:provider/provider.dart';
 
 void main() {
-//  WidgetsFlutterBinding.ensureInitialized();
   runApp(MyApp());
 }
 
@@ -28,7 +29,6 @@ class MyApp extends StatelessWidget {
         builder: (_, auth, __) {
           return MaterialApp(
             title: 'JustClass',
-//            debugShowCheckedModeBanner: false,
             theme: Themes.forApp,
             home: _buildFirstScreen(auth),
             routes: {

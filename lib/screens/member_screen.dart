@@ -6,7 +6,7 @@ class MemberScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.amber,
-      body: Container(),
+      body: SafeArea(child: Container()),
     );
   }
 }

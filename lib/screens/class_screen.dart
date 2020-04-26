@@ -16,16 +16,6 @@ class ClassScreen extends StatelessWidget {
 
   ClassScreen({@required this.cls});
 
-//  final testCls = Class(
-//    cid: '0',
-//    title: 'KTPM_1234',
-//    publicCode: '010ax31',
-//    role: ClassRole.OWNER,
-//    theme: 5,
-//    studentCount: 12,
-//    section: 'Môn: Kiến trúc phần mềm',
-//  );
-
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider.value(

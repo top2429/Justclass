@@ -12,31 +12,29 @@ class NoteScreen extends StatelessWidget {
     final cls = Provider.of<Class>(context);
     return Scaffold(
       backgroundColor: Themes.forClass(cls.theme).primaryColor,
-      body: SafeArea(
-        child: Container(
-          color: Colors.white,
-          child: RefreshIndicator(
-            onRefresh: () {
-              return Future.value(null);
-            },
-            displacement: 63,
-            child: CustomScrollView(
-              slivers: <Widget>[
-                NoteScreenTopBar(),
-                SliverList(
-                  delegate: SliverChildListDelegate([
-                    const SizedBox(height: 10),
-                    buildChangeBtn(context),
-                    buildTestNote(context),
-                    buildTestNote(context),
-                    buildTestNote(context),
-                    buildTestNote(context),
-                    buildTestNote(context),
-                    const SizedBox(height: 70),
-                  ]),
-                )
-              ],
-            ),
+      body: Container(
+        color: Colors.white,
+        child: RefreshIndicator(
+          onRefresh: () {
+            return Future.value(null);
+          },
+          displacement: 63,
+          child: CustomScrollView(
+            slivers: <Widget>[
+              NoteScreenTopBar(),
+              SliverList(
+                delegate: SliverChildListDelegate([
+                  const SizedBox(height: 10),
+                  buildChangeBtn(context),
+                  buildTestNote(context),
+                  buildTestNote(context),
+                  buildTestNote(context),
+                  buildTestNote(context),
+                  buildTestNote(context),
+                  const SizedBox(height: 70),
+                ]),
+              )
+            ],
           ),
         ),
       ),

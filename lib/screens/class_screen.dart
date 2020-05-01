@@ -44,19 +44,20 @@ class ClassScreenContent extends StatefulWidget {
 
 class _ClassScreenContentState extends State<ClassScreenContent> {
   int _index = 0;
+  final _pageController = PageController();
 
-  Widget _getScreen(int index) {
-    switch (index) {
-      case 0:
-        return NoteScreen();
-      case 1:
-        return TopicScreen();
-      case 2:
-        return MemberScreen();
-      default:
-        return null;
-    }
-  }
+//  Widget _getScreen(int index) {
+//    switch (index) {
+//      case 0:
+//        return NoteScreen();
+//      case 1:
+//        return TopicScreen();
+//      case 2:
+//        return MemberScreen();
+//      default:
+//        return null;
+//    }
+//  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +65,15 @@ class _ClassScreenContentState extends State<ClassScreenContent> {
 
     return Stack(
       children: <Widget>[
-        _getScreen(_index),
+        PageView(
+          controller: _pageController,
+          physics: NeverScrollableScrollPhysics(),
+          children: <Widget>[
+            NoteScreen(),
+            TopicScreen(),
+            MemberScreen(),
+          ],
+        ),
         Positioned(
           bottom: 0,
           left: 0,
@@ -76,7 +85,7 @@ class _ClassScreenContentState extends State<ClassScreenContent> {
               backgroundColor: Colors.transparent,
               animationDuration: const Duration(milliseconds: 500),
               index: _index,
-              onTap: (index) => setState(() => _index = index),
+              onTap: (index) => _pageController.jumpToPage(index),
               items: [
                 const Icon(Icons.speaker_notes, color: Colors.white),
                 const Icon(Icons.class_, color: Colors.white),

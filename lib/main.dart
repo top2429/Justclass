@@ -2,12 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:justclass/providers/auth.dart';
 import 'package:justclass/providers/class_manager.dart';
 import 'package:justclass/screens/auth_screen.dart';
-import 'package:justclass/screens/class_screen.dart';
 import 'package:justclass/screens/home_screen.dart';
 import 'package:justclass/screens/splash_screen.dart';
 import 'package:justclass/themes.dart';
-import 'package:justclass/widgets/app_icon_button.dart';
-import 'package:justclass/widgets/home_backdrop_scaffold.dart';
 import 'package:provider/provider.dart';
 
 void main() {

@@ -1,17 +1,28 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:justclass/providers/auth.dart';
 import 'package:justclass/providers/class.dart';
+import 'package:justclass/screens/new_note_screen_teacher.dart';
 import 'package:justclass/widgets/app_icon_button.dart';
 import 'package:provider/provider.dart';
 
 import '../themes.dart';
 
-class NoteScreen extends StatelessWidget {
+class NoteScreen extends StatefulWidget {
+  @override
+  _NoteScreenState createState() => _NoteScreenState();
+}
+
+class _NoteScreenState extends State<NoteScreen> with AutomaticKeepAliveClientMixin {
+  bool get wantKeepAlive => true;
+
   @override
   Widget build(BuildContext context) {
-    final cls = Provider.of<Class>(context);
+    super.build(context);
+    final theme = Themes.forClass(Provider.of<Class>(context).theme);
+
     return Scaffold(
-      backgroundColor: Themes.forClass(cls.theme).primaryColor,
+      backgroundColor: theme.primaryColor,
       body: Container(
         color: Colors.white,
         child: RefreshIndicator(
@@ -31,11 +42,36 @@ class NoteScreen extends StatelessWidget {
                   buildTestNote(context),
                   buildTestNote(context),
                   buildTestNote(context),
-                  const SizedBox(height: 70),
+                  const SizedBox(height: 130),
                 ]),
               )
             ],
           ),
+        ),
+      ),
+      floatingActionButton: _buildAddNoteBtn(context, theme.primaryColor),
+    );
+  }
+
+  Widget _buildAddNoteBtn(BuildContext context, Color bgColor) {
+    final auth = Provider.of<Auth>(context);
+    final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+    final double distance = isPortrait ? 105 : 100;
+
+    return SizedBox(
+      width: 60,
+      height: distance + 60,
+      child: Tooltip(
+        message: 'New Note',
+        verticalOffset: -70,
+        child: FloatingActionButton(
+          elevation: 2,
+          backgroundColor: bgColor,
+          heroTag: 'new content',
+          child: Icon(Icons.speaker_notes, color: Colors.white, size: 30),
+          onPressed: () {
+            Navigator.of(context).push(MaterialPageRoute(builder: (_) => NewNoteScreenTeacher()));
+          },
         ),
       ),
     );

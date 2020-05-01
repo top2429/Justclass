@@ -46,19 +46,6 @@ class _ClassScreenContentState extends State<ClassScreenContent> {
   int _index = 0;
   final _pageController = PageController();
 
-//  Widget _getScreen(int index) {
-//    switch (index) {
-//      case 0:
-//        return NoteScreen();
-//      case 1:
-//        return TopicScreen();
-//      case 2:
-//        return MemberScreen();
-//      default:
-//        return null;
-//    }
-//  }
-
   @override
   Widget build(BuildContext context) {
     final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
@@ -97,4 +84,17 @@ class _ClassScreenContentState extends State<ClassScreenContent> {
       ],
     );
   }
+
+//  Widget _getScreen(int index) {
+//    switch (index) {
+//      case 0:
+//        return NoteScreen();
+//      case 1:
+//        return TopicScreen();
+//      case 2:
+//        return MemberScreen();
+//      default:
+//        return null;
+//    }
+//  }
 }

@@ -49,11 +49,11 @@ class _NoteScreenState extends State<NoteScreen> with AutomaticKeepAliveClientMi
           ),
         ),
       ),
-      floatingActionButton: _buildAddNoteBtn(context, theme.primaryColor),
+      floatingActionButton: _buildAddNoteBtn(context, theme),
     );
   }
 
-  Widget _buildAddNoteBtn(BuildContext context, Color bgColor) {
+  Widget _buildAddNoteBtn(BuildContext context, ClassTheme theme) {
     final auth = Provider.of<Auth>(context);
     final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
     final double distance = isPortrait ? 105 : 100;
@@ -66,11 +66,16 @@ class _NoteScreenState extends State<NoteScreen> with AutomaticKeepAliveClientMi
         verticalOffset: -70,
         child: FloatingActionButton(
           elevation: 2,
-          backgroundColor: bgColor,
+          backgroundColor: theme.primaryColor,
           heroTag: 'new content',
           child: Icon(Icons.speaker_notes, color: Colors.white, size: 30),
           onPressed: () {
-            Navigator.of(context).push(MaterialPageRoute(builder: (_) => NewNoteScreenTeacher()));
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (_) => NewNoteScreenTeacher(
+                      theme: theme,
+                      uid: auth.user.uid,
+                      cid: Provider.of<Class>(context, listen: false).cid,
+                    )));
           },
         ),
       ),

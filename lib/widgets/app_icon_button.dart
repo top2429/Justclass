@@ -9,6 +9,9 @@ class AppIconButton extends StatelessWidget {
 
   AppIconButton.back({this.onPressed, this.icon = const Icon(Icons.arrow_back), this.tooltip = 'Back'});
 
+  AppIconButton.clear(
+      {this.onPressed, this.icon = const Icon(Icons.clear, color: Colors.black54), this.tooltip = 'Clear'});
+
   @override
   Widget build(BuildContext context) {
     return Tooltip(

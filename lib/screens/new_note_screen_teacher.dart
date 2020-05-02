@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:justclass/utils/validator.dart';
@@ -23,6 +25,7 @@ class _NewNoteScreenTeacherState extends State<NewNoteScreenTeacher> {
   void _pickFiles() async {
     FilePicker.clearTemporaryFiles();
     files = await FilePicker.getMultiFilePath(type: FileType.any);
+    setState(() {});
   }
 
   void _sendNote() {}
@@ -31,11 +34,12 @@ class _NewNoteScreenTeacherState extends State<NewNoteScreenTeacher> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _buildAppBar(),
-      body: Padding(
-        padding: const EdgeInsets.all(15),
+      body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
             _buildNoteInput(),
+            Divider(),
+            if (files != null) ..._buildFileList(),
           ],
         ),
       ),
@@ -68,7 +72,7 @@ class _NewNoteScreenTeacherState extends State<NewNoteScreenTeacher> {
 
   Widget _buildNoteInput() {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 5),
+      padding: const EdgeInsets.only(left: 15, right: 15, top: 20, bottom: 10),
       child: TextFormField(
         minLines: 1,
         maxLines: 5,
@@ -83,5 +87,23 @@ class _NewNoteScreenTeacherState extends State<NewNoteScreenTeacher> {
         },
       ),
     );
+  }
+
+  List<Widget> _buildFileList() {
+    return files.keys
+        .map((key) => Padding(
+              padding: const EdgeInsets.all(5),
+              child: Row(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: Icon(Icons.image, size: 30, color: widget.theme.primaryColor),
+                  ),
+                  Expanded(child: Text(key)),
+                  AppIconButton.clear(onPressed: () {}),
+                ],
+              ),
+            ))
+        .toList();
   }
 }

@@ -26,18 +26,32 @@ class NewNoteScreenTeacher extends StatefulWidget {
 class _NewNoteScreenTeacherState extends State<NewNoteScreenTeacher> {
   bool _valid = false;
   Map<String, String> _files = {};
+  OverlayEntry _entry;
 
-  void _pickFiles() async {
+  @override
+  void initState() {
+    _entry = OverlayEntry(builder: (_) => LoadingDualRing());
+
+    super.initState();
+  }
+
+  void _pickFiles(BuildContext context) async {
     FilePicker.clearTemporaryFiles();
-    _files.addAll(await FilePicker.getMultiFilePath(type: FileType.any));
+    Overlay.of(context).insert(_entry);
+    try {
+      _files.addAll(await FilePicker.getMultiFilePath(type: FileType.any));
+    } catch (error) {
+      AppSnackBar.showError(context, message: "Unable to attach files!");
+    } finally {
+      _entry.remove();
+    }
     setState(() {});
   }
 
   void _sendNote(BuildContext context) async {
     FocusScope.of(context).unfocus();
-    OverlayEntry entry = OverlayEntry(builder: (_) => LoadingDualRing());
 
-    Overlay.of(context).insert(entry);
+    Overlay.of(context).insert(_entry);
     try {
       // TODO: call api from note manager
       await Future.delayed(const Duration(seconds: 3));
@@ -46,7 +60,7 @@ class _NewNoteScreenTeacherState extends State<NewNoteScreenTeacher> {
     } catch (error) {
       AppSnackBar.showError(context, message: "Unable to post notes!");
     } finally {
-      entry.remove();
+      _entry.remove();
     }
   }
 
@@ -80,18 +94,20 @@ class _NewNoteScreenTeacherState extends State<NewNoteScreenTeacher> {
         onPressed: () => Navigator.of(context).pop(),
       ),
       actions: <Widget>[
-        AppIconButton(
-          icon: const Icon(Icons.attachment),
-          tooltip: 'Attachment',
-          onPressed: _pickFiles,
-        ),
-        Builder(
-          builder: (context) => AppIconButton(
+        Builder(builder: (context) {
+          return AppIconButton(
+            icon: const Icon(Icons.attachment),
+            tooltip: 'Attachment',
+            onPressed: () => _pickFiles(context),
+          );
+        }),
+        Builder(builder: (context) {
+          return AppIconButton(
             icon: const Icon(Icons.send),
             tooltip: 'Post',
             onPressed: !_valid ? null : () => _sendNote(context),
-          ),
-        ),
+          );
+        }),
         const SizedBox(width: 5),
       ],
     );

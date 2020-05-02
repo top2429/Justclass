@@ -8,7 +8,9 @@ import 'package:justclass/utils/test.dart';
 import 'package:justclass/widgets/create_class_form.dart';
 
 class ApiCall {
-  static checkInternetConnection() {}
+  static checkInternetConnection() {
+    // TODO: check internet
+  }
 
   static Future<bool> postUserData(User user) async {
     try {

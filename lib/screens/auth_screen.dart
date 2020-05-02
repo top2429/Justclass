@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:justclass/widgets/email_auth_form.dart';
+import 'package:justclass/widgets/loading_dual_ring.dart';
 import 'package:justclass/widgets/oauth_row.dart';
 import 'package:justclass/widgets/auth_mode_changing_button.dart';
 
@@ -57,13 +58,7 @@ class _AuthScreenState extends State<AuthScreen> {
           ),
           Visibility(
             visible: _isLoading,
-            child: Container(
-              width: double.infinity,
-              height: double.infinity,
-              color: Colors.black38,
-              alignment: Alignment.center,
-              child: const SpinKitDualRing(color: Colors.white, lineWidth: 3),
-            ),
+            child: LoadingDualRing(),
           ),
         ],
       ),

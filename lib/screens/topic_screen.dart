@@ -32,7 +32,7 @@ class TopicScreen extends StatelessWidget {
           },
           {
             'tooltip': 'New Topic',
-            'child': Icon(Icons.playlist_add),
+            'child': Icon(Icons.class_),
             'onPressed': () {},
           },
         ],

@@ -18,6 +18,7 @@ class AppIconButton extends StatelessWidget {
         minWidth: 50,
         textColor: Colors.white,
         shape: const CircleBorder(),
+        disabledTextColor: Colors.white24,
         onPressed: onPressed,
         child: Center(child: icon),
       ),

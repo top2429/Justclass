@@ -68,14 +68,17 @@ class _NoteScreenState extends State<NoteScreen> with AutomaticKeepAliveClientMi
           elevation: 2,
           backgroundColor: theme.primaryColor,
           heroTag: 'new content',
-          child: Icon(Icons.speaker_notes, color: Colors.white, size: 30),
+          child: const Icon(Icons.add_comment, color: Colors.white, size: 23),
           onPressed: () {
-            Navigator.of(context).push(MaterialPageRoute(
+            Navigator.of(context).push(
+              MaterialPageRoute(
                 builder: (_) => NewNoteScreenTeacher(
-                      theme: theme,
-                      uid: auth.user.uid,
-                      cid: Provider.of<Class>(context, listen: false).cid,
-                    )));
+                  theme: theme,
+                  uid: auth.user.uid,
+                  cid: Provider.of<Class>(context, listen: false).cid,
+                ),
+              ),
+            );
           },
         ),
       ),
@@ -154,7 +157,7 @@ class NoteScreenTopBar extends StatelessWidget {
       actions: <Widget>[
         AppIconButton(
           tooltip: 'Edit Class Info',
-          icon: Icon(Icons.settings),
+          icon: const Icon(Icons.settings),
           onPressed: () {},
         ),
       ],

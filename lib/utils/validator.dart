@@ -1,6 +1,5 @@
 class EmailPassValidator {
-  static final _emailRegExp =
-      RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
+  static final _emailRegExp = RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
 
   static String validateEmail(String email) {
     if (email.isEmpty) return "Please provide an email";
@@ -25,6 +24,15 @@ class EmailPassValidator {
 class CreateClassValidator {
   static String validateClassName(String name) {
     if (name.isEmpty) return "Please provide a class name";
+    return null;
+  }
+}
+
+class NewNoteValidator {
+  static String validateNote(String note) {
+    if (note.isEmpty) return "Please provide a note";
+    const len = 5;
+    if (note.length < len) return "A note needs to contain at least $len characters";
     return null;
   }
 }

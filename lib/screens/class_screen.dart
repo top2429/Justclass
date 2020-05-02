@@ -74,8 +74,8 @@ class _ClassScreenContentState extends State<ClassScreenContent> {
               index: _index,
               onTap: (index) => _pageController.jumpToPage(index),
               items: [
-                const Icon(Icons.speaker_notes, color: Colors.white),
-                const Icon(Icons.class_, color: Colors.white),
+                const Icon(Icons.chat_bubble, color: Colors.white),
+                const Icon(Icons.collections_bookmark, color: Colors.white),
                 const Icon(Icons.people, color: Colors.white),
               ],
             ),

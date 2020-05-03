@@ -26,53 +26,43 @@ class NewNoteScreenTeacher extends StatefulWidget {
 class _NewNoteScreenTeacherState extends State<NewNoteScreenTeacher> {
   bool _valid = false;
   Map<String, String> _files = {};
-  OverlayEntry _loadingSpin;
-  bool loading = false;
-
-  @override
-  void initState() {
-    _loadingSpin = OverlayEntry(builder: (_) => LoadingDualRing());
-
-    super.initState();
-  }
+  bool _loading = false;
 
   void _pickFiles(BuildContext context) async {
     FilePicker.clearTemporaryFiles();
-    showLoadingSpin();
+    _showLoadingSpin();
     try {
       final files = await FilePicker.getMultiFilePath(type: FileType.any);
       if (files != null) _files.addAll(files);
     } catch (error) {
       AppSnackBar.showError(context, message: "Unable to attach files!");
     } finally {
-      hideLoadingSpin();
+      _hideLoadingSpin();
     }
     setState(() {});
   }
 
   void _sendNote(BuildContext context) async {
-    showLoadingSpin();
+    _showLoadingSpin();
     try {
       // TODO: call api from note manager
-      await Future.delayed(const Duration(seconds: 5));
+      await Future.delayed(const Duration(seconds: 3));
       throw HttpException();
       Navigator.of(context).pop();
     } catch (error) {
-      AppSnackBar.showError(context, message: "Unable to post notes!");
+      if (this.mounted) AppSnackBar.showError(context, message: "Unable to post notes!");
     } finally {
-      hideLoadingSpin();
+      _hideLoadingSpin();
     }
   }
 
-  void showLoadingSpin() {
-    loading = true;
+  void _showLoadingSpin() {
     FocusScope.of(context).unfocus();
-    Overlay.of(context).insert(_loadingSpin);
+    setState(() => _loading = true);
   }
 
-  void hideLoadingSpin() {
-    loading = false;
-    _loadingSpin?.remove();
+  void _hideLoadingSpin() {
+    if (this.mounted) setState(() => _loading = false);
   }
 
   void _removeFile(String key) {
@@ -80,27 +70,23 @@ class _NewNoteScreenTeacherState extends State<NewNoteScreenTeacher> {
     setState(() {});
   }
 
-  Future<bool> _onWillPopScope() async {
-    if (loading) hideLoadingSpin();
-    _loadingSpin = null;
-    return true;
-  }
-
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: _onWillPopScope,
-      child: Scaffold(
-        appBar: _buildAppBar(),
-        body: SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
-              _buildNoteInput(),
-              Divider(),
-              if (_files.isNotEmpty) ..._buildFileList(),
-            ],
+    return Scaffold(
+      appBar: _buildAppBar(),
+      body: Stack(
+        children: <Widget>[
+          SingleChildScrollView(
+            child: Column(
+              children: <Widget>[
+                _buildNoteInput(),
+                Divider(),
+                if (_files.isNotEmpty) ..._buildFileList(),
+              ],
+            ),
           ),
-        ),
+          Visibility(visible: _loading, child: LoadingDualRing()),
+        ],
       ),
     );
   }
@@ -111,21 +97,23 @@ class _NewNoteScreenTeacherState extends State<NewNoteScreenTeacher> {
       leading: AppIconButton(
         tooltip: 'Cancel',
         icon: const Icon(Icons.close),
-        onPressed: () => Navigator.of(context).pop(),
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
       ),
       actions: <Widget>[
         Builder(builder: (context) {
           return AppIconButton(
             icon: const Icon(Icons.attachment),
             tooltip: 'Attachment',
-            onPressed: () => _pickFiles(context),
+            onPressed: _loading ? null : () => _pickFiles(context),
           );
         }),
         Builder(builder: (context) {
           return AppIconButton(
             icon: const Icon(Icons.send),
             tooltip: 'Post',
-            onPressed: !_valid ? null : () => _sendNote(context),
+            onPressed: (!_valid || _loading) ? null : () => _sendNote(context),
           );
         }),
         const SizedBox(width: 5),

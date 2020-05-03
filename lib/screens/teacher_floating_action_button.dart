@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:justclass/utils/constants.dart';
 
 class TeacherFloatingActionButton extends StatefulWidget {
   final double bottomDistance;
@@ -25,7 +26,7 @@ class _TeacherFloatingActionButtonState extends State<TeacherFloatingActionButto
   Animation<double> _animAngle;
   Animation<double> _animOpacity;
 
-  final _btnHeight = 60.0;
+  final _btnHeight = btnHeight;
 
   @override
   void initState() {

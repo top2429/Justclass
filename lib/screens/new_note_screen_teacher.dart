@@ -27,6 +27,7 @@ class _NewNoteScreenTeacherState extends State<NewNoteScreenTeacher> {
   bool _valid = false;
   Map<String, String> _files = {};
   OverlayEntry _loadingSpin;
+  bool loading = false;
 
   @override
   void initState() {
@@ -36,25 +37,21 @@ class _NewNoteScreenTeacherState extends State<NewNoteScreenTeacher> {
   }
 
   void _pickFiles(BuildContext context) async {
-    FocusScope.of(context).unfocus();
     FilePicker.clearTemporaryFiles();
-    Overlay.of(context).insert(_loadingSpin);
-
+    showLoadingSpin();
     try {
       final files = await FilePicker.getMultiFilePath(type: FileType.any);
       if (files != null) _files.addAll(files);
     } catch (error) {
       AppSnackBar.showError(context, message: "Unable to attach files!");
     } finally {
-      _loadingSpin?.remove();
+      hideLoadingSpin();
     }
     setState(() {});
   }
 
   void _sendNote(BuildContext context) async {
-    FocusScope.of(context).unfocus();
-    Overlay.of(context).insert(_loadingSpin);
-
+    showLoadingSpin();
     try {
       // TODO: call api from note manager
       await Future.delayed(const Duration(seconds: 5));
@@ -63,8 +60,19 @@ class _NewNoteScreenTeacherState extends State<NewNoteScreenTeacher> {
     } catch (error) {
       AppSnackBar.showError(context, message: "Unable to post notes!");
     } finally {
-      _loadingSpin?.remove();
+      hideLoadingSpin();
     }
+  }
+
+  void showLoadingSpin() {
+    loading = true;
+    FocusScope.of(context).unfocus();
+    Overlay.of(context).insert(_loadingSpin);
+  }
+
+  void hideLoadingSpin() {
+    loading = false;
+    _loadingSpin?.remove();
   }
 
   void _removeFile(String key) {
@@ -73,7 +81,7 @@ class _NewNoteScreenTeacherState extends State<NewNoteScreenTeacher> {
   }
 
   Future<bool> _onWillPopScope() async {
-    _loadingSpin.remove();
+    if (loading) hideLoadingSpin();
     _loadingSpin = null;
     return true;
   }

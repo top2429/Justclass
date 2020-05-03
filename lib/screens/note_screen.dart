@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:justclass/providers/auth.dart';
 import 'package:justclass/providers/class.dart';
 import 'package:justclass/screens/new_note_screen_teacher.dart';
+import 'package:justclass/utils/constants.dart';
 import 'package:justclass/widgets/app_icon_button.dart';
 import 'package:provider/provider.dart';
 
@@ -56,11 +57,11 @@ class _NoteScreenState extends State<NoteScreen> with AutomaticKeepAliveClientMi
   Widget _buildAddNoteBtn(BuildContext context, ClassTheme theme) {
     final auth = Provider.of<Auth>(context);
     final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
-    final double distance = isPortrait ? 105 : 100;
+    final double distance = isPortrait ? portraitBottomDistance : landscapeBottomDistance;
 
     return SizedBox(
-      width: 60,
-      height: distance + 60,
+      width: btnHeight,
+      height: distance + btnHeight,
       child: Tooltip(
         message: 'New Note',
         verticalOffset: -70,

@@ -16,7 +16,7 @@ class AppSnackBar {
         ),
         action: SnackBarAction(
           label: 'OK',
-          textColor: Themes.primaryColor,
+          textColor: Colors.black87,
           onPressed: Scaffold.of(context).hideCurrentSnackBar,
         ),
       ),

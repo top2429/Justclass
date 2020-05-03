@@ -26,41 +26,44 @@ class NewNoteScreenTeacher extends StatefulWidget {
 class _NewNoteScreenTeacherState extends State<NewNoteScreenTeacher> {
   bool _valid = false;
   Map<String, String> _files = {};
-  OverlayEntry _entry;
+  OverlayEntry _loadingSpin;
 
   @override
   void initState() {
-    _entry = OverlayEntry(builder: (_) => LoadingDualRing());
+    _loadingSpin = OverlayEntry(builder: (_) => LoadingDualRing());
 
     super.initState();
   }
 
   void _pickFiles(BuildContext context) async {
+    FocusScope.of(context).unfocus();
     FilePicker.clearTemporaryFiles();
-    Overlay.of(context).insert(_entry);
+    Overlay.of(context).insert(_loadingSpin);
+
     try {
-      _files.addAll(await FilePicker.getMultiFilePath(type: FileType.any));
+      final files = await FilePicker.getMultiFilePath(type: FileType.any);
+      if (files != null) _files.addAll(files);
     } catch (error) {
       AppSnackBar.showError(context, message: "Unable to attach files!");
     } finally {
-      _entry.remove();
+      _loadingSpin?.remove();
     }
     setState(() {});
   }
 
   void _sendNote(BuildContext context) async {
     FocusScope.of(context).unfocus();
+    Overlay.of(context).insert(_loadingSpin);
 
-    Overlay.of(context).insert(_entry);
     try {
       // TODO: call api from note manager
-      await Future.delayed(const Duration(seconds: 3));
+      await Future.delayed(const Duration(seconds: 5));
       throw HttpException();
       Navigator.of(context).pop();
     } catch (error) {
       AppSnackBar.showError(context, message: "Unable to post notes!");
     } finally {
-      _entry.remove();
+      _loadingSpin?.remove();
     }
   }
 
@@ -69,17 +72,26 @@ class _NewNoteScreenTeacherState extends State<NewNoteScreenTeacher> {
     setState(() {});
   }
 
+  Future<bool> _onWillPopScope() async {
+    _loadingSpin.remove();
+    _loadingSpin = null;
+    return true;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: _buildAppBar(),
-      body: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            _buildNoteInput(),
-            Divider(),
-            if (_files.isNotEmpty) ..._buildFileList(),
-          ],
+    return WillPopScope(
+      onWillPop: _onWillPopScope,
+      child: Scaffold(
+        appBar: _buildAppBar(),
+        body: SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              _buildNoteInput(),
+              Divider(),
+              if (_files.isNotEmpty) ..._buildFileList(),
+            ],
+          ),
         ),
       ),
     );

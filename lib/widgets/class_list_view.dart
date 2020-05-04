@@ -40,12 +40,25 @@ class ClassListView extends StatefulWidget {
 
 class ClassListViewState extends State<ClassListView> {
   ViewType _type = ViewType.ALL;
+  bool _hasError = true;
+  bool _didFirstLoad = false;
 
   set viewType(ViewType type) => setState(() => _type = type);
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _onRefresh().then((_) {
+        setState(() => _didFirstLoad = true);
+      });
+    });
+    super.initState();
+  }
 
   Future<void> _onRefresh() async {
     try {
       await Provider.of<ClassManager>(context, listen: false).fetchData();
+      setState(() => _hasError = false);
     } catch (error) {
       AppSnackBar.showError(context, message: error.toString());
     }
@@ -53,33 +66,28 @@ class ClassListViewState extends State<ClassListView> {
 
   @override
   Widget build(BuildContext context) {
-    return OnceFutureBuilder(
-      future: Provider.of<ClassManager>(context, listen: false).fetchData,
-      builder: (_, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) return FetchProgressIndicator();
-        if (snapshot.hasError) return RefreshableErrorPrompt(onRefresh: _onRefresh);
-        return RefreshIndicator(
-          onRefresh: _onRefresh,
-          child: Consumer<ClassManager>(
-            builder: (_, classMgr, __) {
-              final classes = classMgr.getClassesOnViewType(_type);
-              return ListView(
-                padding: const EdgeInsets.all(10),
-                children: <Widget>[
-                  Text('${_type.name}', style: TextStyle(fontSize: 18), textAlign: TextAlign.center),
-                  const Divider(indent: 50, endIndent: 50),
-                  ...classes
-                      .map((cls) => ChangeNotifierProvider.value(
-                            value: cls,
-                            child: _buildTile(cls.role),
-                          ))
-                      .toList()
-                ],
-              );
-            },
-          ),
-        );
-      },
+    if (!_didFirstLoad) return FetchProgressIndicator();
+    if (_hasError) return RefreshableErrorPrompt(onRefresh: _onRefresh);
+    return RefreshIndicator(
+      onRefresh: _onRefresh,
+      child: Consumer<ClassManager>(
+        builder: (_, classMgr, __) {
+          final classes = classMgr.getClassesOnViewType(_type);
+          return ListView(
+            padding: const EdgeInsets.all(10),
+            children: <Widget>[
+              Text('${_type.name}', style: const TextStyle(fontSize: 18), textAlign: TextAlign.center),
+              const Divider(indent: 50, endIndent: 50),
+              ...classes
+                  .map((cls) => ChangeNotifierProvider.value(
+                        value: cls,
+                        child: _buildTile(cls.role),
+                      ))
+                  .toList()
+            ],
+          );
+        },
+      ),
     );
   }
 

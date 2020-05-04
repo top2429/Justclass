@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:justclass/themes.dart';
 import 'package:justclass/providers/class.dart';
 import 'package:justclass/providers/class_manager.dart';
@@ -7,11 +8,9 @@ import 'package:justclass/widgets/app_snack_bar.dart';
 import 'package:justclass/widgets/class_list_view_tile_collaborator.dart';
 import 'package:justclass/widgets/class_list_view_tile_student.dart';
 import 'package:justclass/widgets/class_list_view_tile_owner.dart';
-import 'package:justclass/widgets/fetch_error_icon.dart';
+import 'package:justclass/widgets/refreshable_error_prompt.dart';
 import 'package:justclass/widgets/fetch_progress_indicator.dart';
-import 'package:provider/provider.dart';
-
-import 'once_future_builder.dart';
+import 'package:justclass/widgets/once_future_builder.dart';
 
 enum ViewType { ALL, CREATED, JOINED, COLLABORATING }
 
@@ -44,22 +43,23 @@ class ClassListViewState extends State<ClassListView> {
 
   set viewType(ViewType type) => setState(() => _type = type);
 
+  Future<void> _onRefresh() async {
+    try {
+      await Provider.of<ClassManager>(context, listen: false).fetchData();
+    } catch (error) {
+      AppSnackBar.showError(context, message: error.toString());
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return OnceFutureBuilder(
       future: Provider.of<ClassManager>(context, listen: false).fetchData,
       builder: (_, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) return FetchProgressIndicator();
-        if (snapshot.hasError) return FetchErrorPrompt();
+        if (snapshot.hasError) return RefreshableErrorPrompt(onRefresh: _onRefresh);
         return RefreshIndicator(
-          color: Themes.primaryColor,
-          onRefresh: () async {
-            try {
-              await Provider.of<ClassManager>(context, listen: false).fetchData();
-            } catch (error) {
-              AppSnackBar.showError(context, message: error.toString());
-            }
-          },
+          onRefresh: _onRefresh,
           child: Consumer<ClassManager>(
             builder: (_, classMgr, __) {
               final classes = classMgr.getClassesOnViewType(_type);
@@ -91,7 +91,6 @@ class ClassListViewState extends State<ClassListView> {
         return ClassListViewTileCollaborator();
       case ClassRole.STUDENT:
         return ClassListViewTileStudent();
-      case ClassRole.NOBODY:
       default:
         return Container();
     }

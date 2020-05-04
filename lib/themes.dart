@@ -46,10 +46,12 @@ class Themes {
   static final forApp = ThemeData(
     backgroundColor: primaryColor,
     fontFamily: "OpenSans",
+    accentColor: primaryColor,
     inputDecorationTheme: InputDecorationTheme(
       isDense: true,
       border: OutlineInputBorder(),
     ),
+
   );
 }
 

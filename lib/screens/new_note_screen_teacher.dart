@@ -7,7 +7,7 @@ import 'package:justclass/utils/mime_type.dart';
 import 'package:justclass/utils/validator.dart';
 import 'package:justclass/widgets/app_icon_button.dart';
 import 'package:justclass/widgets/app_snack_bar.dart';
-import 'package:justclass/widgets/loading_dual_ring.dart';
+import 'package:justclass/widgets/opaque_progress_indicator.dart';
 import 'package:mime/mime.dart';
 
 import '../themes.dart';
@@ -73,6 +73,7 @@ class _NewNoteScreenTeacherState extends State<NewNoteScreenTeacher> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: _buildAppBar(),
       body: Stack(
         children: <Widget>[
@@ -85,7 +86,7 @@ class _NewNoteScreenTeacherState extends State<NewNoteScreenTeacher> {
               ],
             ),
           ),
-          Visibility(visible: _loading, child: LoadingDualRing()),
+          Visibility(visible: _loading, child: OpaqueProgressIndicator()),
         ],
       ),
     );

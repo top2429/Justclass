@@ -1,19 +1,61 @@
 import 'package:flutter/material.dart';
 import 'package:justclass/providers/class.dart';
+import 'package:justclass/providers/class_manager.dart';
 import 'package:justclass/screens/class_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../themes.dart';
+import 'app_snack_bar.dart';
 
 class ClassListViewTileOwner extends StatelessWidget {
   static const _radius = BorderRadius.all(Radius.circular(8));
+
+  void _removeClass(BuildContext context, String cid) async {
+    try {
+      var result = await showDialog(
+        context: context,
+        builder: (_) {
+          return AlertDialog(
+            shape: const RoundedRectangleBorder(borderRadius: _radius),
+            title: Text(
+              'Are you sure?',
+              style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red.shade600),
+            ),
+            content: const Text(
+              'All of the members and content of this class will be gone.',
+            ),
+            actions: <Widget>[
+              FlatButton(
+                child: Text(
+                  'Yes',
+                  style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red.shade600),
+                ),
+                onPressed: () => Navigator.of(context).pop(true),
+              ),
+              FlatButton(
+                child: Text(
+                  'No',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                onPressed: () => Navigator.of(context).pop(false),
+              ),
+            ],
+          );
+        },
+      );
+      result ??= false;
+      if (result) await Provider.of<ClassManager>(context, listen: false).removeClass(cid);
+    } catch (error) {
+      AppSnackBar.showError(context, message: error.toString());
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(10),
       child: Consumer<Class>(
-        builder: (_, cls, child) {
+        builder: (_, cls, __) {
           final studentCount = cls.studentCount;
           final countStr = studentCount == 1 ? '$studentCount student' : '$studentCount students';
 
@@ -69,7 +111,28 @@ class ClassListViewTileOwner extends StatelessWidget {
                             ),
                           ),
                         ),
-                        child,
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            PopupMenuButton(
+                              shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4))),
+                              icon: const Icon(Icons.more_vert, color: Colors.white),
+                              offset: const Offset(0, 40),
+                              itemBuilder: (_) => [
+                                const PopupMenuItem(child: Text('Remove'), value: 'remove', height: 40),
+                              ],
+                              onSelected: (val) {
+                                if (val == 'remove') _removeClass(context, cls.cid);
+                              },
+                            ),
+                            Container(
+                              width: 10,
+                              height: 10,
+                              margin: const EdgeInsets.only(bottom: 17),
+                              decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
+                            ),
+                          ],
+                        ),
                       ],
                     ),
                   ),
@@ -78,27 +141,6 @@ class ClassListViewTileOwner extends StatelessWidget {
             ],
           );
         },
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            PopupMenuButton(
-              shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4))),
-              icon: const Icon(Icons.more_vert, color: Colors.white),
-              offset: const Offset(0, 40),
-              itemBuilder: (_) => [
-                const PopupMenuItem(child: Text('Edit'), value: 'edit', height: 40),
-                const PopupMenuItem(child: Text('Archive'), value: 'archive', height: 40),
-              ],
-              onSelected: (val) {},
-            ),
-            Container(
-              width: 10,
-              height: 10,
-              margin: const EdgeInsets.only(bottom: 17),
-              decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
-            ),
-          ],
-        ),
       ),
     );
   }

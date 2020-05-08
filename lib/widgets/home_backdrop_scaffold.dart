@@ -13,6 +13,7 @@ class HomeBackdropScaffold extends StatefulWidget {
   final Widget frontLayer;
 
   HomeBackdropScaffold({
+    Key key,
     this.leading,
     this.title,
     this.actions,
@@ -20,13 +21,13 @@ class HomeBackdropScaffold extends StatefulWidget {
     this.dropDistance,
     this.backLayer,
     this.frontLayer,
-  });
+  }) : super(key: key);
 
   @override
-  _HomeBackdropScaffoldState createState() => _HomeBackdropScaffoldState();
+  HomeBackdropScaffoldState createState() => HomeBackdropScaffoldState();
 }
 
-class _HomeBackdropScaffoldState extends State<HomeBackdropScaffold> with SingleTickerProviderStateMixin {
+class HomeBackdropScaffoldState extends State<HomeBackdropScaffold> with SingleTickerProviderStateMixin {
   AnimationController _controller;
   Animation<double> _rotateAnim;
   Animation<Offset> _translateAnim;
@@ -46,7 +47,7 @@ class _HomeBackdropScaffoldState extends State<HomeBackdropScaffold> with Single
     super.dispose();
   }
 
-  void _swap() {
+  void swap() {
     if (_controller.isDismissed) {
       _controller.forward();
       _frontLayerKey.currentState.toOffstage();
@@ -58,7 +59,7 @@ class _HomeBackdropScaffoldState extends State<HomeBackdropScaffold> with Single
 
   Future<bool> _onWillPopScope() async {
     if (_frontLayerKey.currentState.isOffstage) {
-      _swap();
+      swap();
       return null;
     }
     return true;
@@ -86,7 +87,7 @@ class _HomeBackdropScaffoldState extends State<HomeBackdropScaffold> with Single
             AnimatedBuilder(
               animation: _controller,
               builder: (_, child) => Transform.rotate(angle: _rotateAnim.value, child: child),
-              child: AppIconButton(icon: const Icon(Icons.add, size: 30), onPressed: _swap),
+              child: AppIconButton(icon: const Icon(Icons.add, size: 30), onPressed: swap),
             ),
             ...widget.actions
           ],
@@ -108,7 +109,7 @@ class _HomeBackdropScaffoldState extends State<HomeBackdropScaffold> with Single
                     topLeft: Radius.circular(20),
                     topRight: Radius.circular(20),
                   ),
-                  child: HomeFrontLayer(key: _frontLayerKey, frontLayer: widget.frontLayer, reverse: _swap),
+                  child: HomeFrontLayer(key: _frontLayerKey, frontLayer: widget.frontLayer, reverse: swap),
                 ),
               ),
             ],

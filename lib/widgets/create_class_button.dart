@@ -7,22 +7,28 @@ import 'package:justclass/widgets/create_class_form.dart';
 import 'package:provider/provider.dart';
 
 class CreateClassButton extends StatefulWidget {
+  final Function onDidCreateClass;
+
+  CreateClassButton({this.onDidCreateClass});
+
   @override
   _CreateClassButtonState createState() => _CreateClassButtonState();
 }
 
 class _CreateClassButtonState extends State<CreateClassButton> {
-  final data = CreateClassFormData(theme: Themes.getRandomTheme());
-  bool isLoading = false;
+  var data = CreateClassFormData(theme: Themes.getRandomTheme());
+  bool _isLoading = false;
 
   void addNewClass() async {
     try {
-      setState(() => isLoading = true);
+      setState(() => _isLoading = true);
       await Provider.of<ClassManager>(context, listen: false).add(data);
+      widget.onDidCreateClass();
+      data = CreateClassFormData(theme: Themes.getRandomTheme());
     } catch (error) {
       AppSnackBar.showError(context, message: error.toString());
     } finally {
-      setState(() => isLoading = false);
+      setState(() => _isLoading = false);
     }
   }
 
@@ -75,13 +81,13 @@ class _CreateClassButtonState extends State<CreateClassButton> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
-                    isLoading
+                    _isLoading
                         ? const SpinKitDualRing(color: Themes.primaryColor, size: 15, lineWidth: 1.5)
                         : const Icon(Icons.add, color: Themes.primaryColor),
                     Flexible(
                       child: FittedBox(
                         child: Text(
-                          isLoading ? 'Creating...' : 'Create class',
+                          _isLoading ? 'Creating...' : 'Create class',
                           style: TextStyle(
                             color: Themes.primaryColor,
                             fontWeight: FontWeight.bold,
@@ -93,7 +99,7 @@ class _CreateClassButtonState extends State<CreateClassButton> {
                     const SizedBox(width: 5),
                   ],
                 ),
-                onPressed: isLoading ? null : showCreateClassDialog,
+                onPressed: _isLoading ? null : showCreateClassDialog,
               ),
             ),
           ],

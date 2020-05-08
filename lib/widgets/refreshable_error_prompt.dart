@@ -15,7 +15,7 @@ class RefreshableErrorPrompt extends StatelessWidget {
           child: ListView(
             children: <Widget>[
               SizedBox(height: (message == null) ? constraints.maxHeight * 0.45 : constraints.maxHeight * 0.42),
-              Icon(Icons.error, color: Colors.amber.shade700, size: 45),
+              Icon(Icons.error, color: Colors.amber, size: 45),
               if (message != null) const SizedBox(height: 10),
               if (message != null) Text(message, style: TextStyle(fontSize: 16)),
             ],

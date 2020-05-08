@@ -41,11 +41,29 @@ class ClassManager with ChangeNotifier {
     }
   }
 
-  Future<void> fetchData() async {
+  Future<void> fetchClassList() async {
     try {
       _classes = await ApiCall.fetchClassList(_uid);
-//     await Test.delay(1);
-//      _classes = testData;
+      notifyListeners();
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  Future<void> joinClass(String publicCode) async {
+    try {
+      final cls = await ApiCall.joinClassWithCode(_uid, publicCode);
+      // TODO: insert class to class list
+      notifyListeners();
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  Future<void> removeClass(String cid) async {
+    try {
+      await ApiCall.removeClass(_uid, cid);
+      _classes.removeWhere((cls) => cls.cid == cid);
       notifyListeners();
     } catch (error) {
       throw error;

@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:justclass/themes.dart';
 import 'package:justclass/providers/class.dart';
 import 'package:justclass/providers/class_manager.dart';
 import 'package:justclass/widgets/app_snack_bar.dart';
@@ -10,7 +9,6 @@ import 'package:justclass/widgets/class_list_view_tile_student.dart';
 import 'package:justclass/widgets/class_list_view_tile_owner.dart';
 import 'package:justclass/widgets/refreshable_error_prompt.dart';
 import 'package:justclass/widgets/fetch_progress_indicator.dart';
-import 'package:justclass/widgets/once_future_builder.dart';
 
 enum ViewType { ALL, CREATED, JOINED, COLLABORATING }
 
@@ -47,20 +45,19 @@ class ClassListViewState extends State<ClassListView> {
 
   @override
   void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _onRefresh().then((_) {
-        setState(() => _didFirstLoad = true);
-      });
-    });
+    WidgetsBinding.instance.addPostFrameCallback((_) => _onRefresh());
     super.initState();
   }
 
   Future<void> _onRefresh() async {
     try {
-      await Provider.of<ClassManager>(context, listen: false).fetchData();
-      setState(() => _hasError = false);
+      await Provider.of<ClassManager>(context, listen: false).fetchClassList();
+      setState(() {
+        _didFirstLoad = true;
+        _hasError = false;
+      });
     } catch (error) {
-      AppSnackBar.showError(context, message: error.toString());
+      if (this.mounted) AppSnackBar.showError(context, message: error.toString());
     }
   }
 

@@ -36,3 +36,13 @@ class NewNoteValidator {
     return null;
   }
 }
+
+
+class JoinClassValidator {
+  static String validateCode(String code) {
+    if (code.isEmpty) return "Please provide a note";
+    const len = 8;
+    if (code.length < len) return "A note needs to contain at least $len ${len == 1 ? "character" : "characters"}";
+    return null;
+  }
+}

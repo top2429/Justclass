@@ -84,19 +84,62 @@ class ApiCall {
 
       final List<Class> classList = [];
       final classesData = json.decode(response.body) as List<dynamic>;
-
       classesData.forEach((cls) {
         classList.add(Class(
           cid: cls['classroomId'],
           title: cls['title'],
           subject: cls['subject'],
           role: ClassRoles.getType(cls['role']),
-          theme: cls['theme'],
-          studentCount: int.parse(cls['studentCount'] ?? '0'),
+          theme: cls['theme'] ?? 0,
+          studentCount: cls['studentsCount'] ?? 0,
+          ownerName: cls['owner']['displayName'],
         ));
       });
-
       return classList;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  static Future<Class> joinClassWithCode(String uid, String publicCode) async {
+    try {
+      checkInternetConnection();
+      final url = 'https://justclass-da0b0.appspot.com/api/v1/classroom/$uid/$publicCode';
+      final response = await http.put(url, headers: {'Accept': 'application/json'});
+      if (response.statusCode == 417)
+        throw HttpException(message: 'Class code does not exist!');
+      else if (response.statusCode >= 400) throw HttpException(message: 'Unable to join class!');
+
+      final data = json.decode(response.body);
+      final cls = Class(
+        cid: data['classroomId'],
+        subject: data['subject'],
+        role: ClassRoles.getType(data['role']),
+        section: data['section'],
+        title: data['title'],
+        theme: data['theme'] ?? 0,
+        studentCount: data['studentsCount'] ?? 0,
+        room: data['room'],
+        description: data['description'],
+        permissionCode: data['studentsNotePermission'],
+        publicCode: data['publicCode'],
+        createdTimestamp: data['createdTimestamp'] ?? 0,
+        ownerName: data['owener']['displayName'],
+        didGetDetails: true,
+      );
+      print(cls);
+      return cls;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  static Future<void> removeClass(String uid, String cid) async {
+    try {
+      checkInternetConnection();
+      final url = 'https://justclass-da0b0.appspot.com/api/v1/classroom/$uid/$cid';
+      final response = await http.delete(url,  headers: {'Accept': 'application/json'});
+      if (response.statusCode >= 400) throw HttpException(message: 'Unable to remove class!');
     } catch (error) {
       throw error;
     }

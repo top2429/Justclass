@@ -17,6 +17,8 @@ class CreateClassFormData {
     this.room = '',
     this.theme = 0,
   });
+
+
 }
 
 class CreateClassForm extends StatefulWidget {
@@ -70,8 +72,8 @@ class _CreateClassFormState extends State<CreateClassForm> {
       elevation: 5,
       color: Theme.of(context).backgroundColor,
       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-      child: Text(
+      shape: RoundedRectangleBorder(borderRadius: const BorderRadius.all(Radius.circular(5))),
+      child: const Text(
         'Create',
         style: TextStyle(
           color: Colors.white,

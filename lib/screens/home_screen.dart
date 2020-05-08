@@ -13,6 +13,7 @@ class HomeScreen extends StatelessWidget {
   static const routeName = '/home';
   final _drawer = GlobalKey<ScaleDrawerWrapperState>();
   final _classListView = GlobalKey<ClassListViewState>();
+  final _backdropScaffold = GlobalKey<HomeBackdropScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +27,7 @@ class HomeScreen extends StatelessWidget {
         key: _drawer,
         drawerContent: HomeDrawerContent(),
         topScaffold: HomeBackdropScaffold(
+          key: _backdropScaffold,
           title: const Text("JustClass", style: TextStyle(fontWeight: FontWeight.bold)),
           dropDistance: dropDistance,
           backColor: Theme.of(context).backgroundColor,
@@ -49,8 +51,16 @@ class HomeScreen extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
-          Container(height: height, width: width, child: Center(child: CreateClassButton())),
-          Container(height: height, width: width, child: Center(child: JoinClassButton())),
+          Container(
+            height: height,
+            width: width,
+            child: Center(child: CreateClassButton(onDidCreateClass: _backdropScaffold.currentState.swap)),
+          ),
+          Container(
+            height: height,
+            width: width,
+            child: Center(child: JoinClassButton(onDidJoinClass: _backdropScaffold.currentState.swap)),
+          ),
         ],
       ),
     );

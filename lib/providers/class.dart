@@ -30,6 +30,8 @@ class Class with ChangeNotifier {
   int studentCount;
   String ownerName;
   int theme;
+  int createdTimestamp;
+  bool _didGetDetails = false;
 
   Class({
     @required this.cid,
@@ -44,7 +46,19 @@ class Class with ChangeNotifier {
     this.description = '',
     this.room = '',
     this.ownerName = '',
-  });
+    this.createdTimestamp = 0,
+    didGetDetails = false,
+  }) {
+    _didGetDetails = didGetDetails;
+  }
+
+  Future<void> autoGetDetails() async {
+    if (!_didGetDetails) {
+      _didGetDetails = true;
+      await fetchDetails();
+      notifyListeners();
+    }
+  }
 
   Future<void> fetchDetails() async {
     try {

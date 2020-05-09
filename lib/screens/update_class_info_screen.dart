@@ -79,80 +79,92 @@ class _UpdateClassInfoScreenState extends State<UpdateClassInfoScreen> {
     return GestureDetector(
       onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
       child: Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: _color,
         appBar: _buildAppBar(),
         body: SafeArea(
-          child: ListView(
-            padding: const EdgeInsets.all(15),
-            children: <Widget>[
-              // About Area
-              Text('About', style: TextStyle(color: _color, fontWeight: FontWeight.bold, fontSize: 25)),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8),
-                child: TextFormField(
-                  initialValue: data.title,
-                  decoration: const InputDecoration(labelText: 'Title'),
-                  keyboardType: TextInputType.text,
-                  textInputAction: TextInputAction.next,
-                  onFieldSubmitted: (_) => FocusScope.of(context).nextFocus(),
-                  onChanged: (val) {
-                    input.title = val;
-                    if (_isValid != (CreateClassValidator.validateClassTitle(val) == null)) {
-                      setState(() => _isValid = !_isValid);
-                    }
-                  },
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8),
-                child: TextFormField(
-                  initialValue: data.subject,
-                  decoration: const InputDecoration(labelText: 'Subject'),
-                  keyboardType: TextInputType.text,
-                  textInputAction: TextInputAction.next,
-                  onFieldSubmitted: (_) => FocusScope.of(context).nextFocus(),
-                  onChanged: (val) => input.subject = val,
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8),
-                child: TextFormField(
-                  initialValue: data.section,
-                  decoration: const InputDecoration(labelText: 'Section'),
-                  keyboardType: TextInputType.text,
-                  textInputAction: TextInputAction.next,
-                  onFieldSubmitted: (_) => FocusScope.of(context).nextFocus(),
-                  onChanged: (val) => input.section = val,
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8),
-                child: TextFormField(
-                  initialValue: data.room,
-                  decoration: const InputDecoration(labelText: 'Room'),
-                  keyboardType: TextInputType.text,
-                  textInputAction: TextInputAction.next,
-                  onFieldSubmitted: (_) => FocusScope.of(context).nextFocus(),
-                  onChanged: (val) => input.room = val,
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8),
-                child: TextFormField(
-                  initialValue: data.description,
-                  decoration: const InputDecoration(labelText: 'Description'),
-                  keyboardType: TextInputType.multiline,
-                  textInputAction: TextInputAction.newline,
-                  minLines: 1,
-                  maxLines: 5,
-                  onChanged: (val) => input.description = val,
-                ),
-              ),
-              const SizedBox(height: 10),
+          child: ClipRRect(
+            borderRadius: const BorderRadius.only(topLeft: Radius.circular(15), topRight: Radius.circular(15)),
+            child: Container(
+              color: Colors.white,
+              child: ListView(
+                padding: const EdgeInsets.all(20),
+                children: <Widget>[
+                  // About Area
+                  Align(
+                    alignment: Alignment.center,
+                    child: Text('About', style: TextStyle(color: _color, fontWeight: FontWeight.bold, fontSize: 25)),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    child: TextFormField(
+                      initialValue: data.title,
+                      decoration: const InputDecoration(labelText: 'Title'),
+                      keyboardType: TextInputType.text,
+                      textInputAction: TextInputAction.next,
+                      onFieldSubmitted: (_) => FocusScope.of(context).nextFocus(),
+                      onChanged: (val) {
+                        input.title = val;
+                        if (_isValid != (CreateClassValidator.validateClassTitle(val) == null)) {
+                          setState(() => _isValid = !_isValid);
+                        }
+                      },
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    child: TextFormField(
+                      initialValue: data.subject,
+                      decoration: const InputDecoration(labelText: 'Subject'),
+                      keyboardType: TextInputType.text,
+                      textInputAction: TextInputAction.next,
+                      onFieldSubmitted: (_) => FocusScope.of(context).nextFocus(),
+                      onChanged: (val) => input.subject = val,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    child: TextFormField(
+                      initialValue: data.section,
+                      decoration: const InputDecoration(labelText: 'Section'),
+                      keyboardType: TextInputType.text,
+                      textInputAction: TextInputAction.next,
+                      onFieldSubmitted: (_) => FocusScope.of(context).nextFocus(),
+                      onChanged: (val) => input.section = val,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    child: TextFormField(
+                      initialValue: data.room,
+                      decoration: const InputDecoration(labelText: 'Room'),
+                      keyboardType: TextInputType.text,
+                      textInputAction: TextInputAction.next,
+                      onFieldSubmitted: (_) => FocusScope.of(context).nextFocus(),
+                      onChanged: (val) => input.room = val,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    child: TextFormField(
+                      initialValue: data.description,
+                      decoration: const InputDecoration(labelText: 'Description'),
+                      keyboardType: TextInputType.multiline,
+                      textInputAction: TextInputAction.newline,
+                      minLines: 1,
+                      maxLines: 5,
+                      onChanged: (val) => input.description = val,
+                    ),
+                  ),
+                  const SizedBox(height: 20),
 
-              // Settings Area
-              Text('Settings', style: TextStyle(color: _color, fontWeight: FontWeight.bold, fontSize: 25)),
-            ],
+                  // Settings Area
+                  Align(
+                    alignment: Alignment.center,
+                    child: Text('Settings', style: TextStyle(color: _color, fontWeight: FontWeight.bold, fontSize: 25)),
+                  ),
+                ],
+              ),
+            ),
           ),
         ),
       ),
@@ -162,21 +174,18 @@ class _UpdateClassInfoScreenState extends State<UpdateClassInfoScreen> {
   Widget _buildAppBar() {
     return AppBar(
       elevation: 0,
-      backgroundColor: Colors.white,
+      backgroundColor: _color,
       leading: AppIconButton(
         tooltip: 'Cancel',
-        icon: const Icon(Icons.close, color: Colors.grey),
+        icon: const Icon(Icons.close),
         onPressed: () => Navigator.of(context).pop(),
       ),
       actions: <Widget>[
         Builder(builder: (context) {
-          return Container(
-            width: 110,
-            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
-            child: FlatButton(
-              disabledColor: Colors.grey,
-              color: _color,
-              child: const Text('Save', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
+          return Padding(
+            padding: const EdgeInsets.only(right: 5),
+            child: AppIconButton(
+              icon: Icon(Icons.save),
               onPressed: !_isValid ? null : () => _updateClassDetails(context),
             ),
           );

@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:justclass/providers/auth.dart';
 import 'package:justclass/providers/class.dart';
-import 'package:justclass/screens/class_about_screen_owner.dart';
+import 'package:justclass/screens/update_class_info_screen.dart';
 import 'package:justclass/screens/new_note_screen_teacher.dart';
 import 'package:justclass/utils/constants.dart';
 import 'package:justclass/widgets/app_icon_button.dart';
@@ -162,7 +162,7 @@ class NoteScreenTopBar extends StatelessWidget {
           icon: const Icon(Icons.settings),
           onPressed: () {
             Navigator.of(context).push(
-              MaterialPageRoute(builder: (_) => ClassAboutScreenOwner(cls: Provider.of<Class>(context))),
+              MaterialPageRoute(builder: (_) => UpdateClassInfoScreen(cls: Provider.of<Class>(context))),
             );
           },
         ),

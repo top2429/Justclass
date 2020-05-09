@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:justclass/models/class_details_data.dart';
 import 'package:justclass/themes.dart';
 import 'package:justclass/utils/api_call.dart';
 
@@ -20,6 +21,18 @@ extension ClassRoles on ClassRole {
 enum PermissionCode { VCP, VC, V }
 
 extension PermissionCodes on PermissionCode {
+  String get name {
+    switch (this) {
+      case PermissionCode.VCP:
+        return 'VCP';
+      case PermissionCode.VC:
+        return 'VC';
+      case PermissionCode.V:
+      default:
+        return 'V';
+    }
+  }
+
   static PermissionCode getType(String code) {
     if (code == 'VCP')
       return PermissionCode.VCP;
@@ -85,6 +98,22 @@ class Class with ChangeNotifier {
     try {
       final data = await ApiCall.fetchClassDetails(cid);
 
+      notifyListeners();
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  Future<void> updateDetails(String uid, ClassDetailsData data) async {
+    try {
+      await ApiCall.updateClassDetails(uid, cid, data);
+      title = data.title;
+      subject = data.subject;
+      section = data.section;
+      room = data.room;
+      theme = data.theme;
+      description = data.description;
+      permissionCode = data.permissionCode;
       notifyListeners();
     } catch (error) {
       throw error;

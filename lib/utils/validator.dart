@@ -22,7 +22,7 @@ class EmailPassValidator {
 }
 
 class CreateClassValidator {
-  static String validateClassName(String name) {
+  static String validateClassTitle(String name) {
     if (name.isEmpty) return "Please provide a class name";
     return null;
   }

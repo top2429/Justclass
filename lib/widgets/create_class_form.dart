@@ -34,7 +34,7 @@ class _CreateClassFormState extends State<CreateClassForm> {
 
   @override
   void initState() {
-    _isValid = CreateClassValidator.validateClassName(widget.data.title) == null;
+    _isValid = CreateClassValidator.validateClassTitle(widget.data.title) == null;
     super.initState();
   }
 
@@ -66,8 +66,8 @@ class _CreateClassFormState extends State<CreateClassForm> {
   }
 
   Widget _buildCreateButton() {
-    return RaisedButton(
-      elevation: 5,
+    return FlatButton(
+      disabledColor: Colors.grey,
       color: Theme.of(context).backgroundColor,
       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
       shape: RoundedRectangleBorder(borderRadius: const BorderRadius.all(Radius.circular(5))),
@@ -91,7 +91,9 @@ class _CreateClassFormState extends State<CreateClassForm> {
       decoration: const InputDecoration(labelText: 'Class title (required)'),
       onChanged: (val) {
         widget.data.title = val;
-        setState(() => _isValid = CreateClassValidator.validateClassName(val) == null);
+        if (_isValid != (CreateClassValidator.validateClassTitle(val) == null)) {
+          setState(() => _isValid = !_isValid);
+        }
       },
     );
   }

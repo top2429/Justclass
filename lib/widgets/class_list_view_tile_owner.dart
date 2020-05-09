@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:justclass/providers/class.dart';
 import 'package:justclass/providers/class_manager.dart';
 import 'package:justclass/screens/class_screen.dart';
+import 'package:justclass/widgets/remove_class_alert_dialog_owner.dart';
 import 'package:provider/provider.dart';
 
 import '../themes.dart';
@@ -14,13 +15,11 @@ class ClassListViewTileOwner extends StatelessWidget {
 
   static const _radius = BorderRadius.all(Radius.circular(8));
 
-  void _removeClass(String cid) async {
+  void _removeClass(String cid, String classTitle) async {
     try {
       var result = await showDialog(
         context: context,
-        builder: (context) {
-          return _buildAlertDialog(context);
-        },
+        builder: (context) => RemoveClassAlertDialogOwner(context: context, classTitle: classTitle),
       );
       result ??= false;
       if (result) await Provider.of<ClassManager>(context, listen: false).removeClass(cid);
@@ -101,7 +100,7 @@ class ClassListViewTileOwner extends StatelessWidget {
                                 const PopupMenuItem(child: Text('Remove'), value: 'remove', height: 40),
                               ],
                               onSelected: (val) {
-                                if (val == 'remove') _removeClass(cls.cid);
+                                if (val == 'remove') _removeClass(cls.cid, cls.title);
                               },
                             ),
                             Container(
@@ -125,31 +124,50 @@ class ClassListViewTileOwner extends StatelessWidget {
   }
 
   Widget _buildAlertDialog(BuildContext context) {
-    return AlertDialog(
-      shape: const RoundedRectangleBorder(borderRadius: _radius),
-      title: Text(
-        'Are you sure?',
-        style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red.shade600),
-      ),
-      content: const Text(
-        'All of the members and content of this class will be gone.',
-      ),
-      actions: <Widget>[
-        FlatButton(
-          child: Text(
-            'Yes',
-            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red.shade600),
-          ),
-          onPressed: () => Navigator.of(context).pop(true),
+    return SingleChildScrollView(
+      child: AlertDialog(
+        shape: const RoundedRectangleBorder(borderRadius: _radius),
+        title: Text(
+          'Are you sure?',
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red.shade600),
         ),
-        FlatButton(
-          child: Text(
-            'No',
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
-          onPressed: () => Navigator.of(context).pop(false),
+//      content: const Text(
+//        'All of the members and content of this class will be gone.',
+//      ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            const Text(
+              'All of the members and content of this class will be gone.\nEnter your class title to proceed:',
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 15),
+              child: TextFormField(
+                textInputAction: TextInputAction.next,
+                onFieldSubmitted: (_) => FocusScope.of(context).nextFocus(),
+                decoration: const InputDecoration(labelText: 'Class Title'),
+                onChanged: (val) {},
+              ),
+            )
+          ],
         ),
-      ],
+        actions: <Widget>[
+          FlatButton(
+            child: Text(
+              'Yes',
+              style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red.shade600),
+            ),
+            onPressed: () => Navigator.of(context).pop(true),
+          ),
+          FlatButton(
+            child: Text(
+              'No',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            onPressed: () => Navigator.of(context).pop(false),
+          ),
+        ],
+      ),
     );
   }
 }

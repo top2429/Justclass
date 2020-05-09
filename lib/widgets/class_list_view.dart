@@ -45,11 +45,11 @@ class ClassListViewState extends State<ClassListView> {
 
   @override
   void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((_) => _onRefresh());
+    WidgetsBinding.instance.addPostFrameCallback((_) => _onRefreshWhenWithoutDataLoaded());
     super.initState();
   }
 
-  Future<void> _onRefresh() async {
+  Future<void> _onRefreshWhenWithoutDataLoaded() async {
     try {
       await Provider.of<ClassManager>(context, listen: false).fetchClassList();
       setState(() {
@@ -65,7 +65,7 @@ class ClassListViewState extends State<ClassListView> {
     }
   }
 
-  Future<void> _onRefreshAfterFirstLoad() async {
+  Future<void> _onRefreshWithDataLoaded() async {
     try {
       await Provider.of<ClassManager>(context, listen: false).fetchClassList();
     } catch (error) {
@@ -75,14 +75,10 @@ class ClassListViewState extends State<ClassListView> {
 
   @override
   Widget build(BuildContext context) {
-    if (!_didFirstLoad) {
-      return FetchProgressIndicator();
-    }
-    if (_hasError) {
-      return RefreshableErrorPrompt(onRefresh: _onRefresh);
-    }
+    if (!_didFirstLoad) return FetchProgressIndicator();
+    if (_hasError) return RefreshableErrorPrompt(onRefresh: _onRefreshWhenWithoutDataLoaded);
     return RefreshIndicator(
-      onRefresh: _onRefreshAfterFirstLoad,
+      onRefresh: _onRefreshWithDataLoaded,
       child: Consumer<ClassManager>(
         builder: (_, classMgr, __) {
           final classes = classMgr.getClassesOnViewType(_type);
@@ -109,10 +105,10 @@ class ClassListViewState extends State<ClassListView> {
       case ClassRole.OWNER:
         return ClassListViewTileOwner(context: context);
       case ClassRole.COLLABORATOR:
-        return ClassListViewTileCollaborator();
+        return ClassListViewTileCollaborator(context: context);
       case ClassRole.STUDENT:
       default:
-        return ClassListViewTileStudent();
+        return ClassListViewTileStudent(context: context);
     }
   }
 }

@@ -54,6 +54,7 @@ class ClassManager with ChangeNotifier {
     try {
       final cls = await ApiCall.joinClassWithCode(_uid, publicCode);
       // TODO: insert class to class list
+      _classes.insert(0, cls);
       notifyListeners();
     } catch (error) {
       throw error;
@@ -66,7 +67,7 @@ class ClassManager with ChangeNotifier {
     final cls = _classes.removeAt(index);
     notifyListeners();
     try {
-      await ApiCall.removeClass(_uid, cid);
+      await ApiCall.removeOwnedClass(_uid, cid);
     } catch (error) {
       _classes.insert(index, cls);
       notifyListeners();

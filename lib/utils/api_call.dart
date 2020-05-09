@@ -124,7 +124,7 @@ class ApiCall {
         permissionCode: data['studentsNotePermission'],
         publicCode: data['publicCode'],
         createdTimestamp: data['createdTimestamp'] ?? 0,
-        ownerName: data['owener']['displayName'],
+        ownerName: data['owner']['displayName'],
         didGetDetails: true,
       );
       print(cls);
@@ -134,7 +134,7 @@ class ApiCall {
     }
   }
 
-  static Future<void> removeClass(String uid, String cid) async {
+  static Future<void> removeOwnedClass(String uid, String cid) async {
     try {
       checkInternetConnection();
       final url = 'https://justclass-da0b0.appspot.com/api/v1/classroom/$uid/$cid';

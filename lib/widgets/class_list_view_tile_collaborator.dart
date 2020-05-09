@@ -6,6 +6,10 @@ import 'package:provider/provider.dart';
 import '../themes.dart';
 
 class ClassListViewTileCollaborator extends StatelessWidget {
+  final BuildContext context;
+
+  ClassListViewTileCollaborator({@required this.context});
+
   static const _radius = BorderRadius.all(Radius.circular(8));
 
   @override

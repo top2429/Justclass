@@ -8,9 +8,13 @@ import 'package:provider/provider.dart';
 import '../themes.dart';
 
 class ClassListViewTileStudent extends StatelessWidget {
+  final BuildContext context;
+
+  ClassListViewTileStudent({@required this.context});
+
   static const _radius = BorderRadius.all(Radius.circular(8));
 
-  void _removeClass(BuildContext context, String cid) async {
+  void _removeClass( String cid) async {
     try {
       await Provider.of<ClassManager>(context, listen: false).removeClass(cid);
     } catch (error) {
@@ -87,7 +91,7 @@ class ClassListViewTileStudent extends StatelessWidget {
                             const PopupMenuItem(child: Text('Leave'), value: 'leave', height: 40),
                           ],
                           onSelected: (val) {
-                            if (val == 'leave') _removeClass(context, cls.cid);
+                            if (val == 'leave') _removeClass(cls.cid);
                           },
                         ),
                       ],

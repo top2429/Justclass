@@ -1,19 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:justclass/models/class_details_data.dart';
 
 import '../themes.dart';
 
-class InfoSettingsArea extends StatelessWidget {
+class InfoSettingsArea extends StatefulWidget {
   final int theme;
-  final int inputTheme;
-  final Function onChangeTheme;
+  final ClassDetailsData input;
 
-  InfoSettingsArea({this.theme, this.inputTheme, this.onChangeTheme});
+  InfoSettingsArea({this.theme, this.input});
+
+  @override
+  _InfoSettingsAreaState createState() => _InfoSettingsAreaState();
+}
+
+class _InfoSettingsAreaState extends State<InfoSettingsArea> {
+  int inputTheme;
+
+  initState() {
+    inputTheme = widget.theme;
+
+    super.initState();
+  }
 
   _onPickTheme(BuildContext context) async {
     const borderRadius = const BorderRadius.only(
       topLeft: Radius.circular(15),
       topRight: Radius.circular(15),
     );
+
     final newTheme = await showModalBottomSheet<int>(
       context: context,
       builder: (context) {
@@ -29,24 +43,29 @@ class InfoSettingsArea extends StatelessWidget {
         );
       },
     );
-    if (newTheme != null && newTheme != inputTheme) onChangeTheme(newTheme);
+    if (newTheme != null && newTheme != inputTheme) {
+      widget.input.theme = newTheme;
+      setState(() => inputTheme = newTheme);
+    }
   }
 
   Widget _buildThemeList(BuildContext context) {
-    return ListView(
+    return ListView.builder(
+      itemCount: Themes.classThemes.length,
       padding: const EdgeInsets.all(10),
-      children: Themes.classThemes.map((classTheme) {
-        if (Themes.classThemes.indexOf(classTheme) == inputTheme) {
+      itemBuilder: (context, index) {
+        final themeImage = ClipRRect(
+          borderRadius: const BorderRadius.all(Radius.circular(8)),
+          child: Image.asset(Themes.classThemes[index].imageUrl, fit: BoxFit.cover),
+        );
+        if (index == inputTheme) {
           return GestureDetector(
-            onTap: () => Navigator.of(context).pop(Themes.classThemes.indexOf(classTheme)),
+            onTap: () => Navigator.of(context).pop(index),
             child: Padding(
               padding: const EdgeInsets.all(5),
               child: Stack(
                 children: <Widget>[
-                  ClipRRect(
-                    borderRadius: const BorderRadius.all(Radius.circular(8)),
-                    child: Image.asset(classTheme.imageUrl, fit: BoxFit.cover),
-                  ),
+                  themeImage,
                   Positioned(top: 5, left: 5, child: const Icon(Icons.radio_button_checked, color: Colors.white))
                 ],
               ),
@@ -54,16 +73,10 @@ class InfoSettingsArea extends StatelessWidget {
           );
         }
         return GestureDetector(
-          onTap: () => Navigator.of(context).pop(Themes.classThemes.indexOf(classTheme)),
-          child: Padding(
-            padding: const EdgeInsets.all(5),
-            child: ClipRRect(
-              borderRadius: const BorderRadius.all(Radius.circular(8)),
-              child: Image.asset(classTheme.imageUrl, fit: BoxFit.cover),
-            ),
-          ),
+          onTap: () => Navigator.of(context).pop(index),
+          child: Padding(padding: const EdgeInsets.all(5), child: themeImage),
         );
-      }).toList(),
+      },
     );
   }
 
@@ -77,7 +90,7 @@ class InfoSettingsArea extends StatelessWidget {
             'Settings',
             textAlign: TextAlign.center,
             style: TextStyle(
-              color: Themes.forClass(theme).primaryColor,
+              color: Themes.forClass(widget.theme).primaryColor,
               fontWeight: FontWeight.bold,
               fontSize: 25,
             ),
@@ -86,7 +99,10 @@ class InfoSettingsArea extends StatelessWidget {
         Material(
           color: Colors.white,
           child: InkWell(
-            onTap: () => _onPickTheme(context),
+            onTap: () {
+              FocusScope.of(context).requestFocus(FocusNode());
+              _onPickTheme(context);
+            },
             child: ListTile(
               contentPadding: const EdgeInsets.only(left: 20),
               title: Text('Theme Collection'),

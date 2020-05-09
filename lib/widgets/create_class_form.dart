@@ -17,8 +17,6 @@ class CreateClassFormData {
     this.room = '',
     this.theme = 0,
   });
-
-
 }
 
 class CreateClassForm extends StatefulWidget {
@@ -98,6 +96,16 @@ class _CreateClassFormState extends State<CreateClassForm> {
     );
   }
 
+  Widget _buildSubjectInput() {
+    return TextFormField(
+      initialValue: widget.data.subject,
+      textInputAction: TextInputAction.next,
+      onFieldSubmitted: (_) => FocusScope.of(context).nextFocus(),
+      decoration: const InputDecoration(labelText: 'Subject'),
+      onChanged: (val) => widget.data.subject = val,
+    );
+  }
+
   Widget _buildSectionInput() {
     return TextFormField(
       initialValue: widget.data.section,
@@ -111,19 +119,9 @@ class _CreateClassFormState extends State<CreateClassForm> {
   Widget _buildRoomInput() {
     return TextFormField(
       initialValue: widget.data.room,
-      textInputAction: TextInputAction.next,
-      onFieldSubmitted: (_) => FocusScope.of(context).nextFocus(),
+      textInputAction: TextInputAction.done,
       decoration: const InputDecoration(labelText: 'Room'),
       onChanged: (val) => widget.data.room = val,
-    );
-  }
-
-  Widget _buildSubjectInput() {
-    return TextFormField(
-      initialValue: widget.data.subject,
-      textInputAction: TextInputAction.done,
-      decoration: const InputDecoration(labelText: 'Subject'),
-      onChanged: (val) => widget.data.subject = val,
     );
   }
 }

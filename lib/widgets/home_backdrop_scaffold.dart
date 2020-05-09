@@ -87,7 +87,7 @@ class HomeBackdropScaffoldState extends State<HomeBackdropScaffold> with SingleT
             AnimatedBuilder(
               animation: _controller,
               builder: (_, child) => Transform.rotate(angle: _rotateAnim.value, child: child),
-              child: AppIconButton(icon: const Icon(Icons.add, size: 30), onPressed: swap),
+              child: AppIconButton(icon: const Icon(Icons.add, size: 30), onPressed: swap, tooltip: 'New Class'),
             ),
             ...widget.actions
           ],

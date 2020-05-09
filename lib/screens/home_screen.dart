@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:justclass/themes.dart';
 import 'package:justclass/widgets/app_icon_button.dart';
@@ -74,6 +73,7 @@ class HomeScreen extends StatelessWidget {
         child: Material(
           color: Colors.transparent,
           child: PopupMenuButton(
+            tooltip: 'Filter',
             shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5))),
             offset: const Offset(0, 40),
             itemBuilder: (_) => [

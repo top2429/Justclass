@@ -14,33 +14,8 @@ class ClassListViewTileOwner extends StatelessWidget {
     try {
       var result = await showDialog(
         context: context,
-        builder: (_) {
-          return AlertDialog(
-            shape: const RoundedRectangleBorder(borderRadius: _radius),
-            title: Text(
-              'Are you sure?',
-              style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red.shade600),
-            ),
-            content: const Text(
-              'All of the members and content of this class will be gone.',
-            ),
-            actions: <Widget>[
-              FlatButton(
-                child: Text(
-                  'Yes',
-                  style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red.shade600),
-                ),
-                onPressed: () => Navigator.of(context).pop(true),
-              ),
-              FlatButton(
-                child: Text(
-                  'No',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                onPressed: () => Navigator.of(context).pop(false),
-              ),
-            ],
-          );
+        builder: (context) {
+          return _buildAlertDialog(context);
         },
       );
       result ??= false;
@@ -142,6 +117,35 @@ class ClassListViewTileOwner extends StatelessWidget {
           );
         },
       ),
+    );
+  }
+
+  Widget _buildAlertDialog(BuildContext context) {
+    return AlertDialog(
+      shape: const RoundedRectangleBorder(borderRadius: _radius),
+      title: Text(
+        'Are you sure?',
+        style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red.shade600),
+      ),
+      content: const Text(
+        'All of the members and content of this class will be gone.',
+      ),
+      actions: <Widget>[
+        FlatButton(
+          child: Text(
+            'Yes',
+            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red.shade600),
+          ),
+          onPressed: () => Navigator.of(context).pop(true),
+        ),
+        FlatButton(
+          child: Text(
+            'No',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          onPressed: () => Navigator.of(context).pop(false),
+        ),
+      ],
     );
   }
 }

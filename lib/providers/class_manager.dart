@@ -61,11 +61,15 @@ class ClassManager with ChangeNotifier {
   }
 
   Future<void> removeClass(String cid) async {
+    // optimistic pattern
+    final index = _classes.indexWhere((cls) => cls.cid == cid);
+    final cls = _classes.removeAt(index);
+    notifyListeners();
     try {
       await ApiCall.removeClass(_uid, cid);
-      _classes.removeWhere((cls) => cls.cid == cid);
-      notifyListeners();
     } catch (error) {
+      _classes.insert(index, cls);
+      notifyListeners();
       throw error;
     }
   }

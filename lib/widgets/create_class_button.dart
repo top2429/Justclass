@@ -1,29 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:justclass/themes.dart';
-import 'package:justclass/providers/auth.dart';
 import 'package:justclass/providers/class_manager.dart';
 import 'package:justclass/widgets/app_snack_bar.dart';
 import 'package:justclass/widgets/create_class_form.dart';
 import 'package:provider/provider.dart';
 
 class CreateClassButton extends StatefulWidget {
+  final Function onDidCreateClass;
+
+  CreateClassButton({this.onDidCreateClass});
+
   @override
   _CreateClassButtonState createState() => _CreateClassButtonState();
 }
 
 class _CreateClassButtonState extends State<CreateClassButton> {
-  final data = CreateClassFormData(theme: Themes.getRandomTheme());
-  bool isLoading = false;
+  var data = CreateClassFormData(theme: Themes.getRandomTheme());
+  bool _isLoading = false;
 
   void addNewClass() async {
     try {
-      setState(() => isLoading = true);
+      setState(() => _isLoading = true);
       await Provider.of<ClassManager>(context, listen: false).add(data);
+      widget.onDidCreateClass();
+      data = CreateClassFormData(theme: Themes.getRandomTheme());
     } catch (error) {
       AppSnackBar.showError(context, message: error.toString());
     } finally {
-      setState(() => isLoading = false);
+      setState(() => _isLoading = false);
     }
   }
 
@@ -32,7 +37,7 @@ class _CreateClassButtonState extends State<CreateClassButton> {
       context: context,
       builder: (context) {
         return Dialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+          shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5))),
           child: CreateClassForm(data, addNewClass),
         );
       },
@@ -57,7 +62,7 @@ class _CreateClassButtonState extends State<CreateClassButton> {
               width: width,
               child: Material(
                 elevation: 8,
-                shape: CircleBorder(),
+                shape: const CircleBorder(),
                 child: Image.asset('assets/images/teacher.png', fit: BoxFit.contain),
               ),
             ),
@@ -71,20 +76,18 @@ class _CreateClassButtonState extends State<CreateClassButton> {
                 height: btnHeight,
                 color: Colors.white,
                 elevation: 10,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(btnHeight * 0.5),
-                ),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(btnHeight * 0.5)),
                 padding: EdgeInsets.zero,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
-                    isLoading
+                    _isLoading
                         ? const SpinKitDualRing(color: Themes.primaryColor, size: 15, lineWidth: 1.5)
                         : const Icon(Icons.add, color: Themes.primaryColor),
                     Flexible(
                       child: FittedBox(
                         child: Text(
-                          isLoading ? 'Creating...' : 'Create class',
+                          _isLoading ? 'Creating...' : 'Create class',
                           style: TextStyle(
                             color: Themes.primaryColor,
                             fontWeight: FontWeight.bold,
@@ -96,7 +99,7 @@ class _CreateClassButtonState extends State<CreateClassButton> {
                     const SizedBox(width: 5),
                   ],
                 ),
-                onPressed: isLoading ? null : showCreateClassDialog,
+                onPressed: _isLoading ? null : showCreateClassDialog,
               ),
             ),
           ],

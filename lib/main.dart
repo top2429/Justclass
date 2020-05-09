@@ -8,8 +8,6 @@ import 'package:justclass/themes.dart';
 import 'package:provider/provider.dart';
 
 void main() {
-  WidgetsFlutterBinding.ensureInitialized();
-
   runApp(MyApp());
 }
 
@@ -28,7 +26,6 @@ class MyApp extends StatelessWidget {
         builder: (_, auth, __) {
           return MaterialApp(
             title: 'JustClass',
-//            debugShowCheckedModeBanner: false,
             theme: Themes.forApp,
             home: _buildFirstScreen(auth),
             routes: {

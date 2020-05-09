@@ -1,33 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:justclass/providers/class.dart';
-import 'package:justclass/providers/class_manager.dart';
 import 'package:justclass/screens/class_screen.dart';
-import 'package:justclass/widgets/app_snack_bar.dart';
 import 'package:provider/provider.dart';
 
 import '../themes.dart';
 
-class ClassListViewTileStudent extends StatelessWidget {
+class ClassListViewTileCollaborator extends StatelessWidget {
   final BuildContext context;
 
-  ClassListViewTileStudent({@required this.context});
+  ClassListViewTileCollaborator({@required this.context});
 
   static const _radius = BorderRadius.all(Radius.circular(8));
-
-  void _removeClass(String cid) async {
-    try {
-      await Provider.of<ClassManager>(context, listen: false).removeClass(cid);
-    } catch (error) {
-      AppSnackBar.showError(context, message: error.toString());
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(10),
       child: Consumer<Class>(
-        builder: (_, cls, __) {
+        builder: (_, cls, child) {
           final studentCount = cls.studentCount;
           final countStr = studentCount == 1 ? '$studentCount student' : '$studentCount students';
 
@@ -77,24 +67,13 @@ class ClassListViewTileStudent extends StatelessWidget {
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                   Spacer(),
-                                  Text(cls.ownerName,
-                                      style: const TextStyle(fontSize: 14), overflow: TextOverflow.ellipsis),
+                                  Text(countStr, style: const TextStyle(fontSize: 14)),
                                 ],
                               ),
                             ),
                           ),
                         ),
-                        PopupMenuButton(
-                          shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4))),
-                          icon: const Icon(Icons.more_vert, color: Colors.white),
-                          offset: const Offset(0, 40),
-                          itemBuilder: (_) => [
-                            const PopupMenuItem(child: Text('Leave'), value: 'leave', height: 40),
-                          ],
-                          onSelected: (val) {
-                            if (val == 'leave') _removeClass(cls.cid);
-                          },
-                        ),
+                        child,
                       ],
                     ),
                   ),
@@ -103,6 +82,16 @@ class ClassListViewTileStudent extends StatelessWidget {
             ],
           );
         },
+        child: PopupMenuButton(
+          shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4))),
+          icon: const Icon(Icons.more_vert, color: Colors.white),
+          offset: const Offset(0, 40),
+          itemBuilder: (_) => [
+            const PopupMenuItem(child: Text('Edit'), value: 'edit', height: 40),
+            const PopupMenuItem(child: Text('Leave'), value: 'leave', height: 40),
+          ],
+          onSelected: (val) {},
+        ),
       ),
     );
   }

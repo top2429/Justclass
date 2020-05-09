@@ -18,8 +18,8 @@ class _OnceFutureBuilderState<T> extends State<OnceFutureBuilder<T>> {
 
   @override
   void initState() {
-    super.initState();
     _future = widget.future();
+    super.initState();
   }
 
   @override

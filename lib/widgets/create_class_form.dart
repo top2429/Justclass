@@ -34,7 +34,7 @@ class _CreateClassFormState extends State<CreateClassForm> {
 
   @override
   void initState() {
-    _isValid = CreateClassValidator.validateClassName(widget.data.title) == null;
+    _isValid = CreateClassValidator.validateClassTitle(widget.data.title) == null;
     super.initState();
   }
 
@@ -66,12 +66,12 @@ class _CreateClassFormState extends State<CreateClassForm> {
   }
 
   Widget _buildCreateButton() {
-    return RaisedButton(
-      elevation: 5,
+    return FlatButton(
+      disabledColor: Colors.grey,
       color: Theme.of(context).backgroundColor,
       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-      child: Text(
+      shape: RoundedRectangleBorder(borderRadius: const BorderRadius.all(Radius.circular(5))),
+      child: const Text(
         'Create',
         style: TextStyle(
           color: Colors.white,
@@ -91,8 +91,20 @@ class _CreateClassFormState extends State<CreateClassForm> {
       decoration: const InputDecoration(labelText: 'Class title (required)'),
       onChanged: (val) {
         widget.data.title = val;
-        setState(() => _isValid = CreateClassValidator.validateClassName(val) == null);
+        if (_isValid != (CreateClassValidator.validateClassTitle(val) == null)) {
+          setState(() => _isValid = !_isValid);
+        }
       },
+    );
+  }
+
+  Widget _buildSubjectInput() {
+    return TextFormField(
+      initialValue: widget.data.subject,
+      textInputAction: TextInputAction.next,
+      onFieldSubmitted: (_) => FocusScope.of(context).nextFocus(),
+      decoration: const InputDecoration(labelText: 'Subject'),
+      onChanged: (val) => widget.data.subject = val,
     );
   }
 
@@ -109,19 +121,9 @@ class _CreateClassFormState extends State<CreateClassForm> {
   Widget _buildRoomInput() {
     return TextFormField(
       initialValue: widget.data.room,
-      textInputAction: TextInputAction.next,
-      onFieldSubmitted: (_) => FocusScope.of(context).nextFocus(),
+      textInputAction: TextInputAction.done,
       decoration: const InputDecoration(labelText: 'Room'),
       onChanged: (val) => widget.data.room = val,
-    );
-  }
-
-  Widget _buildSubjectInput() {
-    return TextFormField(
-      initialValue: widget.data.subject,
-      textInputAction: TextInputAction.done,
-      decoration: const InputDecoration(labelText: 'Subject'),
-      onChanged: (val) => widget.data.subject = val,
     );
   }
 }

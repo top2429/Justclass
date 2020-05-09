@@ -23,11 +23,13 @@ class ClassManager with ChangeNotifier {
       case ViewType.JOINED:
         return _classes.where((c) => c.role == ClassRole.STUDENT).toList();
       case ViewType.COLLABORATING:
-        return _classes.where((c) => c.role == ClassRole.TEACHER).toList();
+        return _classes.where((c) => c.role == ClassRole.COLLABORATOR).toList();
       default:
         return [];
     }
   }
+
+  Class getClass(String cid) => _classes.firstWhere((cls) => cls.cid == cid, orElse: () => null);
 
   Future<void> add(CreateClassFormData data) async {
     try {
@@ -39,7 +41,7 @@ class ClassManager with ChangeNotifier {
     }
   }
 
-  Future<void> fetchData() async {
+  Future<void> fetchClassList() async {
     try {
       _classes = await ApiCall.fetchClassList(_uid);
       notifyListeners();
@@ -48,49 +50,74 @@ class ClassManager with ChangeNotifier {
     }
   }
 
-  static final testData = [
-    Class(
-      cid: '0',
-      title: 'KTPM_1234',
-      publicCode: '010ax31',
-      role: ClassRole.OWNER,
-      theme: 0,
-      studentCount: 12,
-      section: 'Môn: Kiến trúc phần mềm',
-    ),
-    Class(
-      cid: '2',
-      title: 'THCNTT3_100',
-      publicCode: '010ax31',
-      role: ClassRole.STUDENT,
-      theme: 2,
-      ownerName: 'Hieu Pham',
-    ),
-    Class(
-      cid: '1',
-      title: 'PPHDH_1996 day la test text input qua dai',
-      publicCode: '010ax31',
-      role: ClassRole.TEACHER,
-      theme: 1,
-      section: 'Môn: Phương pháp học đại học, nhung chua du dau, phai dai hon nua',
-      ownerName: 'Minh Ngoc',
-    ),
-    Class(
-      cid: '3',
-      title: 'THCNTT3_100',
-      publicCode: '010ax31',
-      role: ClassRole.OWNER,
-      theme: 3,
-      studentCount: 1,
-      ownerName: 'Hieu Pham',
-    ),
-    Class(
-      cid: '4',
-      title: 'Because I\'m Batman',
-      publicCode: '010ax31',
-      role: ClassRole.STUDENT,
-      theme: 4,
-      ownerName: 'Bruce Wayne',
-    ),
-  ];
+  Future<void> joinClass(String publicCode) async {
+    try {
+      final cls = await ApiCall.joinClassWithCode(_uid, publicCode);
+      // TODO: insert class to class list
+      _classes.insert(0, cls);
+      notifyListeners();
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  Future<void> removeClass(String cid) async {
+    // optimistic pattern
+    final index = _classes.indexWhere((cls) => cls.cid == cid);
+    final cls = _classes.removeAt(index);
+    notifyListeners();
+    try {
+      await ApiCall.removeOwnedClass(_uid, cid);
+    } catch (error) {
+      _classes.insert(index, cls);
+      notifyListeners();
+      throw error;
+    }
+  }
+
+//  static final testData = [
+//    Class(
+//      cid: '0',
+//      title: 'KTPM_1234 co title rat chi la dai do',
+//      publicCode: '010ax31',
+//      role: ClassRole.OWNER,
+//      theme: 0,
+//      studentCount: 12,
+//      section: 'Môn: Kiến trúc phần mềm',
+//    ),
+//    Class(
+//      cid: '2',
+//      title: 'THCNTT3_100 co title ra chi la dai do',
+//      publicCode: '010ax31',
+//      role: ClassRole.STUDENT,
+//      theme: 2,
+//      ownerName: 'Hieu Pham',
+//    ),
+//    Class(
+//      cid: '1',
+//      title: 'PPHDH_1996 day la ',
+//      publicCode: '010ax31',
+//      role: ClassRole.COLLABORATOR,
+//      theme: 1,
+//      subject: 'Môn: Phương pháp học đại học, nhung chua du dau, phai dai hon nua',
+//      ownerName: 'Minh Ngoc',
+//    ),
+//    Class(
+//      cid: '3',
+//      title: 'THCNTT3_100',
+//      publicCode: '010ax31',
+//      role: ClassRole.OWNER,
+//      theme: 3,
+//      studentCount: 1,
+//      ownerName: 'Hieu Pham',
+//    ),
+//    Class(
+//      cid: '4',
+//      title: 'Because I\'m Batman',
+//      publicCode: '010ax31',
+//      role: ClassRole.STUDENT,
+//      theme: 4,
+//      ownerName: 'Bruce Wayne',
+//    ),
+//  ];
 }

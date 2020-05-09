@@ -197,7 +197,7 @@ class _UpdateClassInfoScreenState extends State<UpdateClassInfoScreen> {
                   const SizedBox(height: 10),
 
                   // Settings Area
-                  InfoSettingsArea(themeIndex: input.theme, onChangeTheme: onChangeTheme),
+                  InfoSettingsArea(theme: data.theme, inputTheme: input.theme, onChangeTheme: onChangeTheme),
                 ],
               ),
             ),

@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:justclass/models/class_details_data.dart';
 import 'package:justclass/providers/auth.dart';
@@ -6,6 +7,7 @@ import 'package:justclass/themes.dart';
 import 'package:justclass/utils/validator.dart';
 import 'package:justclass/widgets/app_icon_button.dart';
 import 'package:justclass/widgets/app_snack_bar.dart';
+import 'package:justclass/widgets/info_settings_area.dart';
 import 'package:provider/provider.dart';
 
 class UpdateClassInfoScreen extends StatefulWidget {
@@ -26,6 +28,7 @@ class _UpdateClassInfoScreenState extends State<UpdateClassInfoScreen> {
   @override
   void initState() {
     _color = Themes.forClass(widget.cls.theme).primaryColor;
+
     _setUpData(widget.cls);
 
     super.initState();
@@ -74,8 +77,14 @@ class _UpdateClassInfoScreenState extends State<UpdateClassInfoScreen> {
     return true;
   }
 
+  void onChangeTheme(int theme) {
+    setState(() => input.theme = theme);
+  }
+
   @override
   Widget build(BuildContext context) {
+    final padding = const EdgeInsets.symmetric(vertical: 8, horizontal: 20);
+
     return GestureDetector(
       onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
       child: Scaffold(
@@ -87,18 +96,26 @@ class _UpdateClassInfoScreenState extends State<UpdateClassInfoScreen> {
             child: Container(
               color: Colors.white,
               child: ListView(
-                padding: const EdgeInsets.all(20),
                 children: <Widget>[
                   // About Area
-                  Align(
-                    alignment: Alignment.center,
-                    child: Text('About', style: TextStyle(color: _color, fontWeight: FontWeight.bold, fontSize: 25)),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 20, bottom: 5),
+                    child: Text(
+                      'About',
+                      style: TextStyle(color: _color, fontWeight: FontWeight.bold, fontSize: 25),
+                      textAlign: TextAlign.center,
+                    ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    padding: padding,
                     child: TextFormField(
                       initialValue: data.title,
-                      decoration: const InputDecoration(labelText: 'Title'),
+                      decoration: InputDecoration(
+                        labelText: 'Title',
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: _color, width: 2),
+                        ),
+                      ),
                       keyboardType: TextInputType.text,
                       textInputAction: TextInputAction.next,
                       onFieldSubmitted: (_) => FocusScope.of(context).nextFocus(),
@@ -111,10 +128,15 @@ class _UpdateClassInfoScreenState extends State<UpdateClassInfoScreen> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    padding: padding,
                     child: TextFormField(
                       initialValue: data.subject,
-                      decoration: const InputDecoration(labelText: 'Subject'),
+                      decoration: InputDecoration(
+                        labelText: 'Subject',
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: _color, width: 2),
+                        ),
+                      ),
                       keyboardType: TextInputType.text,
                       textInputAction: TextInputAction.next,
                       onFieldSubmitted: (_) => FocusScope.of(context).nextFocus(),
@@ -122,10 +144,15 @@ class _UpdateClassInfoScreenState extends State<UpdateClassInfoScreen> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    padding: padding,
                     child: TextFormField(
                       initialValue: data.section,
-                      decoration: const InputDecoration(labelText: 'Section'),
+                      decoration: InputDecoration(
+                        labelText: 'Section',
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: _color, width: 2),
+                        ),
+                      ),
                       keyboardType: TextInputType.text,
                       textInputAction: TextInputAction.next,
                       onFieldSubmitted: (_) => FocusScope.of(context).nextFocus(),
@@ -133,10 +160,15 @@ class _UpdateClassInfoScreenState extends State<UpdateClassInfoScreen> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    padding: padding,
                     child: TextFormField(
                       initialValue: data.room,
-                      decoration: const InputDecoration(labelText: 'Room'),
+                      decoration: InputDecoration(
+                        labelText: 'Room',
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: _color, width: 2),
+                        ),
+                      ),
                       keyboardType: TextInputType.text,
                       textInputAction: TextInputAction.next,
                       onFieldSubmitted: (_) => FocusScope.of(context).nextFocus(),
@@ -144,10 +176,15 @@ class _UpdateClassInfoScreenState extends State<UpdateClassInfoScreen> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    padding: padding,
                     child: TextFormField(
                       initialValue: data.description,
-                      decoration: const InputDecoration(labelText: 'Description'),
+                      decoration: InputDecoration(
+                        labelText: 'Description',
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: _color, width: 2),
+                        ),
+                      ),
                       keyboardType: TextInputType.multiline,
                       textInputAction: TextInputAction.newline,
                       minLines: 1,
@@ -155,13 +192,12 @@ class _UpdateClassInfoScreenState extends State<UpdateClassInfoScreen> {
                       onChanged: (val) => input.description = val,
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 5),
+                  Divider(),
+                  const SizedBox(height: 10),
 
                   // Settings Area
-                  Align(
-                    alignment: Alignment.center,
-                    child: Text('Settings', style: TextStyle(color: _color, fontWeight: FontWeight.bold, fontSize: 25)),
-                  ),
+                  InfoSettingsArea(themeIndex: input.theme, onChangeTheme: onChangeTheme),
                 ],
               ),
             ),

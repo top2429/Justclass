@@ -7,7 +7,7 @@ class Themes {
   static const List<ClassTheme> _classThemes = [
     ClassTheme(
       imageUrl: 'assets/images/themes/theme-00.jpg',
-      primaryColor:  Color(0xff02579a),
+      primaryColor: Color(0xff02579a),
       secondaryColor: Color(0xff007dde),
     ),
     ClassTheme(
@@ -37,6 +37,8 @@ class Themes {
     ),
   ];
 
+  static List<ClassTheme> get classThemes => _classThemes;
+
   static ClassTheme forClass(int theme) => _classThemes[theme];
 
   static int getRandomTheme() {
@@ -51,7 +53,6 @@ class Themes {
       isDense: true,
       border: OutlineInputBorder(),
     ),
-
   );
 }
 

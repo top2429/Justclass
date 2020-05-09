@@ -25,6 +25,7 @@ class _NoteScreenState extends State<NoteScreen> with AutomaticKeepAliveClientMi
 
     return Scaffold(
       backgroundColor: theme.primaryColor,
+      resizeToAvoidBottomInset: false,
       body: Container(
         color: Colors.white,
         child: RefreshIndicator(
@@ -37,8 +38,7 @@ class _NoteScreenState extends State<NoteScreen> with AutomaticKeepAliveClientMi
               NoteScreenTopBar(),
               SliverList(
                 delegate: SliverChildListDelegate([
-                  const SizedBox(height: 10),
-                  buildChangeBtn(context),
+                  const SizedBox(height: 30),
                   buildTestNote(context),
                   buildTestNote(context),
                   buildTestNote(context),
@@ -97,15 +97,6 @@ class _NoteScreenState extends State<NoteScreen> with AutomaticKeepAliveClientMi
         borderRadius: const BorderRadius.all(Radius.circular(5)),
       ),
       child: Container(height: 150),
-    );
-  }
-
-  Widget buildChangeBtn(BuildContext context) {
-    final cls = Provider.of<Class>(context);
-    return Center(
-      child: RaisedButton(
-        onPressed: cls.changeTheme,
-      ),
     );
   }
 }

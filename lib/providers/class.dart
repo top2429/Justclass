@@ -17,8 +17,23 @@ extension ClassRoles on ClassRole {
   }
 }
 
+enum PermissionCode { VCP, VC, V }
+
+extension PermissionCodes on PermissionCode {
+  static PermissionCode getType(String code) {
+    if (code == 'VCP')
+      return PermissionCode.VCP;
+    else if (code == 'VC')
+      return PermissionCode.VC;
+    else if (code == 'V')
+      return PermissionCode.V;
+    else
+      return null;
+  }
+}
+
 class Class with ChangeNotifier {
-  final String cid;
+  String cid;
   String title;
   String subject;
   String section;
@@ -26,38 +41,44 @@ class Class with ChangeNotifier {
   String room;
   ClassRole role;
   String publicCode;
-  String permissionCode;
+  PermissionCode permissionCode;
   int studentCount;
   String ownerName;
   int theme;
   int createdTimestamp;
-  bool _didGetDetails = false;
+  int lastEdit;
 
   Class({
     @required this.cid,
     @required this.title,
     @required this.role,
     @required this.theme,
+    @required this.permissionCode,
     this.publicCode = 'Not assigned',
     this.studentCount = 0,
-    this.permissionCode = '',
     this.subject = '',
     this.section = '',
     this.description = '',
     this.room = '',
     this.ownerName = '',
     this.createdTimestamp = 0,
-    didGetDetails = false,
-  }) {
-    _didGetDetails = didGetDetails;
-  }
+    this.lastEdit = 0,
+  });
 
-  Future<void> autoGetDetails() async {
-    if (!_didGetDetails) {
-      _didGetDetails = true;
-      await fetchDetails();
-      notifyListeners();
-    }
+  Class.fromJson(dynamic json) {
+    this.cid = json['classroomId'];
+    this.title = json['title'];
+    this.subject = json['subject'];
+    this.section = json['section'];
+    this.room = json['room'];
+    this.description = json['description'];
+    this.role = ClassRoles.getType(json['role']);
+    this.theme = json['theme'];
+    this.studentCount = json['studentsCount'] ?? 0;
+    this.ownerName = json['owner'] != null ? json['owner']['displayName'] : 'Me';
+    this.permissionCode = PermissionCodes.getType(json['studentsNotePermission']);
+    this.createdTimestamp = json['createdTimestamp'];
+    this.lastEdit = json['lastEdit'];
   }
 
   Future<void> fetchDetails() async {

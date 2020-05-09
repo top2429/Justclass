@@ -55,18 +55,8 @@ class ApiCall {
       if (response.statusCode >= 400) throw HttpException(message: 'Unable to create new class!');
 
       final info = json.decode(response.body);
-      final newClass = Class(
-        cid: info['classroomId'],
-        publicCode: info['classroomId'],
-        permissionCode: info['studentsNotePermission'],
-        role: ClassRoles.getType(info['role']),
-        title: data.title,
-        section: data.section,
-        subject: data.subject,
-        description: data.description,
-        room: data.room,
-        theme: data.theme,
-      );
+      final newClass = Class.fromJson(info);
+
       return newClass;
     } catch (error) {
       throw error;
@@ -84,17 +74,7 @@ class ApiCall {
 
       final List<Class> classList = [];
       final classesData = json.decode(response.body) as List<dynamic>;
-      classesData.forEach((cls) {
-        classList.add(Class(
-          cid: cls['classroomId'],
-          title: cls['title'],
-          subject: cls['subject'],
-          role: ClassRoles.getType(cls['role']),
-          theme: cls['theme'] ?? 0,
-          studentCount: cls['studentsCount'] ?? 0,
-          ownerName: cls['owner']['displayName'],
-        ));
-      });
+      classesData.forEach((cls) => classList.add(Class.fromJson(cls)));
       return classList;
     } catch (error) {
       throw error;
@@ -111,24 +91,7 @@ class ApiCall {
       else if (response.statusCode >= 400) throw HttpException(message: 'Unable to join class!');
 
       final data = json.decode(response.body);
-      final cls = Class(
-        cid: data['classroomId'],
-        subject: data['subject'],
-        role: ClassRoles.getType(data['role']),
-        section: data['section'],
-        title: data['title'],
-        theme: data['theme'] ?? 0,
-        studentCount: data['studentsCount'] ?? 0,
-        room: data['room'],
-        description: data['description'],
-        permissionCode: data['studentsNotePermission'],
-        publicCode: data['publicCode'],
-        createdTimestamp: data['createdTimestamp'] ?? 0,
-        ownerName: data['owner']['displayName'],
-        didGetDetails: true,
-      );
-      print(cls);
-      return cls;
+      return Class.fromJson(data);
     } catch (error) {
       throw error;
     }
@@ -138,7 +101,7 @@ class ApiCall {
     try {
       checkInternetConnection();
       final url = 'https://justclass-da0b0.appspot.com/api/v1/classroom/$uid/$cid';
-      final response = await http.delete(url,  headers: {'Accept': 'application/json'});
+      final response = await http.delete(url, headers: {'Accept': 'application/json'});
       if (response.statusCode >= 400) throw HttpException(message: 'Unable to remove class!');
     } catch (error) {
       throw error;

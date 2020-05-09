@@ -14,7 +14,7 @@ class ClassListViewTileStudent extends StatelessWidget {
 
   static const _radius = BorderRadius.all(Radius.circular(8));
 
-  void _removeClass( String cid) async {
+  void _removeClass(String cid) async {
     try {
       await Provider.of<ClassManager>(context, listen: false).removeClass(cid);
     } catch (error) {
@@ -77,7 +77,8 @@ class ClassListViewTileStudent extends StatelessWidget {
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                   Spacer(),
-                                  Text(cls.ownerName, style: const TextStyle(fontSize: 14)),
+                                  Text(cls.ownerName,
+                                      style: const TextStyle(fontSize: 14), overflow: TextOverflow.ellipsis),
                                 ],
                               ),
                             ),

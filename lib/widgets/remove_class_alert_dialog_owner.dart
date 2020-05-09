@@ -33,7 +33,7 @@ class _RemoveClassAlertDialogOwnerState extends State<RemoveClassAlertDialogOwne
               padding: const EdgeInsets.only(top: 10),
               child: TextFormField(
                 textInputAction: TextInputAction.done,
-//                decoration: const InputDecoration(labelText: 'Class Title'),
+                decoration: const InputDecoration(hintText: 'Class Title'),
                 onChanged: (val) {
                   setState(() => _isValid = val == widget.classTitle);
                 },

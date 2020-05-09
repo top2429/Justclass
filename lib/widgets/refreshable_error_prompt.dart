@@ -11,7 +11,7 @@ class RefreshableErrorPrompt extends StatelessWidget {
     return LayoutBuilder(
       builder: (_, constraints) {
         return RefreshIndicator(
-          onRefresh: () => onRefresh(),
+          onRefresh: onRefresh,
           child: ListView(
             children: <Widget>[
               SizedBox(height: (message == null) ? constraints.maxHeight * 0.45 : constraints.maxHeight * 0.42),

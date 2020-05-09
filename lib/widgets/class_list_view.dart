@@ -38,7 +38,7 @@ class ClassListView extends StatefulWidget {
 
 class ClassListViewState extends State<ClassListView> {
   ViewType _type = ViewType.ALL;
-  bool _hasError = true;
+  bool _hasError = false;
   bool _didFirstLoad = false;
 
   set viewType(ViewType type) => setState(() => _type = type);
@@ -57,16 +57,32 @@ class ClassListViewState extends State<ClassListView> {
         _hasError = false;
       });
     } catch (error) {
-      if (this.mounted) AppSnackBar.showError(context, message: error.toString());
+      setState(() {
+        _didFirstLoad = true;
+        _hasError = true;
+      });
+      AppSnackBar.showError(context, message: error.toString());
+    }
+  }
+
+  Future<void> _onRefreshAfterFirstLoad() async {
+    try {
+      await Provider.of<ClassManager>(context, listen: false).fetchClassList();
+    } catch (error) {
+      AppSnackBar.showError(context, message: error.toString());
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    if (!_didFirstLoad) return FetchProgressIndicator();
-    if (_hasError) return RefreshableErrorPrompt(onRefresh: _onRefresh);
+    if (!_didFirstLoad) {
+      return FetchProgressIndicator();
+    }
+    if (_hasError) {
+      return RefreshableErrorPrompt(onRefresh: _onRefresh);
+    }
     return RefreshIndicator(
-      onRefresh: _onRefresh,
+      onRefresh: _onRefreshAfterFirstLoad,
       child: Consumer<ClassManager>(
         builder: (_, classMgr, __) {
           final classes = classMgr.getClassesOnViewType(_type);
@@ -91,13 +107,12 @@ class ClassListViewState extends State<ClassListView> {
   Widget _buildTile(ClassRole role) {
     switch (role) {
       case ClassRole.OWNER:
-        return ClassListViewTileOwner();
+        return ClassListViewTileOwner(context: context);
       case ClassRole.COLLABORATOR:
         return ClassListViewTileCollaborator();
       case ClassRole.STUDENT:
-        return ClassListViewTileStudent();
       default:
-        return Container();
+        return ClassListViewTileStudent();
     }
   }
 }

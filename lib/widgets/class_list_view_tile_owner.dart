@@ -8,9 +8,13 @@ import '../themes.dart';
 import 'app_snack_bar.dart';
 
 class ClassListViewTileOwner extends StatelessWidget {
+  final BuildContext context;
+
+  ClassListViewTileOwner({@required this.context});
+
   static const _radius = BorderRadius.all(Radius.circular(8));
 
-  void _removeClass(BuildContext context, String cid) async {
+  void _removeClass(String cid) async {
     try {
       var result = await showDialog(
         context: context,
@@ -97,7 +101,7 @@ class ClassListViewTileOwner extends StatelessWidget {
                                 const PopupMenuItem(child: Text('Remove'), value: 'remove', height: 40),
                               ],
                               onSelected: (val) {
-                                if (val == 'remove') _removeClass(context, cls.cid);
+                                if (val == 'remove') _removeClass(cls.cid);
                               },
                             ),
                             Container(

@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
 import 'package:justclass/models/class_details_data.dart';
-import 'package:justclass/themes.dart';
 import 'package:justclass/utils/api_call.dart';
 
 enum ClassRole { OWNER, COLLABORATOR, STUDENT }

@@ -4,7 +4,6 @@ import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:justclass/models/user.dart';
 import 'package:justclass/utils/api_call.dart';
-import 'package:justclass/utils/test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 enum AuthType { FIREBASE_EMAIL_PASS, OAUTH_GOOGLE, OAUTH_FACEBOOK }

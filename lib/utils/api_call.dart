@@ -16,7 +16,6 @@ class ApiCall {
   static Future<bool> postUserData(User user) async {
     try {
       checkInternetConnection();
-
       const url = 'https://justclass-da0b0.appspot.com/api/v1/user';
       final response = await http.post(
         url,
@@ -39,8 +38,8 @@ class ApiCall {
 
   static Future<Class> createClass(String uid, CreateClassFormData data) async {
     try {
+      await Future.delayed(Duration(seconds: 5));
       checkInternetConnection();
-
       final url = 'https://justclass-da0b0.appspot.com/api/v1/classroom/$uid';
       final response = await http.post(
         url,
@@ -67,10 +66,8 @@ class ApiCall {
   static Future<List<Class>> fetchClassList(String uid) async {
     try {
       checkInternetConnection();
-
       final url = 'https://justclass-da0b0.appspot.com/api/v1/classroom/$uid';
       final response = await http.get(url, headers: {'Content-type': 'application/json', 'Accept': 'application/json'});
-
       if (response.statusCode >= 400) throw HttpException(message: 'Unable to fetch class data!');
 
       final List<Class> classList = [];
@@ -102,8 +99,10 @@ class ApiCall {
     try {
       checkInternetConnection();
       final url = 'https://justclass-da0b0.appspot.com/api/v1/classroom/$uid/$cid';
-      final response =
-          await http.delete(url, headers: {'Content-type': 'application/json', 'Accept': 'application/json'});
+      final response = await http.delete(url, headers: {
+        'Content-type': 'application/json',
+        'Accept': 'application/json',
+      });
       if (response.statusCode >= 400) throw HttpException(message: 'Unable to remove class!');
     } catch (error) {
       throw error;

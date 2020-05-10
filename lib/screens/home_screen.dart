@@ -53,12 +53,12 @@ class HomeScreen extends StatelessWidget {
           Container(
             height: height,
             width: width,
-            child: Center(child: CreateClassButton(onDidCreateClass: _backdropScaffold.currentState.swap)),
+            child: Center(child: CreateClassButton(onDidCreateClass: _backdropScaffold.currentState.reserve)),
           ),
           Container(
             height: height,
             width: width,
-            child: Center(child: JoinClassButton(onDidJoinClass: _backdropScaffold.currentState.swap)),
+            child: Center(child: JoinClassButton(onDidJoinClass: _backdropScaffold.currentState.reserve)),
           ),
         ],
       ),

@@ -23,7 +23,6 @@ class _InfoSettingsAreaState extends State<InfoSettingsArea> {
   @override
   void initState() {
     inputTheme = widget.theme;
-
     super.initState();
   }
 
@@ -38,7 +37,7 @@ class _InfoSettingsAreaState extends State<InfoSettingsArea> {
   }
 
   void _onPickTheme(BuildContext context) async {
-    const borderRadius = const BorderRadius.only(
+    const borderRadius = BorderRadius.only(
       topLeft: Radius.circular(15),
       topRight: Radius.circular(15),
     );

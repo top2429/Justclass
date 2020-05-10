@@ -123,6 +123,7 @@ class Class with ChangeNotifier {
   Future<String> resetClassCode(String uid) async {
     try {
       final code = await ApiCall.requestNewPublicCode(uid, cid);
+      publicCode = code;
       return code;
     } catch (error) {
       throw error;

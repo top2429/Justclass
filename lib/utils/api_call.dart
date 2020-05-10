@@ -27,7 +27,7 @@ class ApiCall {
           'photoUrl': user.photoUrl,
         }),
       );
-      if (response.statusCode >= 400) throw HttpException(message: 'Unable to update user data');
+      if (response.statusCode >= 400) throw HttpException(message: 'Unable to update user data. Status code: ${response.statusCode}.');
 
       final isNew = json.decode(response.body)['newUser'];
       return isNew;

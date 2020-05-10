@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:justclass/themes.dart';
 import 'package:justclass/widgets/app_icon_button.dart';
@@ -30,7 +32,7 @@ class HomeScreen extends StatelessWidget {
           title: const Text("JustClass", style: TextStyle(fontWeight: FontWeight.bold)),
           dropDistance: dropDistance,
           backColor: Theme.of(context).backgroundColor,
-          leading: AppIconButton(icon: const Icon(Icons.menu), onPressed: () => _drawer.currentState.swap()),
+          leading: AppIconButton(icon: const Icon(Icons.menu, size: 22), onPressed: () => _drawer.currentState.swap()),
           actions: <Widget>[_buildPopupMenu()],
           backLayer: LayoutBuilder(
             builder: (_, constraints) {
@@ -74,6 +76,7 @@ class HomeScreen extends StatelessWidget {
           color: Colors.transparent,
           child: PopupMenuButton(
             tooltip: 'Filter',
+            child: const Icon(Icons.filter_list, size: 22),
             shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5))),
             offset: const Offset(0, 40),
             itemBuilder: (_) => [

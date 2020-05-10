@@ -8,6 +8,7 @@ class ClassDetailsData {
   String room;
   String description;
   PermissionCode permissionCode;
+  String classCode;
   int theme;
 
   ClassDetailsData({
@@ -18,5 +19,6 @@ class ClassDetailsData {
     @required this.description,
     @required this.permissionCode,
     @required this.theme,
+    this.classCode,
   });
 }

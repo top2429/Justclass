@@ -55,6 +55,7 @@ class _UpdateClassInfoScreenState extends State<UpdateClassInfoScreen> {
       description: cls.description,
       permissionCode: cls.permissionCode,
       theme: cls.theme,
+      classCode: cls.publicCode,
     );
   }
 
@@ -69,7 +70,7 @@ class _UpdateClassInfoScreenState extends State<UpdateClassInfoScreen> {
       if (this.mounted) AppSnackBar.showError(context, message: error.toString());
     } finally {
       _hideLoadingSpin();
-      _updateBtn.currentState.changeState(true);
+      _updateBtn.currentState?.changeState(true);
     }
   }
 
@@ -116,7 +117,7 @@ class _UpdateClassInfoScreenState extends State<UpdateClassInfoScreen> {
                       const SizedBox(height: 5),
                       Divider(),
                       const SizedBox(height: 10),
-                      InfoSettingsArea(theme: data.theme, input: input),
+                      InfoSettingsArea(theme: data.theme, input: input, resetClassCode: widget.cls.resetClassCode),
                       const SizedBox(height: 20),
                     ],
                   ),

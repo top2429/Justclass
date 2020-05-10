@@ -87,6 +87,7 @@ class Class with ChangeNotifier {
     this.description = json['description'];
     this.role = ClassRoles.getType(json['role']);
     this.theme = json['theme'];
+    this.publicCode = json['publicCode'];
     this.studentCount = json['studentsCount'] ?? 0;
     this.ownerName = json['owner'] != null ? json['owner']['displayName'] : 'Me';
     this.permissionCode = PermissionCodes.getType(json['studentsNotePermission']);
@@ -120,8 +121,12 @@ class Class with ChangeNotifier {
     }
   }
 
-  void changeTheme() {
-    theme = Themes.getRandomTheme();
-    notifyListeners();
+  Future<String> resetClassCode(String uid) async {
+    try {
+      final code = await ApiCall.requestNewPublicCode(uid, cid);
+      return code;
+    } catch (error) {
+      throw error;
+    }
   }
 }

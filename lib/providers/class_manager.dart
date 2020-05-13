@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
+import 'package:justclass/models/member.dart';
 import 'package:justclass/providers/class.dart';
 import 'package:justclass/utils/api_call.dart';
-import 'package:justclass/utils/test.dart';
 import 'package:justclass/widgets/class_list_view.dart';
 import 'package:justclass/widgets/create_class_form.dart';
 

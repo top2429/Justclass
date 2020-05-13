@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:justclass/models/class_details_data.dart';
+import 'package:justclass/models/member.dart';
 import 'package:justclass/models/user.dart';
 import 'package:justclass/providers/class.dart';
 import 'package:justclass/utils/http_exception.dart';
@@ -9,6 +10,8 @@ import 'package:justclass/utils/test.dart';
 import 'package:justclass/widgets/create_class_form.dart';
 
 class ApiCall {
+  static const _headers = {'Content-type': 'application/json', 'Accept': 'application/json'};
+
   static checkInternetConnection() {
     // TODO: check internet
   }
@@ -19,7 +22,7 @@ class ApiCall {
       const url = 'https://justclass-da0b0.appspot.com/api/v1/user';
       final response = await http.post(
         url,
-        headers: {'Content-type': 'application/json', 'Accept': 'application/json'},
+        headers: _headers,
         body: json.encode({
           'localId': user.uid,
           'displayName': user.displayName,
@@ -27,7 +30,8 @@ class ApiCall {
           'photoUrl': user.photoUrl,
         }),
       );
-      if (response.statusCode >= 400) throw HttpException(message: 'Unable to update user data. Status code: ${response.statusCode}.');
+      if (response.statusCode >= 400)
+        throw HttpException(message: 'Unable to update user data. Status code: ${response.statusCode}.');
 
       final isNew = json.decode(response.body)['newUser'];
       return isNew;
@@ -43,7 +47,7 @@ class ApiCall {
       final url = 'https://justclass-da0b0.appspot.com/api/v1/classroom/$uid';
       final response = await http.post(
         url,
-        headers: {'Content-type': 'application/json', 'Accept': 'application/json'},
+        headers: _headers,
         body: json.encode({
           'title': data.title,
           'section': data.section,
@@ -67,7 +71,7 @@ class ApiCall {
     try {
       checkInternetConnection();
       final url = 'https://justclass-da0b0.appspot.com/api/v1/classroom/$uid';
-      final response = await http.get(url, headers: {'Content-type': 'application/json', 'Accept': 'application/json'});
+      final response = await http.get(url, headers: _headers);
       if (response.statusCode >= 400) throw HttpException(message: 'Unable to fetch class data!');
 
       final List<Class> classList = [];
@@ -83,7 +87,7 @@ class ApiCall {
     try {
       checkInternetConnection();
       final url = 'https://justclass-da0b0.appspot.com/api/v1/classroom/$uid/$publicCode';
-      final response = await http.put(url, headers: {'Content-type': 'application/json', 'Accept': 'application/json'});
+      final response = await http.put(url, headers: _headers);
       if (response.statusCode == 417)
         throw HttpException(message: 'Class code does not exist!');
       else if (response.statusCode >= 400) throw HttpException(message: 'Unable to join class!');
@@ -99,10 +103,7 @@ class ApiCall {
     try {
       checkInternetConnection();
       final url = 'https://justclass-da0b0.appspot.com/api/v1/classroom/$uid/$cid';
-      final response = await http.delete(url, headers: {
-        'Content-type': 'application/json',
-        'Accept': 'application/json',
-      });
+      final response = await http.delete(url, headers: _headers);
       if (response.statusCode >= 400) throw HttpException(message: 'Unable to remove class!');
     } catch (error) {
       throw error;
@@ -114,7 +115,7 @@ class ApiCall {
       checkInternetConnection();
       final url = 'https://justclass-da0b0.appspot.com/api/v1/classroom/$uid';
       final response = await http.patch(url,
-          headers: {'Content-type': 'application/json', 'Accept': 'application/json'},
+          headers: _headers,
           body: json.encode({
             'classroomId': cid,
             'title': data.title,
@@ -135,9 +136,7 @@ class ApiCall {
     try {
       checkInternetConnection();
       final url = 'https://justclass-da0b0.appspot.com/api/v1/classroom/$uid?requestNewPublicCode=true';
-      final response = await http.patch(url,
-          headers: {'Content-type': 'application/json', 'Accept': 'application/json'},
-          body: json.encode({'classroomId': cid}));
+      final response = await http.patch(url, headers: _headers, body: json.encode({'classroomId': cid}));
       if (response.statusCode >= 400) throw HttpException(message: 'Unable to generate new class code!');
       final newCode = json.decode(response.body)['publicCode'];
       return newCode;
@@ -148,8 +147,30 @@ class ApiCall {
 
   static Future<Class> fetchClassDetails(String cid) async {
     try {
+      checkInternetConnection();
       await Test.delay(1);
-      // TODO: Implementation
+      // TODO: Implementation for class info screen in student mode
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  static Future<List<Member>> fetchMemberList(String uid, String cid) async {
+    try {
+      checkInternetConnection();
+      final url = 'https://justclass-da0b0.appspot.com/api/v1/classroom/members/$uid/$cid';
+      final response = await http.get(url, headers: _headers);
+      if (response.statusCode >= 400) throw HttpException(message: 'Unable to fetch member list!');
+
+      final memberData = json.decode(response.body) as List<dynamic>;
+      final members = memberData.map((m) => Member(
+            uid: m['localId'],
+            photoUrl: m['photoUrl'],
+            displayName: m['displayName'],
+            joinDatetime: m['joinDatetime'],
+            role: ClassRoles.getType(m['role']),
+          )).toList();
+      return members;
     } catch (error) {
       throw error;
     }

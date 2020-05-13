@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:justclass/models/class_details_data.dart';
 import 'package:justclass/providers/auth.dart';

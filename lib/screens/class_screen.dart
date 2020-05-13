@@ -12,7 +12,7 @@ import 'member_screen.dart';
 
 class ClassScreen extends StatelessWidget {
   static const routeName = '/class';
-  final Class cls; // cls is class, because class is a keyword in Dart so I cannot use it
+  final Class cls; // cls is class, since class is a keyword in Dart so I cannot use it
 
   ClassScreen({@required this.cls});
 

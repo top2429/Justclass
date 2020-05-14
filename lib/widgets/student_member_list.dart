@@ -8,6 +8,8 @@ import 'package:justclass/widgets/member_role_title.dart';
 import 'package:justclass/widgets/remove_member_dialog.dart';
 import 'package:provider/provider.dart';
 
+import 'member_avatar.dart';
+
 class StudentMemberList extends StatefulWidget {
   @override
   _StudentMemberListState createState() => _StudentMemberListState();
@@ -41,9 +43,7 @@ class _StudentMemberListState extends State<StudentMemberList> {
         ...memberMgr.students.map(
           (t) => ListTile(
             contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 2),
-            leading: CircleAvatar(
-              child: Image.network(t.photoUrl),
-            ),
+            leading: MemberAvatar(photoUrl: t.photoUrl, displayName: t.displayName),
             title: Text(t.displayName, overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 15)),
             trailing: Padding(
               padding: const EdgeInsets.only(right: 4),

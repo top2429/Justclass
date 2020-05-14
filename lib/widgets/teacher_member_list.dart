@@ -3,6 +3,7 @@ import 'package:justclass/models/member.dart';
 import 'package:justclass/providers/class.dart';
 import 'package:justclass/providers/member_manager.dart';
 import 'package:justclass/widgets/app_snack_bar.dart';
+import 'package:justclass/widgets/member_avatar.dart';
 import 'package:justclass/widgets/member_role_title.dart';
 import 'package:justclass/widgets/remove_member_dialog.dart';
 import 'package:provider/provider.dart';
@@ -41,17 +42,13 @@ class _TeacherMemberListState extends State<TeacherMemberList> {
         MemberRoleTitle(color: color, title: 'Teachers', tooltip: 'New Teacher', onPressed: addCollaborators),
         ListTile(
           contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 2),
-          leading: CircleAvatar(
-            child: Image.network(memberMgr.owner.photoUrl),
-          ),
+          leading: MemberAvatar(photoUrl: memberMgr.owner.photoUrl, displayName: memberMgr.owner.displayName),
           title: Text(memberMgr.owner.displayName, overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 15)),
         ),
         ...memberMgr.collaborators.map(
           (t) => ListTile(
             contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 2),
-            leading: CircleAvatar(
-              child: Image.network(t.photoUrl),
-            ),
+            leading: MemberAvatar(photoUrl: t.photoUrl, displayName: t.displayName),
             title: Text(t.displayName, overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 15)),
             trailing: Padding(
               padding: const EdgeInsets.only(right: 4),

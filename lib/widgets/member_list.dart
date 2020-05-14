@@ -72,7 +72,7 @@ class _MemberListState extends State<MemberList> {
             const SizedBox(height: 20),
             TeacherMemberList(),
             const SizedBox(height: 20),
-             StudentMemberList(),
+            StudentMemberList(),
             const SizedBox(height: 70),
           ],
         ),

@@ -145,22 +145,4 @@ class Class with ChangeNotifier {
       throw error;
     }
   }
-
-  Future<void> removeCollaborator(Member member) async {
-    try {
-      await ApiCall.removeCollaborator();
-      _members.remove(member);
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  Future<void> removeStudent(Member member) async {
-    try {
-      await ApiCall.removeStudent();
-      _members.remove(member);
-    } catch (error) {
-      throw error;
-    }
-  }
 }

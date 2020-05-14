@@ -164,7 +164,7 @@ class ApiCall {
           uid: '1',
           role: ClassRole.OWNER,
           joinDatetime: 123,
-          photoUrl: 'https://placekitten.com/200/200',
+          photoUrl: null,
         ),
         Member(
           displayName: 'Chung Pham',

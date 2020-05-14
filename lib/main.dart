@@ -45,7 +45,7 @@ class MyApp extends StatelessWidget {
         cls: Class(
       cid: '1',
       role: ClassRole.OWNER,
-      theme: 1,
+      theme: 3,
       permissionCode: PermissionCode.VCP,
       title: 'Class Test',
     ));

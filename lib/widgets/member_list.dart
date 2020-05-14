@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:justclass/models/member.dart';
 import 'package:justclass/providers/auth.dart';
 import 'package:justclass/providers/class.dart';
+import 'package:justclass/providers/member_manager.dart';
 import 'package:justclass/themes.dart';
 import 'package:justclass/widgets/app_snack_bar.dart';
 import 'package:justclass/widgets/refreshable_error_prompt.dart';
@@ -19,17 +20,6 @@ class MemberList extends StatefulWidget {
 class _MemberListState extends State<MemberList> {
   bool hasError = false;
   bool didFirstLoad = false;
-
-  List<Member> getTeacherList(List<Member> members) {
-    List<Member> teachers = [];
-    teachers.add(members.firstWhere((m) => m.role == ClassRole.OWNER));
-    teachers.addAll(members.where((m) => m.role == ClassRole.COLLABORATOR));
-    return teachers;
-  }
-
-  List<Member> getStudentList(List<Member> members) {
-    return members.where((m) => m.role == ClassRole.STUDENT).toList();
-  }
 
   Future<void> fetchMemberListFirstLoad(Class cls, String uid) async {
     try {
@@ -72,23 +62,21 @@ class _MemberListState extends State<MemberList> {
   }
 
   Widget buildMemberList(Class cls, String uid, Color color) {
-    final teachers = getTeacherList(cls.members);
-    final students = getStudentList(cls.members);
-
     return RefreshIndicator(
       color: color,
       onRefresh: () => fetchMemberList(cls, uid),
-      child: LayoutBuilder(builder: (_, constraints) {
-        return ListView(
+      child: ChangeNotifierProvider.value(
+        value: MemberManager(cls.members),
+        child: ListView(
           children: <Widget>[
             const SizedBox(height: 20),
-            TeacherMemberList(teachers: teachers),
+            TeacherMemberList(),
             const SizedBox(height: 20),
-            if (students.isNotEmpty) StudentMemberList(students: students),
+             StudentMemberList(),
             const SizedBox(height: 70),
           ],
-        );
-      }),
+        ),
+      ),
     );
   }
 }

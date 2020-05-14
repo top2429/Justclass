@@ -140,6 +140,7 @@ class Class with ChangeNotifier {
   Future<void> fetchMemberList(String uid) async {
     try {
       _members = await ApiCall.fetchMemberList(uid, cid);
+      notifyListeners();
     } catch (error) {
       throw error;
     }
@@ -147,12 +148,19 @@ class Class with ChangeNotifier {
 
   Future<void> removeCollaborator(Member member) async {
     try {
-      await ApiCall.removeCollaborators();
+      await ApiCall.removeCollaborator();
       _members.remove(member);
     } catch (error) {
       throw error;
     }
   }
 
-  Future<void> removeStudent(String uid) async {}
+  Future<void> removeStudent(Member member) async {
+    try {
+      await ApiCall.removeStudent();
+      _members.remove(member);
+    } catch (error) {
+      throw error;
+    }
+  }
 }

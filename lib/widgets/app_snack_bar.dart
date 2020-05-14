@@ -14,13 +14,10 @@ class AppSnackBar {
         backgroundColor: bgColor,
         duration: const Duration(seconds: 3600),
         behavior: SnackBarBehavior.floating,
-        content: Text(
-          message,
-          style: const TextStyle(color: Colors.black),
-        ),
+        content: Text(message, style: const TextStyle(color: Colors.black)),
         action: SnackBarAction(
           label: 'OK',
-          textColor: Colors.black87,
+          textColor: Colors.black54,
           onPressed: Scaffold.of(context).hideCurrentSnackBar,
         ),
       ),

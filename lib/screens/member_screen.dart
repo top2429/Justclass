@@ -16,7 +16,8 @@ class _MemberScreenState extends State<MemberScreen> with AutomaticKeepAliveClie
 
   @override
   Widget build(BuildContext context) {
-    final cls = Provider.of<Class>(context, listen: false);
+    super.build(context);
+    final cls = Provider.of<Class>(context);
     final color = Themes.forClass(cls.theme).primaryColor;
 
     return Scaffold(

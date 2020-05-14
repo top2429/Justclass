@@ -160,7 +160,7 @@ class ApiCall {
       await Future.delayed(Duration(seconds: 2));
       return [
         Member(
-          displayName: 'Hieu Pham',
+          displayName: 'Hieu Pham 1',
           uid: '1',
           role: ClassRole.OWNER,
           joinDatetime: 123,
@@ -174,49 +174,70 @@ class ApiCall {
           photoUrl: 'https://placekitten.com/156/156',
         ),
         Member(
-          displayName: 'Kai Pham',
+          displayName: 'Kai Pham 1',
           uid: '1',
           role: ClassRole.STUDENT,
           joinDatetime: 123,
           photoUrl: 'https://placekitten.com/150/150',
         ),
         Member(
-          displayName: 'Kai Pham',
+          displayName: 'Kai Pham 2',
           uid: '1',
           role: ClassRole.STUDENT,
           joinDatetime: 123,
           photoUrl: 'https://placekitten.com/150/150',
         ),
         Member(
-          displayName: 'Kai Pham',
+          displayName: 'Kai Pham 3',
           uid: '1',
           role: ClassRole.STUDENT,
           joinDatetime: 123,
           photoUrl: 'https://placekitten.com/150/150',
         ),
         Member(
-          displayName: 'Kai Pham',
+          displayName: 'Kai Pham 4',
           uid: '1',
           role: ClassRole.STUDENT,
           joinDatetime: 123,
           photoUrl: 'https://placekitten.com/150/150',
         ),
         Member(
-          displayName: 'Kai Pham',
+          displayName: 'Kai Pham 5',
           uid: '1',
           role: ClassRole.STUDENT,
           joinDatetime: 123,
           photoUrl: 'https://placekitten.com/150/150',
         ),
         Member(
-          displayName: 'Kai Pham',
+          displayName: 'Kai Pham 6',
           uid: '1',
           role: ClassRole.STUDENT,
           joinDatetime: 123,
           photoUrl: 'https://placekitten.com/150/150',
         ),
         Member(
-          displayName: 'Kai Pham',
+          displayName: 'Kai Pham 7',
+          uid: '1',
+          role: ClassRole.STUDENT,
+          joinDatetime: 123,
+          photoUrl: 'https://placekitten.com/150/150',
+        ),
+        Member(
+          displayName: 'Kai Pham 8',
+          uid: '1',
+          role: ClassRole.STUDENT,
+          joinDatetime: 123,
+          photoUrl: 'https://placekitten.com/150/150',
+        ),
+        Member(
+          displayName: 'Kai Pham 9',
+          uid: '1',
+          role: ClassRole.STUDENT,
+          joinDatetime: 123,
+          photoUrl: 'https://placekitten.com/150/150',
+        ),
+        Member(
+          displayName: 'Kai Pham 10',
           uid: '1',
           role: ClassRole.STUDENT,
           joinDatetime: 123,
@@ -245,8 +266,13 @@ class ApiCall {
     }
   }
 
-  static Future<void> removeCollaborators() async {
-    await Future.delayed(Duration(seconds: 2));
-    throw HttpException(message: 'Idiot');
+  static Future<void> removeCollaborator() async {
+    await Future.delayed(Duration(seconds: 1));
+    throw HttpException(message: 'Collab cannot be removed');
+  }
+
+  static Future<void> removeStudent() async {
+    await Future.delayed(Duration(seconds: 1));
+    throw HttpException(message: 'Student cannot be removed');
   }
 }

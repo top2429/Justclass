@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:justclass/providers/auth.dart';
+import 'package:justclass/providers/class.dart';
 import 'package:justclass/providers/class_manager.dart';
 import 'package:justclass/screens/auth_screen.dart';
+import 'package:justclass/screens/class_screen.dart';
 import 'package:justclass/screens/home_screen.dart';
 import 'package:justclass/screens/splash_screen.dart';
 import 'package:justclass/themes.dart';
@@ -39,6 +41,14 @@ class MyApp extends StatelessWidget {
   }
 
   Widget _buildFirstScreen(Auth auth) {
+    return ClassScreen(
+        cls: Class(
+      cid: '1',
+      role: ClassRole.OWNER,
+      theme: 1,
+      permissionCode: PermissionCode.VCP,
+      title: 'Class Test',
+    ));
     return (auth.user == null)
         ? FutureBuilder(
             future: auth.tryAutoSignIn(),

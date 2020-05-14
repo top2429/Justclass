@@ -18,8 +18,10 @@ class ClassScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider.value(
-      value: cls,
+    // sua lai thanh ChangeNotifierProvider.value sau khi co lai internet
+    return ChangeNotifierProvider(
+      create: (_) => cls,
+//      value: cls,
       child: Consumer<Class>(
         builder: (_, cls, child) => Scaffold(
           backgroundColor: Themes.forClass(cls.theme).primaryColor,

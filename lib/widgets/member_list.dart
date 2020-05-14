@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:justclass/models/member.dart';
 import 'package:justclass/providers/auth.dart';
 import 'package:justclass/providers/class.dart';
+import 'package:justclass/themes.dart';
+import 'package:justclass/widgets/app_snack_bar.dart';
 import 'package:justclass/widgets/refreshable_error_prompt.dart';
 import 'package:justclass/widgets/student_member_list.dart';
 import 'package:justclass/widgets/teacher_member_list.dart';
@@ -16,8 +18,7 @@ class MemberList extends StatefulWidget {
 
 class _MemberListState extends State<MemberList> {
   bool hasError = false;
-
-  get color => null;
+  bool didFirstLoad = false;
 
   List<Member> getTeacherList(List<Member> members) {
     List<Member> teachers = [];
@@ -30,40 +31,52 @@ class _MemberListState extends State<MemberList> {
     return members.where((m) => m.role == ClassRole.STUDENT).toList();
   }
 
+  Future<void> fetchMemberListFirstLoad(Class cls, String uid) async {
+    try {
+      await cls.fetchMemberList(uid);
+      setState(() {
+        didFirstLoad = true;
+      });
+    } catch (error) {
+      if (this.mounted) AppSnackBar.showError(context, message: error.toString());
+      setState(() {
+        didFirstLoad = true;
+        hasError = true;
+      });
+    }
+  }
+
+  Future<void> fetchMemberList(Class cls, String uid) async {
+    try {
+      await cls.fetchMemberList(uid);
+      setState(() => hasError = false);
+    } catch (error) {
+      if (this.mounted) AppSnackBar.showError(context, message: error.toString());
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final cls = Provider.of<Class>(context, listen: false);
+    final cls = Provider.of<Class>(context);
+//    final uid = Provider.of<Auth>(context, listen: false).user.uid;
+    final uid = '1';
 
-    if (cls.members == null) {
-      final uid = Provider.of<Auth>(context, listen: false).user.uid;
-      cls.fetchMemberList(uid).then((_) {
-        setState(() {});
-      }).catchError((_) {
-        setState(() {
-          hasError = true;
-        });
-      });
+    if (!didFirstLoad && cls.members == null) {
+      fetchMemberListFirstLoad(cls, uid);
       return FetchProgressIndicator();
     }
     return (hasError)
-        ? RefreshableErrorPrompt(
-            onRefresh: () {
-              final uid = Provider.of<Auth>(context, listen: false).user.uid;
-              return cls.fetchMemberList(uid).then((_) {
-                setState(() {});
-              }).catchError((_) {
-                setState(() {
-                  hasError = true;
-                });
-              });
-            },
-          )
-        : SingleChildScrollView(
-            child: Column(
-              children: <Widget>[
-                TeacherMemberList(color: color),
-                StudentMemberList(color: color),
-              ],
+        ? RefreshableErrorPrompt(onRefresh: () => fetchMemberList(cls, uid))
+        : RefreshIndicator(
+            onRefresh: () => fetchMemberList(cls, uid),
+            child: SingleChildScrollView(
+              physics: AlwaysScrollableScrollPhysics(),
+              child: Column(
+                children: <Widget>[
+                  TeacherMemberList(teachers: getTeacherList(cls.members)),
+                  StudentMemberList(students: getStudentList(cls.members)),
+                ],
+              ),
             ),
           );
   }

@@ -61,7 +61,7 @@ class Class with ChangeNotifier {
   int theme;
   int createdTimestamp;
   int lastEdit;
-  List<Member> members;
+  List<Member> _members;
 
   Class({
     @required this.cid,
@@ -98,6 +98,8 @@ class Class with ChangeNotifier {
     this.createdTimestamp = json['createdTimestamp'];
     this.lastEdit = json['lastEdit'];
   }
+
+  List<Member> get members => _members;
 
   Future<void> fetchDetails() async {
     try {
@@ -137,7 +139,8 @@ class Class with ChangeNotifier {
 
   Future<void> fetchMemberList(String uid) async {
     try {
-      members = await ApiCall.fetchMemberList(uid, cid);
+      _members = await ApiCall.fetchMemberList(uid, cid);
+      _members.forEach((m) => print('${m.displayName} ${m.photoUrl} ${m.role}'));
       notifyListeners();
     } catch (error) {
       throw error;

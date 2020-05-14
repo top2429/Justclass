@@ -157,19 +157,39 @@ class ApiCall {
 
   static Future<List<Member>> fetchMemberList(String uid, String cid) async {
     try {
+      await Future.delayed(Duration(seconds: 2));
+      return [
+        Member(
+          displayName: 'Hieu Pham',
+          uid: '1',
+          role: ClassRole.OWNER,
+          joinDatetime: 123,
+          photoUrl: 'http://placekitten.com/200/200',
+        ),
+        Member(
+          displayName: 'Kai Pham',
+          uid: '1',
+          role: ClassRole.STUDENT,
+          joinDatetime: 123,
+          photoUrl: 'http://placekitten.com/150/150',
+        )
+      ];
+
       checkInternetConnection();
       final url = 'https://justclass-da0b0.appspot.com/api/v1/classroom/members/$uid/$cid';
       final response = await http.get(url, headers: _headers);
       if (response.statusCode >= 400) throw HttpException(message: 'Unable to fetch member list!');
 
       final memberData = json.decode(response.body) as List<dynamic>;
-      final members = memberData.map((m) => Member(
-            uid: m['localId'],
-            photoUrl: m['photoUrl'],
-            displayName: m['displayName'],
-            joinDatetime: m['joinDatetime'],
-            role: ClassRoles.getType(m['role']),
-          )).toList();
+      final members = memberData
+          .map((m) => Member(
+                uid: m['localId'],
+                photoUrl: m['photoUrl'],
+                displayName: m['displayName'],
+                joinDatetime: m['joinDatetime'],
+                role: ClassRoles.getType(m['role']),
+              ))
+          .toList();
       return members;
     } catch (error) {
       throw error;

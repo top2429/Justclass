@@ -39,7 +39,16 @@ class TopicScreen extends StatelessWidget {
         ],
       ),
       body: SafeArea(
-        child: Container(),
+        child: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: const <Widget>[
+              Icon(Icons.build),
+              SizedBox(height: 10),
+              Text('Under Construction!'),
+            ],
+          ),
+        ),
       ),
     );
   }

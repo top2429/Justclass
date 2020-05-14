@@ -16,9 +16,25 @@ class TeacherMemberList extends StatefulWidget {
 }
 
 class _TeacherMemberListState extends State<TeacherMemberList> {
+  Member owner;
+  List<Member> collaborators;
+
   @override
   void initState() {
+    owner = widget.teachers.removeAt(0);
+    collaborators = widget.teachers;
+
     super.initState();
+  }
+
+  void removeCollaborators(String uid) async {
+    try {
+      await Provider.of<Class>(context).removeCollaborator(uid);
+    } catch (error) {}
+  }
+
+  void addCollaborators() {
+
   }
 
   @override
@@ -27,13 +43,31 @@ class _TeacherMemberListState extends State<TeacherMemberList> {
 
     return Column(
       children: <Widget>[
-        MemberRoleTitle(bgColor: color, title: 'Teachers', tooltip: 'New Teachers', onPressed: () {}),
-        ...widget.teachers.map(
+        MemberRoleTitle(color: color, title: 'Teachers', tooltip: 'New Teacher', onPressed: addCollaborators),
+        ListTile(
+          contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 2),
+          leading: CircleAvatar(
+            child: Image.network(owner.photoUrl),
+          ),
+          title: Text(owner.displayName, overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 15)),
+        ),
+        ...collaborators.map(
           (t) => ListTile(
+            contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 2),
             leading: CircleAvatar(
               child: Image.network(t.photoUrl),
             ),
-            title: Text(t.displayName),
+            title: Text(t.displayName, overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 15)),
+            trailing: Padding(
+              padding: const EdgeInsets.only(right: 4),
+              child: PopupMenuButton(
+                elevation: 5,
+                itemBuilder: (_) => [const PopupMenuItem(child: Text('Remove'), value: 'remove', height: 40)],
+                onSelected: (val) {
+                  if (val == 'remove') removeCollaborators(t.uid);
+                },
+              ),
+            ),
           ),
         ),
       ],

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:justclass/models/member.dart';
 import 'package:justclass/providers/auth.dart';
 import 'package:justclass/providers/class.dart';
-import 'package:justclass/themes.dart';
 import 'package:justclass/widgets/app_snack_bar.dart';
 import 'package:justclass/widgets/refreshable_error_prompt.dart';
 import 'package:justclass/widgets/student_member_list.dart';
@@ -65,19 +64,26 @@ class _MemberListState extends State<MemberList> {
       fetchMemberListFirstLoad(cls, uid);
       return FetchProgressIndicator();
     }
-    return (hasError)
-        ? RefreshableErrorPrompt(onRefresh: () => fetchMemberList(cls, uid))
-        : RefreshIndicator(
-            onRefresh: () => fetchMemberList(cls, uid),
-            child: SingleChildScrollView(
-              physics: AlwaysScrollableScrollPhysics(),
-              child: Column(
-                children: <Widget>[
-                  TeacherMemberList(teachers: getTeacherList(cls.members)),
-                  StudentMemberList(students: getStudentList(cls.members)),
-                ],
-              ),
-            ),
-          );
+    return (hasError) ? RefreshableErrorPrompt(onRefresh: () => fetchMemberList(cls, uid)) : buildMemberList(cls, uid);
+  }
+
+  Widget buildMemberList(Class cls, String uid) {
+    final teachers = getTeacherList(cls.members);
+    final students = getStudentList(cls.members);
+
+    return RefreshIndicator(
+      onRefresh: () => fetchMemberList(cls, uid),
+      child: LayoutBuilder(builder: (_, constraints) {
+        return ListView(
+          children: <Widget>[
+            const SizedBox(height: 20),
+            TeacherMemberList(teachers: teachers),
+            const SizedBox(height: 20),
+            if (students.isNotEmpty) StudentMemberList(students: students),
+            const SizedBox(height: 70),
+          ],
+        );
+      }),
+    );
   }
 }

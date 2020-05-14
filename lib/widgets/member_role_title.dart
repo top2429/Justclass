@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:justclass/widgets/app_icon_button.dart';
 
 class MemberRoleTitle extends StatelessWidget {
-  final Color bgColor;
+  final Color color;
   final String title;
   final String tooltip;
   final Function onPressed;
 
   const MemberRoleTitle({
-    @required this.bgColor,
+    @required this.color,
     @required this.title,
     @required this.tooltip,
     this.onPressed,
@@ -17,27 +17,25 @@ class MemberRoleTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       child: Container(
         decoration: BoxDecoration(
-          color: bgColor,
-          borderRadius: const BorderRadius.all(Radius.circular(10)),
+          border: Border(bottom: BorderSide(color: color, width: 0.5)),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(left: 20),
-              child: Text(this.title,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  )),
+            Text(
+              this.title,
+              style: TextStyle(
+                color: color,
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             AppIconButton(
               tooltip: tooltip,
-              icon: const Icon(Icons.add),
+              icon: Icon(Icons.person_add, color: color),
               onPressed: this.onPressed,
             ),
           ],

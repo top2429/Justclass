@@ -6,7 +6,14 @@ import 'package:justclass/widgets/app_icon_button.dart';
 import 'package:justclass/widgets/member_list.dart';
 import 'package:provider/provider.dart';
 
-class MemberScreen extends StatelessWidget {
+class MemberScreen extends StatefulWidget {
+  @override
+  _MemberScreenState createState() => _MemberScreenState();
+}
+
+class _MemberScreenState extends State<MemberScreen> with AutomaticKeepAliveClientMixin {
+  bool get wantKeepAlive => true;
+
   @override
   Widget build(BuildContext context) {
     final cls = Provider.of<Class>(context, listen: false);
@@ -36,7 +43,7 @@ class MemberScreen extends StatelessWidget {
       title: Text(title, overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 17)),
       actions: <Widget>[
         AppIconButton(
-          icon: Icon(Icons.extension),
+          icon: Icon(Icons.extension, size: 22),
           tooltip: 'Role Pass',
           onPressed: () {},
         ),

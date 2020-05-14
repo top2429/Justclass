@@ -140,10 +140,12 @@ class Class with ChangeNotifier {
   Future<void> fetchMemberList(String uid) async {
     try {
       _members = await ApiCall.fetchMemberList(uid, cid);
-      _members.forEach((m) => print('${m.displayName} ${m.photoUrl} ${m.role}'));
-      notifyListeners();
     } catch (error) {
       throw error;
     }
   }
+
+  Future<void> removeCollaborator(String uid) async {}
+
+  Future<void> removeStudent(String uid) async {}
 }

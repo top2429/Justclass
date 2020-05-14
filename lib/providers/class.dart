@@ -145,7 +145,14 @@ class Class with ChangeNotifier {
     }
   }
 
-  Future<void> removeCollaborator(String uid) async {}
+  Future<void> removeCollaborator(Member member) async {
+    try {
+      await ApiCall.removeCollaborators();
+      _members.remove(member);
+    } catch (error) {
+      throw error;
+    }
+  }
 
   Future<void> removeStudent(String uid) async {}
 }

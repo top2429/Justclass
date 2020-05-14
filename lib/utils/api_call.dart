@@ -244,4 +244,9 @@ class ApiCall {
       throw error;
     }
   }
+
+  static Future<void> removeCollaborators() async {
+    await Future.delayed(Duration(seconds: 2));
+    throw HttpException(message: 'Idiot');
+  }
 }

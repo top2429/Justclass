@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:justclass/models/member.dart';
 import 'package:justclass/providers/class.dart';
+import 'package:justclass/widgets/app_snack_bar.dart';
 import 'package:justclass/widgets/member_role_title.dart';
+import 'package:justclass/widgets/remove_member_dialog.dart';
 import 'package:provider/provider.dart';
 
 import '../themes.dart';
@@ -27,15 +29,24 @@ class _TeacherMemberListState extends State<TeacherMemberList> {
     super.initState();
   }
 
-  void removeCollaborators(String uid) async {
+  void removeCollaborators(Member member) async {
+    final index = collaborators.indexOf(member);
+
     try {
-      await Provider.of<Class>(context).removeCollaborator(uid);
-    } catch (error) {}
+      final result = await showDialog(
+        context: context,
+        builder: (context) => RemoveMemberDialog(title: 'Remove teacher?', member: member),
+      );
+
+      setState(() => collaborators.remove(member));
+      if (result) await Provider.of<Class>(context, listen: false).removeCollaborator(member);
+    } catch (error) {
+      setState(() => collaborators.insert(index, member));
+      if (this.mounted) AppSnackBar.showError(context, message: error.toString());
+    }
   }
 
-  void addCollaborators() {
-
-  }
+  void addCollaborators() {}
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +75,7 @@ class _TeacherMemberListState extends State<TeacherMemberList> {
                 elevation: 5,
                 itemBuilder: (_) => [const PopupMenuItem(child: Text('Remove'), value: 'remove', height: 40)],
                 onSelected: (val) {
-                  if (val == 'remove') removeCollaborators(t.uid);
+                  if (val == 'remove') removeCollaborators(t);
                 },
               ),
             ),

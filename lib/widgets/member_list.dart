@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:justclass/models/member.dart';
 import 'package:justclass/providers/auth.dart';
 import 'package:justclass/providers/class.dart';
+import 'package:justclass/themes.dart';
 import 'package:justclass/widgets/app_snack_bar.dart';
 import 'package:justclass/widgets/refreshable_error_prompt.dart';
 import 'package:justclass/widgets/student_member_list.dart';
@@ -57,21 +58,25 @@ class _MemberListState extends State<MemberList> {
   @override
   Widget build(BuildContext context) {
     final cls = Provider.of<Class>(context);
+    final color = Themes.forClass(cls.theme).primaryColor;
 //    final uid = Provider.of<Auth>(context, listen: false).user.uid;
     final uid = '1';
 
     if (!didFirstLoad && cls.members == null) {
       fetchMemberListFirstLoad(cls, uid);
-      return FetchProgressIndicator();
+      return FetchProgressIndicator(color: color);
     }
-    return (hasError) ? RefreshableErrorPrompt(onRefresh: () => fetchMemberList(cls, uid)) : buildMemberList(cls, uid);
+    return (hasError)
+        ? RefreshableErrorPrompt(onRefresh: () => fetchMemberList(cls, uid))
+        : buildMemberList(cls, uid, color);
   }
 
-  Widget buildMemberList(Class cls, String uid) {
+  Widget buildMemberList(Class cls, String uid, Color color) {
     final teachers = getTeacherList(cls.members);
     final students = getStudentList(cls.members);
 
     return RefreshIndicator(
+      color: color,
       onRefresh: () => fetchMemberList(cls, uid),
       child: LayoutBuilder(builder: (_, constraints) {
         return ListView(

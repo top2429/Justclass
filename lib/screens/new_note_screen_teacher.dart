@@ -4,7 +4,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:justclass/utils/http_exception.dart';
 import 'package:justclass/utils/mime_type.dart';
-import 'package:justclass/utils/validator.dart';
+import 'package:justclass/utils/validators.dart';
 import 'package:justclass/widgets/app_icon_button.dart';
 import 'package:justclass/widgets/app_snack_bar.dart';
 import 'package:justclass/widgets/opaque_progress_indicator.dart';

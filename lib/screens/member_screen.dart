@@ -45,7 +45,7 @@ class _MemberScreenState extends State<MemberScreen> with AutomaticKeepAliveClie
       title: Text(title, overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 17)),
       actions: <Widget>[
         AppIconButton(
-          icon: Icon(Icons.extension, size: 22),
+          icon: const Icon(Icons.extension, size: 22),
           tooltip: 'Role Pass',
           onPressed: () {},
         ),

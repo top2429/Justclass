@@ -6,6 +6,18 @@ import 'package:justclass/utils/api_call.dart';
 enum ClassRole { OWNER, COLLABORATOR, STUDENT }
 
 extension ClassRoles on ClassRole {
+  String get name {
+    switch (this) {
+      case ClassRole.OWNER:
+        return 'OWNER';
+      case ClassRole.COLLABORATOR:
+        return 'COLLABORATOR';
+      case ClassRole.STUDENT:
+      default:
+        return 'STUDENT';
+    }
+  }
+
   static ClassRole getType(String role) {
     if (role == 'OWNER')
       return ClassRole.OWNER;

@@ -10,7 +10,7 @@ class AppSnackBar {
     Scaffold.of(context).hideCurrentSnackBar();
     Scaffold.of(context).showSnackBar(
       SnackBar(
-        elevation: 1,
+        elevation: 2,
         backgroundColor: bgColor,
         duration: const Duration(seconds: 3600),
         behavior: SnackBarBehavior.floating,

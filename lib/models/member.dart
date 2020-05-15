@@ -6,13 +6,15 @@ class Member {
   final String displayName;
   final String photoUrl;
   final int joinDatetime;
+  final String email;
   final ClassRole role;
 
   Member({
     @required this.uid,
-    this.photoUrl,
+    @required this.photoUrl,
     @required this.displayName,
     this.joinDatetime,
+    this.email,
     this.role,
   });
 }

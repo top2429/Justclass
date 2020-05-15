@@ -267,4 +267,31 @@ class ApiCall {
     await Future.delayed(Duration(seconds: 1));
     throw HttpException(message: 'Student cannot be removed');
   }
+
+  static Future<List<Member>> fetchSuggestedMembers(
+    String uid,
+    String cid,
+    ClassRole role,
+    String keyword,
+  ) async {
+    try {
+      checkInternetConnection();
+      final url = 'https://justclass-da0b0.appspot.com/api/v1/classroom/lookup/$uid/$cid/${role.name}?keyword=$keyword';
+      final response = await http.get(url, headers: _headers);
+      if (response.statusCode >= 400) throw HttpException(message: 'Unable to suggest users!');
+
+      final memberData = json.decode(response.body) as List<dynamic>;
+      final members = memberData
+          .map((u) => Member(
+                uid: u['uid'],
+                email: u['email'],
+                displayName: u['displayName'],
+                photoUrl: u['photoUrl'],
+              ))
+          .toList();
+      return members;
+    } catch (error) {
+      throw error;
+    }
+  }
 }

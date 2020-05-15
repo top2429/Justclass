@@ -44,4 +44,22 @@ class MemberManager extends ChangeNotifier {
       notifyListeners();
     }
   }
+
+  Future<void> fetchSuggestedCollaborators(String uid, String cid, String keyword) {
+    try {
+      final collaborators = ApiCall.fetchSuggestedMembers(uid, cid, ClassRole.COLLABORATOR, keyword);
+      return collaborators;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  Future<void> fetchSuggestedStudents(String uid, String cid, String keyword) {
+    try {
+      final students = ApiCall.fetchSuggestedMembers(uid, cid, ClassRole.STUDENT, keyword);
+      return students;
+    } catch (error) {
+      throw error;
+    }
+  }
 }

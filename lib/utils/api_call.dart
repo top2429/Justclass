@@ -157,94 +157,6 @@ class ApiCall {
 
   static Future<List<Member>> fetchMemberList(String uid, String cid) async {
     try {
-      await Future.delayed(Duration(seconds: 2));
-      return [
-        Member(
-          displayName: 'Hieu Pham 1',
-          uid: '1',
-          role: ClassRole.OWNER,
-          joinDatetime: 123,
-          photoUrl: null,
-        ),
-        Member(
-          displayName: 'Chung Pham',
-          uid: '2',
-          role: ClassRole.COLLABORATOR,
-          joinDatetime: 123,
-          photoUrl: 'https://placekitten.com/156/156',
-        ),
-        Member(
-          displayName: 'Kai Pham 1',
-          uid: '1',
-          role: ClassRole.STUDENT,
-          joinDatetime: 123,
-          photoUrl: 'https://placekitten.com/150/150',
-        ),
-        Member(
-          displayName: 'Kai Pham 2',
-          uid: '1',
-          role: ClassRole.STUDENT,
-          joinDatetime: 123,
-          photoUrl: 'https://placekitten.com/150/150',
-        ),
-        Member(
-          displayName: 'Kai Pham 3',
-          uid: '1',
-          role: ClassRole.STUDENT,
-          joinDatetime: 123,
-          photoUrl: 'https://placekitten.com/150/150',
-        ),
-        Member(
-          displayName: 'Kai Pham 4',
-          uid: '1',
-          role: ClassRole.STUDENT,
-          joinDatetime: 123,
-          photoUrl: 'https://placekitten.com/150/150',
-        ),
-        Member(
-          displayName: 'Kai Pham 5',
-          uid: '1',
-          role: ClassRole.STUDENT,
-          joinDatetime: 123,
-          photoUrl: 'https://placekitten.com/150/150',
-        ),
-        Member(
-          displayName: 'Kai Pham 6',
-          uid: '1',
-          role: ClassRole.STUDENT,
-          joinDatetime: 123,
-          photoUrl: 'https://placekitten.com/150/150',
-        ),
-        Member(
-          displayName: 'Kai Pham 7',
-          uid: '1',
-          role: ClassRole.STUDENT,
-          joinDatetime: 123,
-          photoUrl: 'https://placekitten.com/150/150',
-        ),
-        Member(
-          displayName: 'Kai Pham 8',
-          uid: '1',
-          role: ClassRole.STUDENT,
-          joinDatetime: 123,
-          photoUrl: 'https://placekitten.com/150/150',
-        ),
-        Member(
-          displayName: 'Kai Pham 9',
-          uid: '1',
-          role: ClassRole.STUDENT,
-          joinDatetime: 123,
-          photoUrl: 'https://placekitten.com/150/150',
-        ),
-        Member(
-          displayName: 'Kai Pham 10',
-          uid: '1',
-          role: ClassRole.STUDENT,
-          joinDatetime: 123,
-          photoUrl: 'https://placekitten.com/150/150',
-        )
-      ];
-
       checkInternetConnection();
       final url = 'https://justclass-da0b0.appspot.com/api/v1/classroom/members/$uid/$cid';
       final response = await http.get(url, headers: _headers);
@@ -260,6 +172,86 @@ class ApiCall {
                 role: ClassRoles.getType(m['role']),
               ))
           .toList();
+      members
+        ..addAll([
+          Member(
+            displayName: 'Minh Pham',
+            uid: '2',
+            role: ClassRole.COLLABORATOR,
+            joinDatetime: 123,
+            photoUrl: 'https://placekitten.com/156/156',
+          ),
+          Member(
+            displayName: 'Kai Pham 1',
+            uid: '1',
+            role: ClassRole.STUDENT,
+            joinDatetime: 123,
+            photoUrl: 'https://placekitten.com/150/150',
+          ),
+          Member(
+            displayName: 'Kai Pham 2',
+            uid: '1',
+            role: ClassRole.STUDENT,
+            joinDatetime: 123,
+            photoUrl: 'https://placekitten.com/150/150',
+          ),
+          Member(
+            displayName: 'Kai Pham 3',
+            uid: '1',
+            role: ClassRole.STUDENT,
+            joinDatetime: 123,
+            photoUrl: null,
+          ),
+          Member(
+            displayName: 'Kai Pham 4',
+            uid: '1',
+            role: ClassRole.STUDENT,
+            joinDatetime: 123,
+            photoUrl: 'https://placekitten.com/150/150',
+          ),
+          Member(
+            displayName: 'Kai Pham 5',
+            uid: '1',
+            role: ClassRole.STUDENT,
+            joinDatetime: 123,
+            photoUrl: 'https://placekitten.com/150/150',
+          ),
+          Member(
+            displayName: 'Kai Pham 6',
+            uid: '1',
+            role: ClassRole.STUDENT,
+            joinDatetime: 123,
+            photoUrl: 'https://placekitten.com/150/150',
+          ),
+          Member(
+            displayName: 'Kai Pham 7',
+            uid: '1',
+            role: ClassRole.STUDENT,
+            joinDatetime: 123,
+            photoUrl: 'https://placekitten.com/150/150',
+          ),
+          Member(
+            displayName: 'Kai Pham 8',
+            uid: '1',
+            role: ClassRole.STUDENT,
+            joinDatetime: 123,
+            photoUrl: 'https://placekitten.com/150/150',
+          ),
+          Member(
+            displayName: 'Kai Pham 9',
+            uid: '1',
+            role: ClassRole.STUDENT,
+            joinDatetime: 123,
+            photoUrl: null,
+          ),
+          Member(
+            displayName: 'Kai Pham 10',
+            uid: '1',
+            role: ClassRole.STUDENT,
+            joinDatetime: 123,
+            photoUrl: 'https://placekitten.com/150/150',
+          )
+        ]);
       return members;
     } catch (error) {
       throw error;

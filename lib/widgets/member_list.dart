@@ -49,8 +49,7 @@ class _MemberListState extends State<MemberList> {
   Widget build(BuildContext context) {
     final cls = Provider.of<Class>(context);
     final color = Themes.forClass(cls.theme).primaryColor;
-//    final uid = Provider.of<Auth>(context, listen: false).user.uid;
-    final uid = '1';
+    final uid = Provider.of<Auth>(context, listen: false).user.uid;
 
     if (!didFirstLoad && cls.members == null) {
       fetchMemberListFirstLoad(cls, uid);

@@ -6,13 +6,12 @@ import 'package:provider/provider.dart';
 class MemberAvatar extends StatelessWidget {
   final String photoUrl;
   final String displayName;
+  final Color color;
 
-  const MemberAvatar({this.photoUrl, this.displayName});
+  const MemberAvatar({this.photoUrl, this.displayName, this.color});
 
   @override
   Widget build(BuildContext context) {
-    final cls = Provider.of<Class>(context);
-    final color = Themes.forClass(cls.theme).primaryColor;
     return photoUrl == null
         ? SizedBox(
             width: 40,

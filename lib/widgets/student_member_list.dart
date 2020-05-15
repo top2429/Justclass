@@ -18,13 +18,14 @@ class StudentMemberList extends StatefulWidget {
 class _StudentMemberListState extends State<StudentMemberList> {
   void removeStudent(Member member) async {
     final memberMgr = Provider.of<MemberManager>(context, listen: false);
+    final color = Themes.forClass(Provider.of<Class>(context, listen: false).theme).primaryColor;
     try {
       final result = await showDialog(
         context: context,
-        builder: (context) => RemoveMemberDialog(title: 'Remove teacher?', member: member),
+        builder: (context) => RemoveMemberDialog(title: 'Remove student?', member: member, color: color),
       );
 
-      if (result) await memberMgr.removeStudent(member);
+      if (result != null && result) await memberMgr.removeStudent(member);
     } catch (error) {
       if (this.mounted) AppSnackBar.showError(context, message: error.toString());
     }
@@ -39,16 +40,17 @@ class _StudentMemberListState extends State<StudentMemberList> {
 
     return Column(
       children: <Widget>[
-        MemberRoleTitle(color: color, title: 'Students', tooltip: 'New Student', onPressed: addStudent),
+        MemberRoleTitle(color: color, title: 'Students', tooltip: 'Invite Students', onPressed: addStudent),
         ...memberMgr.students.map(
           (t) => ListTile(
             contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 2),
-            leading: MemberAvatar(photoUrl: t.photoUrl, displayName: t.displayName),
+            leading: MemberAvatar(photoUrl: t.photoUrl, displayName: t.displayName, color: color),
             title: Text(t.displayName, overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 15)),
             trailing: Padding(
               padding: const EdgeInsets.only(right: 4),
               child: PopupMenuButton(
                 elevation: 5,
+                shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5))),
                 itemBuilder: (_) => [const PopupMenuItem(child: Text('Remove'), value: 'remove', height: 40)],
                 onSelected: (val) {
                   if (val == 'remove') removeStudent(t);

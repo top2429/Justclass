@@ -18,13 +18,13 @@ class TeacherMemberList extends StatefulWidget {
 class _TeacherMemberListState extends State<TeacherMemberList> {
   void removeCollaborators(Member member) async {
     final memberMgr = Provider.of<MemberManager>(context, listen: false);
+    final color = Themes.forClass(Provider.of<Class>(context, listen: false).theme).primaryColor;
     try {
       final result = await showDialog(
         context: context,
-        builder: (context) => RemoveMemberDialog(title: 'Remove teacher?', member: member),
+        builder: (context) => RemoveMemberDialog(title: 'Remove teacher?', member: member, color: color),
       );
-
-      if (result) await memberMgr.removeCollaborator(member);
+      if (result != null && result) await memberMgr.removeCollaborator(member);
     } catch (error) {
       if (this.mounted) AppSnackBar.showError(context, message: error.toString());
     }
@@ -39,10 +39,14 @@ class _TeacherMemberListState extends State<TeacherMemberList> {
 
     return Column(
       children: <Widget>[
-        MemberRoleTitle(color: color, title: 'Teachers', tooltip: 'New Teacher', onPressed: addCollaborators),
+        MemberRoleTitle(color: color, title: 'Teachers', tooltip: 'Invite Teachers', onPressed: addCollaborators),
         ListTile(
           contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 2),
-          leading: MemberAvatar(photoUrl: memberMgr.owner.photoUrl, displayName: memberMgr.owner.displayName),
+          leading: MemberAvatar(
+            photoUrl: memberMgr.owner.photoUrl,
+            displayName: memberMgr.owner.displayName,
+            color: color,
+          ),
           title: Text(memberMgr.owner.displayName, overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 15)),
         ),
         ...memberMgr.collaborators.map(
@@ -54,6 +58,7 @@ class _TeacherMemberListState extends State<TeacherMemberList> {
               padding: const EdgeInsets.only(right: 4),
               child: PopupMenuButton(
                 elevation: 5,
+                shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5))),
                 itemBuilder: (_) => [const PopupMenuItem(child: Text('Remove'), value: 'remove', height: 40)],
                 onSelected: (val) {
                   if (val == 'remove') removeCollaborators(t);

@@ -41,14 +41,14 @@ class MyApp extends StatelessWidget {
   }
 
   Widget _buildFirstScreen(Auth auth) {
-    return ClassScreen(
-        cls: Class(
-      cid: '1',
-      role: ClassRole.OWNER,
-      theme: 3,
-      permissionCode: PermissionCode.VCP,
-      title: 'Class Test',
-    ));
+//    return ClassScreen(
+//        cls: Class(
+//      cid: '1',
+//      role: ClassRole.OWNER,
+//      theme: 3,
+//      permissionCode: PermissionCode.VCP,
+//      title: 'Class Test',
+//    ));
     return (auth.user == null)
         ? FutureBuilder(
             future: auth.tryAutoSignIn(),

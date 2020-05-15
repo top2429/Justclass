@@ -25,7 +25,8 @@ class InviteCollaboratorScreen extends StatefulWidget {
 }
 
 class _InviteCollaboratorScreenState extends State<InviteCollaboratorScreen> {
-  bool nothingView = true;
+  bool areEmailsValid = false;
+  bool nothingView = true; // a flag to stop everything
   bool isLoading = false;
   int reqCount = 0;
   List<Member> members;
@@ -105,32 +106,10 @@ class _InviteCollaboratorScreenState extends State<InviteCollaboratorScreen> {
               child: SingleChildScrollView(
                 child: Column(
                   children: <Widget>[
-                    if (emails.isNotEmpty)
-                      Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[],
-                      ),
+                    if (emails.isNotEmpty) _buildEmailList(),
                     InviteTeacherTextField(onInputChange: onInputChange),
-                    SizedBox(
-                      height: 4,
-                      child: (isLoading)
-                          ? LinearProgressIndicator(
-                              valueColor: AlwaysStoppedAnimation(widget.color),
-                              backgroundColor: widget.color.withOpacity(0.5),
-                            )
-                          : Divider(color: widget.color),
-                    ),
-                    if (members != null)
-                      Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          ...members
-                              .map((m) => ListTile(
-                                    title: Text(m.displayName),
-                                  ))
-                              .toList(),
-                        ],
-                      ),
+                    _buildLoadingIndicator(),
+                    if (members != null) _buildSuggestedMemberList(),
                   ],
                 ),
               ),
@@ -138,6 +117,44 @@ class _InviteCollaboratorScreenState extends State<InviteCollaboratorScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildEmailList() {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[],
+    );
+  }
+
+  Widget _buildSuggestedMemberList() {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        if (members.isEmpty)
+          Padding(
+            padding: const EdgeInsets.all(10),
+            child: const Text('No suggestions', style: TextStyle(color: Colors.grey, fontSize: 14)),
+          ),
+        if (members.isNotEmpty)
+          ...members
+              .map((m) => ListTile(
+                    title: Text(m.displayName),
+                  ))
+              .toList(),
+      ],
+    );
+  }
+
+  Widget _buildLoadingIndicator() {
+    return SizedBox(
+      height: 4,
+      child: (isLoading)
+          ? LinearProgressIndicator(
+              valueColor: AlwaysStoppedAnimation(widget.color),
+              backgroundColor: widget.color.withOpacity(0.5),
+            )
+          : Divider(color: widget.color),
     );
   }
 
@@ -153,7 +170,7 @@ class _InviteCollaboratorScreenState extends State<InviteCollaboratorScreen> {
           child: AppIconButton(
             icon: const Icon(Icons.send, size: 22),
             tooltip: 'Send invitations',
-            onPressed: () {},
+            onPressed: !areEmailsValid ? null : () {},
           ),
         ),
       ],

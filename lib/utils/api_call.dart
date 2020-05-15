@@ -277,6 +277,7 @@ class ApiCall {
     try {
       checkInternetConnection();
       final url = 'https://justclass-da0b0.appspot.com/api/v1/classroom/lookup/$uid/$cid/${role.name}?keyword=$keyword';
+      print(url);
       final response = await http.get(url, headers: _headers);
       if (response.statusCode >= 400) throw HttpException(message: 'Unable to suggest users!');
 

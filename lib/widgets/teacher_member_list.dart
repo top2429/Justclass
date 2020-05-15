@@ -29,12 +29,13 @@ class _TeacherMemberListState extends State<TeacherMemberList> {
     }
   }
 
-  void addCollaborators(Color color, MemberManager memberMgr) {
+  void addCollaborators(Color color, MemberManager memberMgr, String cid) {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (_) => InviteCollaboratorScreen(
           memberMgr: memberMgr,
           color: color,
+          cid: cid,
         ),
       ),
     );
@@ -52,7 +53,7 @@ class _TeacherMemberListState extends State<TeacherMemberList> {
           color: color,
           title: 'Teachers',
           tooltip: 'Invite Teachers',
-          onPressed: () => addCollaborators(color, memberMgr),
+          onPressed: () => addCollaborators(color, memberMgr, cls.cid),
         ),
         ListTile(
           contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 2),

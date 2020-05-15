@@ -45,7 +45,7 @@ class MemberManager extends ChangeNotifier {
     }
   }
 
-  Future<void> fetchSuggestedCollaborators(String uid, String cid, String keyword) {
+  Future<List<Member>> fetchSuggestedCollaborators(String uid, String cid, String keyword) {
     try {
       final collaborators = ApiCall.fetchSuggestedMembers(uid, cid, ClassRole.COLLABORATOR, keyword);
       return collaborators;
@@ -54,7 +54,7 @@ class MemberManager extends ChangeNotifier {
     }
   }
 
-  Future<void> fetchSuggestedStudents(String uid, String cid, String keyword) {
+  Future<List<Member>> fetchSuggestedStudents(String uid, String cid, String keyword) {
     try {
       final students = ApiCall.fetchSuggestedMembers(uid, cid, ClassRole.STUDENT, keyword);
       return students;

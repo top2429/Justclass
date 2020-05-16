@@ -45,18 +45,18 @@ class MemberManager extends ChangeNotifier {
     }
   }
 
-  Future<List<Member>> fetchSuggestedCollaborators(String uid, String cid, String keyword) {
+  Future<List<Member>> fetchSuggestedCollaborators(String uid, String cid, String keyword) async {
     try {
-      final collaborators = ApiCall.fetchSuggestedMembers(uid, cid, ClassRole.COLLABORATOR, keyword);
+      final collaborators = await ApiCall.fetchSuggestedMembers(uid, cid, ClassRole.COLLABORATOR, keyword);
       return collaborators;
     } catch (error) {
       throw error;
     }
   }
 
-  Future<List<Member>> fetchSuggestedStudents(String uid, String cid, String keyword) {
+  Future<List<Member>> fetchSuggestedStudents(String uid, String cid, String keyword) async {
     try {
-      final students = ApiCall.fetchSuggestedMembers(uid, cid, ClassRole.STUDENT, keyword);
+      final students = await ApiCall.fetchSuggestedMembers(uid, cid, ClassRole.STUDENT, keyword);
       return students;
     } catch (error) {
       throw error;
@@ -65,7 +65,7 @@ class MemberManager extends ChangeNotifier {
 
   Future<void> inviteCollaborators(String uid, String cid, Set<String> emails) async {
     try {
-      ApiCall.inviteMembers(uid, cid, emails, ClassRole.COLLABORATOR);
+      await ApiCall.inviteMembers(uid, cid, emails, ClassRole.COLLABORATOR);
     } catch (error) {
       throw error;
     }

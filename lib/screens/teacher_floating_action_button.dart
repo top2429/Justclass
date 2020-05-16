@@ -93,7 +93,7 @@ class _TeacherFloatingActionButtonState extends State<TeacherFloatingActionButto
             width: _btnHeight,
             child: FloatingActionButton(
               elevation: 2,
-              heroTag: 'new content',
+              heroTag: 'add component button',
               backgroundColor: widget.primaryColor,
               child: AnimatedBuilder(
                 animation: _controller,

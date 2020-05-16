@@ -4,6 +4,7 @@ import 'package:justclass/providers/auth.dart';
 import 'package:justclass/providers/class.dart';
 import 'package:justclass/screens/update_class_info_screen.dart';
 import 'package:justclass/screens/new_note_screen_teacher.dart';
+import 'package:justclass/utils/app_context.dart';
 import 'package:justclass/utils/constants.dart';
 import 'package:justclass/widgets/app_icon_button.dart';
 import 'package:provider/provider.dart';
@@ -11,6 +12,8 @@ import 'package:provider/provider.dart';
 import '../themes.dart';
 
 class NoteScreen extends StatefulWidget {
+  static const screenName = '/note-screen';
+
   @override
   _NoteScreenState createState() => _NoteScreenState();
 }

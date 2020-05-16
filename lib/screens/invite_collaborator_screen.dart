@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:justclass/models/member.dart';
 import 'package:justclass/providers/auth.dart';
 import 'package:justclass/providers/member_manager.dart';
+import 'package:justclass/utils/app_context.dart';
 import 'package:justclass/utils/validators.dart';
 import 'package:justclass/widgets/app_icon_button.dart';
 import 'package:justclass/widgets/app_snack_bar.dart';
@@ -12,6 +13,7 @@ import 'package:justclass/widgets/opaque_progress_indicator.dart';
 import 'package:provider/provider.dart';
 
 class InviteCollaboratorScreen extends StatefulWidget {
+  static const routeName = 'invite-collab-screen';
   final MemberManager memberMgr;
   final Color color;
   final String cid;
@@ -27,6 +29,9 @@ class InviteCollaboratorScreen extends StatefulWidget {
 }
 
 class _InviteCollaboratorScreenState extends State<InviteCollaboratorScreen> {
+  // for notification and global snackBar
+  BuildContext screenCtx;
+
   // a flag to stop everything from running
   bool nothingView = true;
 
@@ -57,12 +62,21 @@ class _InviteCollaboratorScreenState extends State<InviteCollaboratorScreen> {
   bool sending = false;
 
   @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      AppContext.add(screenCtx, InviteCollaboratorScreen.routeName);
+    });
+    super.initState();
+  }
+
+  @override
   void dispose() {
     timer?.cancel();
+    AppContext.pop();
     super.dispose();
   }
 
-  void onInputChange(String val, BuildContext context) {
+  void onInputChange(String val) {
     if (val == '')
       backToFirstMode();
     else {
@@ -76,7 +90,7 @@ class _InviteCollaboratorScreenState extends State<InviteCollaboratorScreen> {
       } else {
         timer?.cancel();
         setState(() => suggesting = true);
-        timer = Timer(const Duration(milliseconds: 500), () => showSuggestions(val, context));
+        timer = Timer(const Duration(milliseconds: 500), () => showSuggestions(val));
       }
     }
   }
@@ -91,7 +105,7 @@ class _InviteCollaboratorScreenState extends State<InviteCollaboratorScreen> {
     });
   }
 
-  Future<void> showSuggestions(String val, BuildContext context) async {
+  Future<void> showSuggestions(String val) async {
     if (suggesting) setState(() => isFetching = true);
     requestCount++;
     final index = requestCount;
@@ -103,7 +117,7 @@ class _InviteCollaboratorScreenState extends State<InviteCollaboratorScreen> {
       if (index == requestCount && !nothingView && suggesting && this.mounted)
         setState(() => members = suggestedMembers);
     } catch (error) {
-      if (this.mounted && suggesting) AppSnackBar.showError(context, message: error.toString());
+      if (this.mounted && suggesting) AppSnackBar.showError(screenCtx, message: error.toString());
     } finally {
       if (index == requestCount && this.mounted && suggesting) setState(() => isFetching = false);
     }
@@ -127,13 +141,14 @@ class _InviteCollaboratorScreenState extends State<InviteCollaboratorScreen> {
     });
   }
 
-  void sendInvitations() {
+  void sendInvitations() async {
     setState(() => sending = true);
     try {
       final uid = Provider.of<Auth>(context, listen: false).user.uid;
-      widget.memberMgr.inviteCollaborators(uid, widget.cid, emails);
+      await widget.memberMgr.inviteCollaborators(uid, widget.cid, emails);
+      if (this.mounted) Navigator.of(context).pop();
     } catch (error) {
-      if (this.mounted) AppSnackBar.showError(context, message: error.toString());
+      AppSnackBar.showError(screenCtx, message: error.toString());
     } finally {
       if (this.mounted) setState(() => sending = false);
     }
@@ -145,36 +160,39 @@ class _InviteCollaboratorScreenState extends State<InviteCollaboratorScreen> {
       onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
       child: Scaffold(
         backgroundColor: widget.color,
-        appBar: _buildTopBar(context, widget.color, 'Invite teachers'),
-        body: SafeArea(
-          child: ClipRRect(
-            borderRadius: const BorderRadius.only(topLeft: Radius.circular(15), topRight: Radius.circular(15)),
-            child: Container(
-              color: Colors.white,
-              height: double.infinity,
-              child: Stack(
-                children: <Widget>[
-                  SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        if (emails.isNotEmpty) _buildEmailList(),
-                        _buildTextField(),
-                        _buildLoadingIndicator(),
-                        if (members != null) _buildSuggestedMemberList(),
-                        if (members == null && !suggesting) _buildRecipientBtn(inputCtrl.text),
-                      ],
+        appBar: _buildTopBar(widget.color, 'Invite teachers'),
+        body: Builder(builder: (context) {
+          screenCtx = context;
+          return SafeArea(
+            child: ClipRRect(
+              borderRadius: const BorderRadius.only(topLeft: Radius.circular(15), topRight: Radius.circular(15)),
+              child: Container(
+                color: Colors.white,
+                height: double.infinity,
+                child: Stack(
+                  children: <Widget>[
+                    SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          if (emails.isNotEmpty) _buildEmailList(),
+                          _buildTextField(),
+                          _buildLoadingIndicator(),
+                          if (members != null) _buildSuggestedMemberList(),
+                          if (members == null && !suggesting) _buildRecipientBtn(inputCtrl.text),
+                        ],
+                      ),
                     ),
-                  ),
-                  Visibility(
-                    visible: sending,
-                    child: OpaqueProgressIndicator(),
-                  ),
-                ],
+                    Visibility(
+                      visible: sending,
+                      child: OpaqueProgressIndicator(),
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-        ),
+          );
+        }),
       ),
     );
   }
@@ -243,25 +261,22 @@ class _InviteCollaboratorScreenState extends State<InviteCollaboratorScreen> {
   }
 
   Widget _buildTextField() {
-    return Builder(
-      builder: (context) {
-        return TextField(
-          controller: inputCtrl,
-          autofocus: true,
-          decoration: InputDecoration(
-            contentPadding: const EdgeInsets.all(20),
-            enabledBorder: const OutlineInputBorder(borderSide: BorderSide(color: Colors.transparent)),
-            focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: Colors.transparent)),
-            labelText: 'Name or email address',
-            hasFloatingPlaceholder: false,
-          ),
-          onChanged: (val) => onInputChange(val, context),
-        );
-      },
+    return TextField(
+      controller: inputCtrl,
+      autofocus: true,
+      keyboardType: TextInputType.emailAddress,
+      decoration: InputDecoration(
+        contentPadding: const EdgeInsets.all(20),
+        enabledBorder: const OutlineInputBorder(borderSide: BorderSide(color: Colors.transparent)),
+        focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: Colors.transparent)),
+        labelText: 'Name or email address',
+        hasFloatingPlaceholder: false,
+      ),
+      onChanged: onInputChange,
     );
   }
 
-  Widget _buildTopBar(BuildContext context, Color bgColor, String title) {
+  Widget _buildTopBar(Color bgColor, String title) {
     return AppBar(
       elevation: 0,
       backgroundColor: bgColor,

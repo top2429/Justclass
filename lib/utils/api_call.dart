@@ -311,6 +311,8 @@ class ApiCall {
 
   static Future<void> inviteMembers(String uid, String cid, Set<String> emails, ClassRole role) async {
     try {
+      await Future.delayed(Duration(seconds: 3));
+      throw HttpException(message: '1111111');
       checkInternetConnection();
       final url = 'https://justclass-da0b0.appspot.com/api/v1/classroom/$uid/$cid';
 

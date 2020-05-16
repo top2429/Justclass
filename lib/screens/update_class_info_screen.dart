@@ -134,11 +134,7 @@ class _UpdateClassInfoScreenState extends State<UpdateClassInfoScreen> {
     return AppBar(
       elevation: 0,
       backgroundColor: _color,
-      leading: AppIconButton(
-        tooltip: 'Cancel',
-        icon: const Icon(Icons.close),
-        onPressed: () => Navigator.of(context).pop(),
-      ),
+      leading: AppIconButton.cancel(onPressed: () => Navigator.of(context).pop()),
       actions: <Widget>[
         UpdateClassInfoButton(key: _updateBtn, updateClassDetails: _updateClassDetails),
       ],

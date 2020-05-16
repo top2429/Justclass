@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:justclass/models/member.dart';
 import 'package:justclass/providers/class.dart';
 import 'package:justclass/utils/api_call.dart';
@@ -35,7 +35,7 @@ class MemberManager extends ChangeNotifier {
     students.remove(member);
     notifyListeners();
     try {
-      await ApiCall.removeCollaborator();
+      await ApiCall.removeStudent();
       members.remove(member);
     } catch (error) {
       students.insert(index, member);
@@ -58,6 +58,14 @@ class MemberManager extends ChangeNotifier {
     try {
       final students = ApiCall.fetchSuggestedMembers(uid, cid, ClassRole.STUDENT, keyword);
       return students;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  Future<void> inviteCollaborators(String uid, String cid, Set<String> emails) async {
+    try {
+      ApiCall.inviteMembers(uid, cid, emails, ClassRole.COLLABORATOR);
     } catch (error) {
       throw error;
     }

@@ -95,13 +95,7 @@ class _NewNoteScreenTeacherState extends State<NewNoteScreenTeacher> {
   Widget _buildAppBar() {
     return AppBar(
       backgroundColor: widget.theme.primaryColor,
-      leading: AppIconButton(
-        tooltip: 'Cancel',
-        icon: const Icon(Icons.close),
-        onPressed: () {
-          Navigator.of(context).pop();
-        },
-      ),
+      leading: AppIconButton.cancel(onPressed: () => Navigator.of(context).pop()),
       actions: <Widget>[
         Builder(builder: (context) {
           return AppIconButton(
@@ -152,7 +146,7 @@ class _NewNoteScreenTeacherState extends State<NewNoteScreenTeacher> {
                     child: Icon(iconMap[key], size: 30, color: widget.theme.primaryColor),
                   ),
                   Expanded(child: Text(key)),
-                  AppIconButton.clear(
+                  AppIconButton.cancel(
                     icon: const Icon(Icons.clear, color: Colors.black54, size: 20),
                     onPressed: () => _removeFile(key),
                   ),

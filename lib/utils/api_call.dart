@@ -295,7 +295,8 @@ class ApiCall {
           email: 'test1@gmail.com',
           displayName: 'Test 1',
           photoUrl: 'https://placekitten.com/100/100',
-        ), Member(
+        ),
+        Member(
           uid: '2',
           email: 'test2@gmail.com',
           displayName: 'Test 2',
@@ -303,6 +304,24 @@ class ApiCall {
         ),
       ]);
       return members;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  static Future<void> inviteMembers(String uid, String cid, Set<String> emails, ClassRole role) async {
+    try {
+      checkInternetConnection();
+      final url = 'https://justclass-da0b0.appspot.com/api/v1/classroom/$uid/$cid';
+
+      final response = await http.patch(
+        url,
+        headers: _headers,
+        body: json.encode([
+          ...emails.map((e) => {'email': e, 'role': role.name}),
+        ]),
+      );
+      if (response.statusCode >= 400) throw HttpException(message: 'Unable to send invitations!');
     } catch (error) {
       throw error;
     }

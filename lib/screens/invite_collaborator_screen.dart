@@ -7,6 +7,7 @@ import 'package:justclass/providers/member_manager.dart';
 import 'package:justclass/utils/validators.dart';
 import 'package:justclass/widgets/app_icon_button.dart';
 import 'package:justclass/widgets/app_snack_bar.dart';
+import 'package:justclass/widgets/member_avatar.dart';
 import 'package:provider/provider.dart';
 
 class InviteCollaboratorScreen extends StatefulWidget {
@@ -25,20 +26,24 @@ class InviteCollaboratorScreen extends StatefulWidget {
 }
 
 class _InviteCollaboratorScreenState extends State<InviteCollaboratorScreen> {
-  bool areEmailsValid = false;
-  bool nothingView = true; // a flag to stop everything
+  // a flag to stop everything from running
+  bool nothingView = true;
+
+  // a flag indicating that whether suggested members is fetching
   bool isLoading = false;
-  int reqCount = 0;
+
+  //only the last request having the highest index can execute (index == requestCount)
+  int requestCount = 0;
+
+  // a list of suggested members fetched from api
   List<Member> members;
 
-  final emails = Set<String>();
-
+  // a timer used to set timeout for the method of fetching suggested members
   Timer timer;
 
-  @override
-  void initState() {
-    super.initState();
-  }
+  // a list of chosen emails that user wants to invite
+  final emails = Set<String>();
+  bool areEmailsValid = false;
 
   @override
   void dispose() {
@@ -55,7 +60,7 @@ class _InviteCollaboratorScreenState extends State<InviteCollaboratorScreen> {
         showAddRecipientBtn(val);
       else {
         timer?.cancel();
-        timer = Timer(const Duration(seconds: 1), () => showSuggestions(val, context));
+        timer = Timer(const Duration(milliseconds: 700), () => showSuggestions(val, context));
       }
     }
   }
@@ -71,24 +76,33 @@ class _InviteCollaboratorScreenState extends State<InviteCollaboratorScreen> {
 
   Future<void> showSuggestions(String val, BuildContext context) async {
     setState(() => isLoading = true);
+    requestCount++;
+    final index = requestCount;
     try {
-      reqCount++;
-      print('invite request $reqCount');
       final uid = Provider.of<Auth>(context, listen: false).user.uid;
       final suggestedMembers = await widget.memberMgr.fetchSuggestedCollaborators(uid, widget.cid, val);
-      print('invite end $reqCount');
-      reqCount--;
-      if (reqCount == 0 && !nothingView) setState(() => members = suggestedMembers);
+
+      // only the result of last request is assigned
+      if (index == requestCount && !nothingView && this.mounted) setState(() => members = suggestedMembers);
     } catch (error) {
-      print('invite fail $reqCount');
-      reqCount--;
       if (this.mounted) AppSnackBar.showError(context, message: error.toString());
     } finally {
-      if (reqCount == 0) setState(() => isLoading = false);
+      if (index == requestCount && this.mounted) setState(() => isLoading = false);
     }
   }
 
   void showAddRecipientBtn(String val) {}
+
+  void onSelectMember(String email) {
+    backToFirstMode();
+    emails.add(email);
+    setState(() {});
+  }
+
+  void removeEmail(String email) {
+    emails.remove(email);
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -105,9 +119,10 @@ class _InviteCollaboratorScreenState extends State<InviteCollaboratorScreen> {
               height: double.infinity,
               child: SingleChildScrollView(
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     if (emails.isNotEmpty) _buildEmailList(),
-                    InviteTeacherTextField(onInputChange: onInputChange),
+                    _buildTextField(),
                     _buildLoadingIndicator(),
                     if (members != null) _buildSuggestedMemberList(),
                   ],
@@ -121,9 +136,22 @@ class _InviteCollaboratorScreenState extends State<InviteCollaboratorScreen> {
   }
 
   Widget _buildEmailList() {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: <Widget>[],
+    return Padding(
+      padding: const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 0),
+      child: Wrap(
+        spacing: 10,
+        children: <Widget>[
+          ...emails
+              .map(
+                (m) => Chip(
+                  label: Text(m, overflow: TextOverflow.ellipsis),
+                  deleteIcon: const Icon(Icons.clear, color: Colors.black45, size: 18),
+                  onDeleted: () => removeEmail(m),
+                ),
+              )
+              .toList(),
+        ],
+      ),
     );
   }
 
@@ -139,7 +167,10 @@ class _InviteCollaboratorScreenState extends State<InviteCollaboratorScreen> {
         if (members.isNotEmpty)
           ...members
               .map((m) => ListTile(
-                    title: Text(m.displayName),
+                    trailing: MemberAvatar(color: widget.color, displayName: m.displayName, photoUrl: m.photoUrl),
+                    title: Text(m.displayName, overflow: TextOverflow.ellipsis),
+                    subtitle: Text(m.email, overflow: TextOverflow.ellipsis),
+                    onTap: () => onSelectMember(m.email),
                   ))
               .toList(),
       ],
@@ -154,7 +185,25 @@ class _InviteCollaboratorScreenState extends State<InviteCollaboratorScreen> {
               valueColor: AlwaysStoppedAnimation(widget.color),
               backgroundColor: widget.color.withOpacity(0.5),
             )
-          : Divider(color: widget.color),
+          : Divider(color: widget.color, height: 0.5),
+    );
+  }
+
+  Widget _buildTextField() {
+    return Builder(
+      builder: (context) {
+        return TextField(
+          autofocus: true,
+          decoration: InputDecoration(
+            contentPadding: const EdgeInsets.all(20),
+            enabledBorder: const OutlineInputBorder(borderSide: BorderSide(color: Colors.transparent)),
+            focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: Colors.transparent)),
+            labelText: 'Name or email address',
+            hasFloatingPlaceholder: false,
+          ),
+          onChanged: (val) => onInputChange(val, context),
+        );
+      },
     );
   }
 
@@ -174,30 +223,6 @@ class _InviteCollaboratorScreenState extends State<InviteCollaboratorScreen> {
           ),
         ),
       ],
-    );
-  }
-}
-
-class InviteTeacherTextField extends StatelessWidget {
-  final Function onInputChange;
-
-  const InviteTeacherTextField({this.onInputChange});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 20, right: 20, top: 25, bottom: 20),
-      child: TextField(
-        autofocus: true,
-        decoration: InputDecoration(
-          contentPadding: const EdgeInsets.all(0),
-          enabledBorder: const OutlineInputBorder(borderSide: BorderSide(color: Colors.transparent)),
-          focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: Colors.transparent)),
-          labelText: 'Name or email address',
-          hasFloatingPlaceholder: false,
-        ),
-        onChanged: (val) => onInputChange(val, context),
-      ),
     );
   }
 }

@@ -175,77 +175,77 @@ class ApiCall {
       members
         ..addAll([
           Member(
-            displayName: 'Minh Pham',
+            displayName: 'Test 1',
             uid: '2',
             role: ClassRole.COLLABORATOR,
             joinDatetime: 123,
             photoUrl: 'https://placekitten.com/156/156',
           ),
           Member(
-            displayName: 'Kai Pham 1',
+            displayName: 'Test 1',
             uid: '1',
             role: ClassRole.STUDENT,
             joinDatetime: 123,
-            photoUrl: 'https://placekitten.com/150/150',
+            photoUrl: 'https://placekitten.com/151/151',
           ),
           Member(
-            displayName: 'Kai Pham 2',
+            displayName: 'Test 2',
             uid: '1',
             role: ClassRole.STUDENT,
             joinDatetime: 123,
-            photoUrl: 'https://placekitten.com/150/150',
+            photoUrl: 'https://placekitten.com/149/149',
           ),
           Member(
-            displayName: 'Kai Pham 3',
-            uid: '1',
-            role: ClassRole.STUDENT,
-            joinDatetime: 123,
-            photoUrl: null,
-          ),
-          Member(
-            displayName: 'Kai Pham 4',
-            uid: '1',
-            role: ClassRole.STUDENT,
-            joinDatetime: 123,
-            photoUrl: 'https://placekitten.com/150/150',
-          ),
-          Member(
-            displayName: 'Kai Pham 5',
-            uid: '1',
-            role: ClassRole.STUDENT,
-            joinDatetime: 123,
-            photoUrl: 'https://placekitten.com/150/150',
-          ),
-          Member(
-            displayName: 'Kai Pham 6',
-            uid: '1',
-            role: ClassRole.STUDENT,
-            joinDatetime: 123,
-            photoUrl: 'https://placekitten.com/150/150',
-          ),
-          Member(
-            displayName: 'Kai Pham 7',
-            uid: '1',
-            role: ClassRole.STUDENT,
-            joinDatetime: 123,
-            photoUrl: 'https://placekitten.com/150/150',
-          ),
-          Member(
-            displayName: 'Kai Pham 8',
-            uid: '1',
-            role: ClassRole.STUDENT,
-            joinDatetime: 123,
-            photoUrl: 'https://placekitten.com/150/150',
-          ),
-          Member(
-            displayName: 'Kai Pham 9',
+            displayName: 'Test 3',
             uid: '1',
             role: ClassRole.STUDENT,
             joinDatetime: 123,
             photoUrl: null,
           ),
           Member(
-            displayName: 'Kai Pham 10',
+            displayName: 'Test 4',
+            uid: '1',
+            role: ClassRole.STUDENT,
+            joinDatetime: 123,
+            photoUrl: 'https://placekitten.com/153/153',
+          ),
+          Member(
+            displayName: 'Test 5',
+            uid: '1',
+            role: ClassRole.STUDENT,
+            joinDatetime: 123,
+            photoUrl: 'https://placekitten.com/150/150',
+          ),
+          Member(
+            displayName: 'Test 6',
+            uid: '1',
+            role: ClassRole.STUDENT,
+            joinDatetime: 123,
+            photoUrl: 'https://placekitten.com/154/154',
+          ),
+          Member(
+            displayName: 'Test 7',
+            uid: '1',
+            role: ClassRole.STUDENT,
+            joinDatetime: 123,
+            photoUrl: 'https://placekitten.com/155/155',
+          ),
+          Member(
+            displayName: 'Test 8',
+            uid: '1',
+            role: ClassRole.STUDENT,
+            joinDatetime: 123,
+            photoUrl: 'https://placekitten.com/156/156',
+          ),
+          Member(
+            displayName: 'A Test 9',
+            uid: '1',
+            role: ClassRole.STUDENT,
+            joinDatetime: 123,
+            photoUrl: null,
+          ),
+          Member(
+            displayName: 'Test 10',
             uid: '1',
             role: ClassRole.STUDENT,
             joinDatetime: 123,
@@ -277,7 +277,6 @@ class ApiCall {
     try {
       checkInternetConnection();
       final url = 'https://justclass-da0b0.appspot.com/api/v1/classroom/lookup/$uid/$cid/${role.name}?keyword=$keyword';
-      print(url);
       final response = await http.get(url, headers: _headers);
       if (response.statusCode >= 400) throw HttpException(message: 'Unable to suggest users!');
 
@@ -290,6 +289,19 @@ class ApiCall {
                 photoUrl: u['photoUrl'],
               ))
           .toList();
+      members.addAll([
+        Member(
+          uid: '1',
+          email: 'test1@gmail.com',
+          displayName: 'Test 1',
+          photoUrl: 'https://placekitten.com/100/100',
+        ), Member(
+          uid: '2',
+          email: 'test2@gmail.com',
+          displayName: 'Test 2',
+          photoUrl: 'https://placekitten.com/101/101',
+        ),
+      ]);
       return members;
     } catch (error) {
       throw error;

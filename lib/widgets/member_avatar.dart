@@ -18,7 +18,7 @@ class MemberAvatar extends StatelessWidget {
             height: 40,
             child: CircleAvatar(
               backgroundColor: color,
-              child: Text(displayName[0], style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
+              child: Text(displayName[0].toUpperCase(), style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
             ),
           )
         : ClipOval(

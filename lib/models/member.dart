@@ -11,10 +11,10 @@ class Member {
 
   Member({
     @required this.uid,
-    @required this.photoUrl,
     @required this.displayName,
-    this.joinDatetime,
     this.email,
+    this.photoUrl,
+    this.joinDatetime,
     this.role,
   });
 }

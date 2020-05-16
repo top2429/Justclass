@@ -45,6 +45,11 @@ class _InviteCollaboratorScreenState extends State<InviteCollaboratorScreen> {
   final emails = Set<String>();
   bool areEmailsValid = false;
 
+  //  a flag witching between suggested member list and entered recipient
+  bool suggesting = true;
+
+  final inputCtrl = TextEditingController();
+
   @override
   void dispose() {
     timer?.cancel();
@@ -56,11 +61,17 @@ class _InviteCollaboratorScreenState extends State<InviteCollaboratorScreen> {
       backToFirstMode();
     else {
       nothingView = false;
-      if (InviteTeacherValidator.validateEmail(val) == null)
-        showAddRecipientBtn(val);
-      else {
+      if (InviteTeacherValidator.validateEmail(val) == null) {
+        if (suggesting)
+          setState(() {
+            suggesting = false;
+            isLoading = false;
+            members = null;
+          });
+      } else {
         timer?.cancel();
-        timer = Timer(const Duration(milliseconds: 700), () => showSuggestions(val, context));
+        if (!suggesting) setState(() => suggesting = true);
+        timer = Timer(const Duration(milliseconds: 500), () => showSuggestions(val, context));
       }
     }
   }
@@ -70,12 +81,13 @@ class _InviteCollaboratorScreenState extends State<InviteCollaboratorScreen> {
     timer?.cancel();
     setState(() {
       isLoading = false;
+      suggesting = true;
       members = null;
     });
   }
 
   Future<void> showSuggestions(String val, BuildContext context) async {
-    setState(() => isLoading = true);
+    if (suggesting) setState(() => isLoading = true);
     requestCount++;
     final index = requestCount;
     try {
@@ -83,25 +95,31 @@ class _InviteCollaboratorScreenState extends State<InviteCollaboratorScreen> {
       final suggestedMembers = await widget.memberMgr.fetchSuggestedCollaborators(uid, widget.cid, val);
 
       // only the result of last request is assigned
-      if (index == requestCount && !nothingView && this.mounted) setState(() => members = suggestedMembers);
+      if (index == requestCount && !nothingView && suggesting && this.mounted)
+        setState(() => members = suggestedMembers);
     } catch (error) {
-      if (this.mounted) AppSnackBar.showError(context, message: error.toString());
+      if (this.mounted && suggesting) AppSnackBar.showError(context, message: error.toString());
     } finally {
-      if (index == requestCount && this.mounted) setState(() => isLoading = false);
+      if (index == requestCount && this.mounted && suggesting) setState(() => isLoading = false);
     }
   }
 
-  void showAddRecipientBtn(String val) {}
-
   void onSelectMember(String email) {
+    inputCtrl.clear();
     backToFirstMode();
     emails.add(email);
-    setState(() {});
+    checkValidEmailList();
   }
 
   void removeEmail(String email) {
     emails.remove(email);
-    setState(() {});
+    checkValidEmailList();
+  }
+
+  void checkValidEmailList() {
+    setState(() {
+      areEmailsValid = emails.isNotEmpty;
+    });
   }
 
   @override
@@ -124,7 +142,8 @@ class _InviteCollaboratorScreenState extends State<InviteCollaboratorScreen> {
                     if (emails.isNotEmpty) _buildEmailList(),
                     _buildTextField(),
                     _buildLoadingIndicator(),
-                    if (members != null) _buildSuggestedMemberList(),
+                    if (members != null && suggesting) _buildSuggestedMemberList(),
+                    if (members == null && !suggesting) _buildRecipientBtn(inputCtrl.text),
                   ],
                 ),
               ),
@@ -132,6 +151,15 @@ class _InviteCollaboratorScreenState extends State<InviteCollaboratorScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildRecipientBtn(String email) {
+    return ListTile(
+      trailing: MemberAvatar(color: widget.color, displayName: email),
+      title: Text('Add recipient'),
+      subtitle: Text(email, overflow: TextOverflow.ellipsis),
+      onTap: () => onSelectMember(email),
     );
   }
 
@@ -193,6 +221,7 @@ class _InviteCollaboratorScreenState extends State<InviteCollaboratorScreen> {
     return Builder(
       builder: (context) {
         return TextField(
+          controller: inputCtrl,
           autofocus: true,
           decoration: InputDecoration(
             contentPadding: const EdgeInsets.all(20),

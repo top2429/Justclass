@@ -48,7 +48,6 @@ class JoinClassValidator {
 
 class InviteTeacherValidator {
   static String validateEmail(String email) {
-    if (email.isEmpty) return "Please provide an email";
     if (!emailRegExp.hasMatch(email)) return "Invalid email";
     return null;
   }

@@ -29,7 +29,11 @@ class AppSnackBar {
     BuildContext context, {
     String message = 'Everything is done.',
     Color bgColor = Colors.green,
-  }) {
+    Duration delay,
+  }) async {
+    if (delay != null) await Future.delayed(delay);
+    if (context == null || context != AppContext.last) context = AppContext.last;
+
     Scaffold.of(context).hideCurrentSnackBar();
     Scaffold.of(context).showSnackBar(
       SnackBar(
@@ -40,7 +44,7 @@ class AppSnackBar {
         content: Text(message, style: const TextStyle(color: Colors.white)),
         action: SnackBarAction(
           label: 'OK',
-          textColor: Colors.white70,
+          textColor: Colors.white,
           onPressed: Scaffold.of(context).hideCurrentSnackBar,
         ),
       ),

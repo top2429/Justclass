@@ -117,7 +117,7 @@ class _InviteCollaboratorScreenState extends State<InviteCollaboratorScreen> {
       if (index == requestCount && !nothingView && suggesting && this.mounted)
         setState(() => members = suggestedMembers);
     } catch (error) {
-      if (this.mounted && suggesting) AppSnackBar.showError(screenCtx, message: error.toString());
+      if (suggesting) AppSnackBar.showError(screenCtx, message: error.toString());
     } finally {
       if (index == requestCount && this.mounted && suggesting) setState(() => isFetching = false);
     }
@@ -146,6 +146,7 @@ class _InviteCollaboratorScreenState extends State<InviteCollaboratorScreen> {
     try {
       final uid = Provider.of<Auth>(context, listen: false).user.uid;
       await widget.memberMgr.inviteCollaborators(uid, widget.cid, emails);
+      AppSnackBar.showSuccess(screenCtx, message: 'Invitations are sent.', delay: Duration(seconds: 1));
       if (this.mounted) Navigator.of(context).pop();
     } catch (error) {
       AppSnackBar.showError(screenCtx, message: error.toString());

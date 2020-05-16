@@ -10,7 +10,7 @@ class ContextScreen {
 class AppContext {
   static final _contexts = Set<ContextScreen>();
 
-  static get last => _contexts.last.context;
+  static get last => _contexts.last?.context;
 
   static void add(BuildContext context, [String routeName = 'screen']) {
     print('add $routeName');

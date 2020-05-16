@@ -45,7 +45,7 @@ class _InviteCollaboratorScreenState extends State<InviteCollaboratorScreen> {
   final emails = Set<String>();
   bool areEmailsValid = false;
 
-  //  a flag witching between suggested member list and entered recipient
+  //  a flag switching between suggested member list and entered recipient
   bool suggesting = true;
 
   final inputCtrl = TextEditingController();
@@ -62,15 +62,14 @@ class _InviteCollaboratorScreenState extends State<InviteCollaboratorScreen> {
     else {
       nothingView = false;
       if (InviteTeacherValidator.validateEmail(val) == null) {
-        if (suggesting)
-          setState(() {
-            suggesting = false;
-            isLoading = false;
-            members = null;
-          });
+        setState(() {
+          suggesting = false;
+          isLoading = false;
+          members = null;
+        });
       } else {
         timer?.cancel();
-        if (!suggesting) setState(() => suggesting = true);
+        setState(() => suggesting = true);
         timer = Timer(const Duration(milliseconds: 500), () => showSuggestions(val, context));
       }
     }
@@ -142,7 +141,7 @@ class _InviteCollaboratorScreenState extends State<InviteCollaboratorScreen> {
                     if (emails.isNotEmpty) _buildEmailList(),
                     _buildTextField(),
                     _buildLoadingIndicator(),
-                    if (members != null && suggesting) _buildSuggestedMemberList(),
+                    if (members != null) _buildSuggestedMemberList(),
                     if (members == null && !suggesting) _buildRecipientBtn(inputCtrl.text),
                   ],
                 ),

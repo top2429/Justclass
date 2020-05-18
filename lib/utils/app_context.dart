@@ -12,14 +12,16 @@ class AppContext {
 
   static get last => _contexts.last?.context;
 
+  static get name => _contexts.last?.routeName;
+
   static void add(BuildContext context, [String routeName = 'screen']) {
-    print('add $routeName');
     _contexts.add(ContextScreen(routeName, context));
+    print('added context $routeName ');
   }
 
   static void pop() {
     final last = _contexts.last;
-    print('pop ${last.routeName}');
     _contexts.remove(last);
+    print('popped context ${last.routeName}');
   }
 }

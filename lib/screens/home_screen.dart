@@ -1,7 +1,6 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:justclass/themes.dart';
+import 'package:justclass/utils/app_context.dart';
 import 'package:justclass/widgets/app_icon_button.dart';
 import 'package:justclass/widgets/class_list_view.dart';
 import 'package:justclass/widgets/create_class_button.dart';
@@ -10,11 +9,30 @@ import 'package:justclass/widgets/home_drawer_content.dart';
 import 'package:justclass/widgets/join_class_button.dart';
 import 'package:justclass/widgets/scale_drawer_wrapper.dart';
 
-class HomeScreen extends StatelessWidget {
-  static const routeName = '/home';
+class HomeScreen extends StatefulWidget {
+  static const routeName = 'home';
+
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  BuildContext screenCtx;
   final _drawer = GlobalKey<ScaleDrawerWrapperState>();
   final _classListView = GlobalKey<ClassListViewState>();
   final _backdropScaffold = GlobalKey<HomeBackdropScaffoldState>();
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) => AppContext.add(screenCtx, HomeScreen.routeName));
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    AppContext.pop();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,25 +42,29 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Themes.primaryColor,
-      body: ScaleDrawerWrapper(
-        key: _drawer,
-        drawerContent: HomeDrawerContent(),
-        topScaffold: HomeBackdropScaffold(
-          key: _backdropScaffold,
-          title: const Text("JustClass", style: TextStyle(fontWeight: FontWeight.bold)),
-          dropDistance: dropDistance,
-          backColor: Theme.of(context).backgroundColor,
-          leading: AppIconButton(icon: const Icon(Icons.menu, size: 22), onPressed: () => _drawer.currentState.swap()),
-          actions: <Widget>[_buildPopupMenu()],
-          backLayer: LayoutBuilder(
-            builder: (_, constraints) {
-              final width = isPortrait ? constraints.maxWidth * 0.35 : constraints.maxWidth * 0.3;
-              return _buildBackLayer(dropDistance, width);
-            },
+      body: Builder(builder: (context) {
+        screenCtx = context;
+        return ScaleDrawerWrapper(
+          key: _drawer,
+          drawerContent: HomeDrawerContent(),
+          topScaffold: HomeBackdropScaffold(
+            key: _backdropScaffold,
+            title: const Text("JustClass", style: TextStyle(fontWeight: FontWeight.bold)),
+            dropDistance: dropDistance,
+            backColor: Theme.of(context).backgroundColor,
+            leading:
+                AppIconButton(icon: const Icon(Icons.menu, size: 22), onPressed: () => _drawer.currentState.swap()),
+            actions: <Widget>[_buildPopupMenu()],
+            backLayer: LayoutBuilder(
+              builder: (_, constraints) {
+                final width = isPortrait ? constraints.maxWidth * 0.35 : constraints.maxWidth * 0.3;
+                return _buildBackLayer(dropDistance, width);
+              },
+            ),
+            frontLayer: ClassListView(key: _classListView),
           ),
-          frontLayer: ClassListView(key: _classListView),
-        ),
-      ),
+        );
+      }),
     );
   }
 

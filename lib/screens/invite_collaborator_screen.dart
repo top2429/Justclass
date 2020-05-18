@@ -13,7 +13,7 @@ import 'package:justclass/widgets/opaque_progress_indicator.dart';
 import 'package:provider/provider.dart';
 
 class InviteCollaboratorScreen extends StatefulWidget {
-  static const routeName = 'invite-collab-screen';
+  static const routeName = 'invite-collaborator-screen';
   final MemberManager memberMgr;
   final Color color;
   final String cid;
@@ -45,11 +45,13 @@ class _InviteCollaboratorScreenState extends State<InviteCollaboratorScreen> {
   // a list of suggested members fetched from api
   List<Member> members;
 
-  // a timer used to set timeout for the method of fetching suggested members
-  Timer timer;
+  // a timer used to set debounce time for the method of fetching suggested members
+  Timer debounce;
 
   // a list of chosen emails that user wants to invite
   final emails = Set<String>();
+
+  // a flag showing that [emails] must contain at least one email
   bool areEmailsValid = false;
 
   //  a flag switching between suggested member list and entered recipient
@@ -63,15 +65,15 @@ class _InviteCollaboratorScreenState extends State<InviteCollaboratorScreen> {
 
   @override
   void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      AppContext.add(screenCtx, InviteCollaboratorScreen.routeName);
-    });
+    WidgetsBinding.instance
+        .addPostFrameCallback((_) => AppContext.add(screenCtx, '${InviteCollaboratorScreen.routeName} ${widget.cid}'));
     super.initState();
   }
 
   @override
   void dispose() {
-    timer?.cancel();
+    debounce?.cancel();
+    inputCtrl.dispose();
     AppContext.pop();
     super.dispose();
   }
@@ -88,16 +90,17 @@ class _InviteCollaboratorScreenState extends State<InviteCollaboratorScreen> {
           members = null;
         });
       } else {
-        timer?.cancel();
+        debounce?.cancel();
         setState(() => suggesting = true);
-        timer = Timer(const Duration(milliseconds: 500), () => showSuggestions(val));
+        // once the user stops typing, after a period of time, send a request
+        debounce = Timer(const Duration(milliseconds: 500), () => showSuggestions(val));
       }
     }
   }
 
   void backToFirstMode() {
     nothingView = true;
-    timer?.cancel();
+    debounce?.cancel();
     setState(() {
       isFetching = false;
       suggesting = true;
@@ -123,7 +126,7 @@ class _InviteCollaboratorScreenState extends State<InviteCollaboratorScreen> {
     }
   }
 
-  void onSelectMember(String email) {
+  void onSelectEmail(String email) {
     inputCtrl.clear();
     backToFirstMode();
     emails.add(email);
@@ -146,8 +149,12 @@ class _InviteCollaboratorScreenState extends State<InviteCollaboratorScreen> {
     try {
       final uid = Provider.of<Auth>(context, listen: false).user.uid;
       await widget.memberMgr.inviteCollaborators(uid, widget.cid, emails);
-      AppSnackBar.showSuccess(screenCtx, message: 'Invitations are sent.', delay: Duration(seconds: 1));
-      if (this.mounted) Navigator.of(context).pop();
+      if (this.mounted) Navigator.of(screenCtx).pop();
+      AppSnackBar.showSuccess(
+        screenCtx,
+        message: emails.length > 1 ? 'Invitations were sent.' : 'An invitation was sent.',
+        delay: const Duration(milliseconds: 500),
+      );
     } catch (error) {
       AppSnackBar.showError(screenCtx, message: error.toString());
     } finally {
@@ -203,7 +210,7 @@ class _InviteCollaboratorScreenState extends State<InviteCollaboratorScreen> {
       trailing: MemberAvatar(color: widget.color, displayName: email),
       title: Text('Add recipient'),
       subtitle: Text(email, overflow: TextOverflow.ellipsis),
-      onTap: () => onSelectMember(email),
+      onTap: () => onSelectEmail(email),
     );
   }
 
@@ -242,7 +249,7 @@ class _InviteCollaboratorScreenState extends State<InviteCollaboratorScreen> {
                     trailing: MemberAvatar(color: widget.color, displayName: m.displayName, photoUrl: m.photoUrl),
                     title: Text(m.displayName, overflow: TextOverflow.ellipsis),
                     subtitle: Text(m.email, overflow: TextOverflow.ellipsis),
-                    onTap: () => onSelectMember(m.email),
+                    onTap: () => onSelectEmail(m.email),
                   ))
               .toList(),
       ],

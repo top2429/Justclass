@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:justclass/utils/app_context.dart';
 import 'package:justclass/utils/http_exception.dart';
 import 'package:justclass/utils/mime_type.dart';
 import 'package:justclass/utils/validators.dart';
@@ -13,6 +14,7 @@ import 'package:mime/mime.dart';
 import '../themes.dart';
 
 class NewNoteScreenTeacher extends StatefulWidget {
+  static const routeName = 'new-note-screen-teacher';
   final ClassTheme theme;
   final String uid;
   final String cid;
@@ -24,9 +26,29 @@ class NewNoteScreenTeacher extends StatefulWidget {
 }
 
 class _NewNoteScreenTeacherState extends State<NewNoteScreenTeacher> {
+  BuildContext screenCtx;
+
+  // a flag indicating if the form is valid
   bool _valid = false;
-  Map<String, String> _files = {};
+
+  // a flag showing that whether request is sending or not
   bool _loading = false;
+
+  // a map of <file name, file path>
+  Map<String, String> _files = {};
+
+  @override
+  void initState() {
+    WidgetsBinding.instance
+        .addPostFrameCallback((_) => AppContext.add(screenCtx, '${NewNoteScreenTeacher.routeName} ${widget.cid}'));
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    AppContext.pop();
+    super.dispose();
+  }
 
   void _pickFiles(BuildContext context) async {
     FilePicker.clearTemporaryFiles();
@@ -35,7 +57,7 @@ class _NewNoteScreenTeacherState extends State<NewNoteScreenTeacher> {
       final files = await FilePicker.getMultiFilePath(type: FileType.any);
       if (files != null) _files.addAll(files);
     } catch (error) {
-      AppSnackBar.showError(context, message: "Unable to attach files!");
+      AppSnackBar.showError(screenCtx, message: "Unable to attach files!");
     } finally {
       _hideLoadingSpin();
     }
@@ -50,7 +72,7 @@ class _NewNoteScreenTeacherState extends State<NewNoteScreenTeacher> {
       throw HttpException();
       Navigator.of(context).pop();
     } catch (error) {
-      if (this.mounted) AppSnackBar.showError(context, message: "Unable to post notes!");
+      AppSnackBar.showError(screenCtx, message: "Unable to post notes!");
     } finally {
       _hideLoadingSpin();
     }
@@ -75,20 +97,23 @@ class _NewNoteScreenTeacherState extends State<NewNoteScreenTeacher> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: _buildAppBar(),
-      body: Stack(
-        children: <Widget>[
-          SingleChildScrollView(
-            child: Column(
-              children: <Widget>[
-                _buildNoteInput(),
-                Divider(),
-                if (_files.isNotEmpty) ..._buildFileList(),
-              ],
+      body: Builder(builder: (context) {
+        screenCtx = context;
+        return Stack(
+          children: <Widget>[
+            SingleChildScrollView(
+              child: Column(
+                children: <Widget>[
+                  _buildNoteInput(),
+                  Divider(),
+                  if (_files.isNotEmpty) ..._buildFileList(),
+                ],
+              ),
             ),
-          ),
-          Visibility(visible: _loading, child: OpaqueProgressIndicator()),
-        ],
-      ),
+            Visibility(visible: _loading, child: OpaqueProgressIndicator()),
+          ],
+        );
+      }),
     );
   }
 
@@ -97,20 +122,16 @@ class _NewNoteScreenTeacherState extends State<NewNoteScreenTeacher> {
       backgroundColor: widget.theme.primaryColor,
       leading: AppIconButton.cancel(onPressed: () => Navigator.of(context).pop()),
       actions: <Widget>[
-        Builder(builder: (context) {
-          return AppIconButton(
-            icon: const Icon(Icons.attachment),
-            tooltip: 'Attachment',
-            onPressed: _loading ? null : () => _pickFiles(context),
-          );
-        }),
-        Builder(builder: (context) {
-          return AppIconButton(
-            icon: const Icon(Icons.send),
-            tooltip: 'Post',
-            onPressed: (!_valid || _loading) ? null : () => _sendNote(context),
-          );
-        }),
+        AppIconButton(
+          icon: const Icon(Icons.attachment),
+          tooltip: 'Attachment',
+          onPressed: _loading ? null : () => _pickFiles(context),
+        ),
+        AppIconButton(
+          icon: const Icon(Icons.send),
+          tooltip: 'Post',
+          onPressed: (!_valid || _loading) ? null : () => _sendNote(context),
+        ),
         const SizedBox(width: 5),
       ],
     );

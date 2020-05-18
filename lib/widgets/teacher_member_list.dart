@@ -25,7 +25,7 @@ class _TeacherMemberListState extends State<TeacherMemberList> {
       );
       if (result != null && result) await memberMgr.removeCollaborator(member);
     } catch (error) {
-      if (this.mounted) AppSnackBar.showError(context, message: error.toString());
+      if (this.mounted) AppSnackBar.showContextError(context, message: error.toString());
     }
   }
 

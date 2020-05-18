@@ -11,28 +11,51 @@ import 'package:provider/provider.dart';
 import '../themes.dart';
 import 'member_screen.dart';
 
-class ClassScreen extends StatelessWidget {
+class ClassScreen extends StatefulWidget {
   static const routeName = 'class-screen';
   final Class cls; // cls is class, since class is a keyword in Dart so I cannot use it
 
   ClassScreen({@required this.cls});
 
   @override
+  _ClassScreenState createState() => _ClassScreenState();
+}
+
+class _ClassScreenState extends State<ClassScreen> {
+  BuildContext screenCtx;
+
+  @override
+  void initState() {
+    WidgetsBinding.instance
+        .addPostFrameCallback((_) => AppContext.add(screenCtx, '${ClassScreen.routeName} ${widget.cls.cid}'));
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    AppContext.pop();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider.value(
-      value: cls,
+      value: widget.cls,
       child: Consumer<Class>(
         builder: (_, cls, child) => Scaffold(
           backgroundColor: Themes.forClass(cls.theme).primaryColor,
           body: child,
         ),
-        child: ScaleDrawerWrapper(
-          drawerContent: HomeDrawerContent(),
-          topScaffold: Scaffold(
-            backgroundColor: Colors.transparent,
-            body: ClassScreenContent(),
-          ),
-        ),
+        child: Builder(builder: (context) {
+          screenCtx = context;
+          return ScaleDrawerWrapper(
+            drawerContent: HomeDrawerContent(),
+            topScaffold: Scaffold(
+              backgroundColor: Colors.transparent,
+              body: ClassScreenContent(),
+            ),
+          );
+        }),
       ),
     );
   }
@@ -46,20 +69,6 @@ class ClassScreenContent extends StatefulWidget {
 class _ClassScreenContentState extends State<ClassScreenContent> {
   int _index = 0;
   final _pageController = PageController();
-
-  @override
-  void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      AppContext.add(context, ClassScreen.routeName);
-    });
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    AppContext.pop();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {

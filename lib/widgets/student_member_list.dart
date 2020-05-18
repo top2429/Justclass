@@ -27,7 +27,7 @@ class _StudentMemberListState extends State<StudentMemberList> {
 
       if (result != null && result) await memberMgr.removeStudent(member);
     } catch (error) {
-      if (this.mounted) AppSnackBar.showError(context, message: error.toString());
+      if (this.mounted) AppSnackBar.showContextError(context, message: error.toString());
     }
   }
 

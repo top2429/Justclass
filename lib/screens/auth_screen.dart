@@ -1,13 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:justclass/widgets/email_auth_form.dart';
-import 'package:justclass/widgets/opaque_progress_indicator.dart';
-import 'package:justclass/widgets/oauth_row.dart';
 import 'package:justclass/widgets/auth_mode_changing_button.dart';
+import 'package:justclass/widgets/email_auth_form.dart';
+import 'package:justclass/widgets/oauth_row.dart';
+import 'package:justclass/widgets/opaque_progress_indicator.dart';
 
 class AuthScreen extends StatefulWidget {
-  static const routeName = "/auth";
+  static const routeName = "auth";
 
   @override
   _AuthScreenState createState() => _AuthScreenState();
@@ -19,7 +18,7 @@ class _AuthScreenState extends State<AuthScreen> {
   bool _isLoading = false;
 
   void _changeLoadingStatus(bool status) {
-    setState(() => _isLoading = status);
+    if (this.mounted) setState(() => _isLoading = status);
   }
 
   @override

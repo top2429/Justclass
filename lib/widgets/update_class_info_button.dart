@@ -22,7 +22,7 @@ class UpdateClassInfoButtonState extends State<UpdateClassInfoButton> {
     return Padding(
       padding: const EdgeInsets.only(right: 5),
       child: AppIconButton(
-        icon: Icon(Icons.save),
+        icon: const Icon(Icons.save),
         onPressed: !_isValid ? null : () => widget.updateClassDetails(context),
       ),
     );

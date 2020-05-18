@@ -275,22 +275,6 @@ class ApiCall {
     String keyword,
   ) async {
     try {
-      await Future.delayed(Duration(seconds: 1));
-      return [
-        Member(
-          uid: '1',
-          email: 'test1@gmail.com',
-          displayName: 'Test 1',
-          photoUrl: 'https://placekitten.com/100/100',
-        ),
-        Member(
-          uid: '2',
-          email: 'test2@gmail.com',
-          displayName: 'Test 2',
-          photoUrl: 'https://placekitten.com/101/101',
-        ),
-      ];
-
       checkInternetConnection();
       final url = 'https://justclass-da0b0.appspot.com/api/v1/classroom/lookup/$uid/$cid/${role.name}?keyword=$keyword';
       final response = await http.get(url, headers: _headers);
@@ -327,8 +311,6 @@ class ApiCall {
 
   static Future<void> inviteMembers(String uid, String cid, Set<String> emails, ClassRole role) async {
     try {
-      await Future.delayed(Duration(seconds: 1));
-      return;
       checkInternetConnection();
       final url = 'https://justclass-da0b0.appspot.com/api/v1/classroom/$uid/$cid';
 

@@ -17,10 +17,16 @@ class _RemoveClassAlertDialogOwnerState extends State<RemoveClassAlertDialogOwne
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: AlertDialog(
+        titlePadding: EdgeInsets.zero,
         shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(8))),
-        title: Text(
-          'ARE YOU SURE?',
-          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red.shade600),
+        title: Container(
+          height: 60,
+          decoration: BoxDecoration(
+            color: Colors.red.shade600,
+            borderRadius: const BorderRadius.only(topRight: Radius.circular(8), topLeft: Radius.circular(8)),
+          ),
+          alignment: Alignment.center,
+          child: const Text('ARE YOU SURE?', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
         ),
         content: Column(
           mainAxisSize: MainAxisSize.min,

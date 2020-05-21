@@ -145,6 +145,7 @@ class _InviteCollaboratorScreenState extends State<InviteCollaboratorScreen> {
   }
 
   void sendInvitations() async {
+    FocusScope.of(context).unfocus();
     setState(() => sending = true);
     try {
       final uid = Provider.of<Auth>(context, listen: false).user.uid;

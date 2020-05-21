@@ -185,14 +185,14 @@ class ApiCall {
             uid: '2',
             role: ClassRole.COLLABORATOR,
             joinDatetime: 123,
-            photoUrl: 'https://placekitten.com/156/156',
+            photoUrl: 'https://placekitten.com/131/131',
           ),
           Member(
             displayName: 'Bot 1',
             uid: '1',
             role: ClassRole.STUDENT,
             joinDatetime: 123,
-            photoUrl: 'https://placekitten.com/151/151',
+            photoUrl: 'https://placekitten.com/162/162',
           ),
           Member(
             displayName: 'Bot 2',
@@ -220,7 +220,7 @@ class ApiCall {
             uid: '1',
             role: ClassRole.STUDENT,
             joinDatetime: 123,
-            photoUrl: 'https://placekitten.com/150/150',
+            photoUrl: 'https://placekitten.com/144/144',
           ),
           Member(
             displayName: 'Bot 6',
@@ -255,7 +255,7 @@ class ApiCall {
             uid: '1',
             role: ClassRole.STUDENT,
             joinDatetime: 123,
-            photoUrl: 'https://placekitten.com/150/150',
+            photoUrl: 'https://placekitten.com/110/110',
           )
         ]);
       return members;

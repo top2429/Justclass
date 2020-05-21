@@ -136,7 +136,11 @@ class ApiCall {
     try {
       checkInternetConnection();
       final url = 'https://justclass-da0b0.appspot.com/api/v1/classroom/$uid?requestNewPublicCode=true';
-      final response = await http.patch(url, headers: _headers, body: json.encode({'classroomId': cid}));
+      final response = await http.patch(
+        url,
+        headers: _headers,
+        body: json.encode({'classroomId': cid}),
+      );
       if (response.statusCode >= 400) throw HttpException(message: 'Unable to generate new class code!');
       final newCode = json.decode(response.body)['publicCode'];
       return newCode;
@@ -172,80 +176,82 @@ class ApiCall {
                 role: ClassRoles.getType(m['role']),
               ))
           .toList();
+
+      // for testing purpose only
       members
         ..addAll([
           Member(
-            displayName: 'Test 1',
+            displayName: 'Bot 1',
             uid: '2',
             role: ClassRole.COLLABORATOR,
             joinDatetime: 123,
             photoUrl: 'https://placekitten.com/156/156',
           ),
           Member(
-            displayName: 'Test 1',
+            displayName: 'Bot 1',
             uid: '1',
             role: ClassRole.STUDENT,
             joinDatetime: 123,
             photoUrl: 'https://placekitten.com/151/151',
           ),
           Member(
-            displayName: 'Test 2',
+            displayName: 'Bot 2',
             uid: '1',
             role: ClassRole.STUDENT,
             joinDatetime: 123,
             photoUrl: 'https://placekitten.com/149/149',
           ),
           Member(
-            displayName: 'Test 3',
+            displayName: 'Bot 3',
             uid: '1',
             role: ClassRole.STUDENT,
             joinDatetime: 123,
             photoUrl: null,
           ),
           Member(
-            displayName: 'Test 4',
+            displayName: 'Bot 4',
             uid: '1',
             role: ClassRole.STUDENT,
             joinDatetime: 123,
             photoUrl: 'https://placekitten.com/153/153',
           ),
           Member(
-            displayName: 'Test 5',
+            displayName: 'Bot 5',
             uid: '1',
             role: ClassRole.STUDENT,
             joinDatetime: 123,
             photoUrl: 'https://placekitten.com/150/150',
           ),
           Member(
-            displayName: 'Test 6',
+            displayName: 'Bot 6',
             uid: '1',
             role: ClassRole.STUDENT,
             joinDatetime: 123,
             photoUrl: 'https://placekitten.com/154/154',
           ),
           Member(
-            displayName: 'Test 7',
+            displayName: 'Bot 7',
             uid: '1',
             role: ClassRole.STUDENT,
             joinDatetime: 123,
             photoUrl: 'https://placekitten.com/155/155',
           ),
           Member(
-            displayName: 'Test 8',
+            displayName: 'Bot 8',
             uid: '1',
             role: ClassRole.STUDENT,
             joinDatetime: 123,
             photoUrl: 'https://placekitten.com/156/156',
           ),
           Member(
-            displayName: 'A Test 9',
+            displayName: 'A Bot 9',
             uid: '1',
             role: ClassRole.STUDENT,
             joinDatetime: 123,
             photoUrl: null,
           ),
           Member(
-            displayName: 'Test 10',
+            displayName: 'Bot 10',
             uid: '1',
             role: ClassRole.STUDENT,
             joinDatetime: 123,
@@ -289,20 +295,23 @@ class ApiCall {
                 photoUrl: u['photoUrl'],
               ))
           .toList();
+
+      // for testing purpose only
       members.addAll([
         Member(
           uid: '1',
-          email: 'test1@gmail.com',
-          displayName: 'Test 1',
+          email: 'test@gmail.com',
+          displayName: 'Test',
           photoUrl: 'https://placekitten.com/100/100',
         ),
         Member(
           uid: '2',
-          email: 'test2@gmail.com',
-          displayName: 'Test 2',
+          email: 'bot@hsu.com',
+          displayName: 'Bot',
           photoUrl: 'https://placekitten.com/101/101',
         ),
       ]);
+
       return members;
     } catch (error) {
       throw error;
@@ -322,6 +331,18 @@ class ApiCall {
         ]),
       );
       if (response.statusCode >= 400) throw HttpException(message: 'Unable to send invitations!');
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  static Future<void> leaveCLass(String uid, String cid) async {
+    try {
+      checkInternetConnection();
+      final url = 'https://justclass-da0b0.appspot.com/api/v1/classroom/leave/$uid/$cid';
+
+      final response = await http.delete(url, headers: _headers);
+      if (response.statusCode >= 400) throw HttpException(message: 'Unable to leave class!');
     } catch (error) {
       throw error;
     }

@@ -14,12 +14,13 @@ class ClassListViewTileStudent extends StatelessWidget {
 
   static const _radius = BorderRadius.all(Radius.circular(8));
 
-  void _removeClass(String cid) async {
+  void _leaveClass(String cid) async {
     try {
-      await Provider.of<ClassManager>(context, listen: false).removeClass(cid);
+      await Provider.of<ClassManager>(context, listen: false).leaveClass(cid);
     } catch (error) {
       AppSnackBar.showError(context, message: error.toString());
     }
+    // 3e77c855
   }
 
   @override
@@ -92,7 +93,7 @@ class ClassListViewTileStudent extends StatelessWidget {
                             const PopupMenuItem(child: Text('Leave'), value: 'leave', height: 40),
                           ],
                           onSelected: (val) {
-                            if (val == 'leave') _removeClass(cls.cid);
+                            if (val == 'leave') _leaveClass(cls.cid);
                           },
                         ),
                       ],

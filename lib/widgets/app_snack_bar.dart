@@ -63,7 +63,7 @@ class AppSnackBar {
       SnackBar(
         elevation: 2,
         backgroundColor: bgColor,
-        duration: const Duration(seconds: 3600),
+        duration: const Duration(seconds: 3),
         behavior: SnackBarBehavior.floating,
         content: Text(message, style: const TextStyle(color: Colors.white)),
         action: SnackBarAction(

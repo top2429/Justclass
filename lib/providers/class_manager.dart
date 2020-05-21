@@ -75,49 +75,17 @@ class ClassManager with ChangeNotifier {
     }
   }
 
-//  static final testData = [
-//    Class(
-//      cid: '0',
-//      title: 'KTPM_1234 co title rat chi la dai do',
-//      publicCode: '010ax31',
-//      role: ClassRole.OWNER,
-//      theme: 0,
-//      studentCount: 12,
-//      section: 'Môn: Kiến trúc phần mềm',
-//    ),
-//    Class(
-//      cid: '2',
-//      title: 'THCNTT3_100 co title ra chi la dai do',
-//      publicCode: '010ax31',
-//      role: ClassRole.STUDENT,
-//      theme: 2,
-//      ownerName: 'Hieu Pham',
-//    ),
-//    Class(
-//      cid: '1',
-//      title: 'PPHDH_1996 day la ',
-//      publicCode: '010ax31',
-//      role: ClassRole.COLLABORATOR,
-//      theme: 1,
-//      subject: 'Môn: Phương pháp học đại học, nhung chua du dau, phai dai hon nua',
-//      ownerName: 'Minh Ngoc',
-//    ),
-//    Class(
-//      cid: '3',
-//      title: 'THCNTT3_100',
-//      publicCode: '010ax31',
-//      role: ClassRole.OWNER,
-//      theme: 3,
-//      studentCount: 1,
-//      ownerName: 'Hieu Pham',
-//    ),
-//    Class(
-//      cid: '4',
-//      title: 'Because I\'m Batman',
-//      publicCode: '010ax31',
-//      role: ClassRole.STUDENT,
-//      theme: 4,
-//      ownerName: 'Bruce Wayne',
-//    ),
-//  ];
+  Future<void> leaveClass(String cid) async {
+    // optimistic pattern
+    final index = _classes.indexWhere((cls) => cls.cid == cid);
+    final cls = _classes.removeAt(index);
+    notifyListeners();
+    try {
+      await ApiCall.leaveCLass(_uid, cid);
+    } catch (error) {
+      _classes.insert(index, cls);
+      notifyListeners();
+      throw error;
+    }
+  }
 }

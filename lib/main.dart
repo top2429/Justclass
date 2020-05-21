@@ -4,6 +4,7 @@ import 'package:justclass/providers/class_manager.dart';
 import 'package:justclass/screens/auth_screen.dart';
 import 'package:justclass/screens/home_screen.dart';
 import 'package:justclass/screens/splash_screen.dart';
+import 'package:justclass/screens/notification_screen.dart';
 import 'package:justclass/themes.dart';
 import 'package:provider/provider.dart';
 
@@ -31,6 +32,7 @@ class MyApp extends StatelessWidget {
             routes: {
               AuthScreen.routeName: (_) => AuthScreen(),
               HomeScreen.routeName: (_) => HomeScreen(),
+              NotificationScreen.routeName: (_) => NotificationScreen(),
             },
           );
         },

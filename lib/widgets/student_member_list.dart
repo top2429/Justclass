@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:justclass/models/member.dart';
 import 'package:justclass/providers/class.dart';
 import 'package:justclass/providers/member_manager.dart';
+import 'package:justclass/screens/invite_student_screen.dart';
 import 'package:justclass/themes.dart';
 import 'package:justclass/widgets/app_snack_bar.dart';
 import 'package:justclass/widgets/member_role_title.dart';
@@ -31,16 +32,32 @@ class _StudentMemberListState extends State<StudentMemberList> {
     }
   }
 
-  void addStudent() {}
+  void addStudent(Color color, MemberManager memberMgr, String cid) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => InviteStudentScreen(
+          memberMgr: memberMgr,
+          color: color,
+          cid: cid,
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
+    final cls = Provider.of<Class>(context);
+    final color = Themes.forClass(cls.theme).primaryColor;
     final memberMgr = Provider.of<MemberManager>(context);
-    final color = Themes.forClass(Provider.of<Class>(context).theme).primaryColor;
 
     return Column(
       children: <Widget>[
-        MemberRoleTitle(color: color, title: 'Students', tooltip: 'Invite Students', onPressed: addStudent),
+        MemberRoleTitle(
+          color: color,
+          title: 'Students',
+          tooltip: 'Invite Students',
+          onPressed: () => addStudent(color, memberMgr, cls.cid),
+        ),
         ...memberMgr.students.map(
           (t) => ListTile(
             contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 2),

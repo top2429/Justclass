@@ -108,17 +108,4 @@ class _ClassScreenContentState extends State<ClassScreenContent> {
       ],
     );
   }
-
-//  Widget _getScreen(int index) {
-//    switch (index) {
-//      case 0:
-//        return NoteScreen();
-//      case 1:
-//        return TopicScreen();
-//      case 2:
-//        return MemberScreen();
-//      default:
-//        return null;
-//    }
-//  }
 }

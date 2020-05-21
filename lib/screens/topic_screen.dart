@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:justclass/providers/class.dart';
-import 'package:justclass/screens/teacher_floating_action_button.dart';
+import 'file:///H:/Hieu/HSU/MonHoc/Code/Android_Flutter/justclass/lib/widgets/teacher_floating_action_button.dart';
 import 'package:justclass/utils/constants.dart';
 import 'package:provider/provider.dart';
 

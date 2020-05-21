@@ -10,17 +10,17 @@ class ContextScreen {
 class AppContext {
   static final _contexts = Set<ContextScreen>();
 
-  static get last => _contexts.last?.context;
+  static BuildContext get last => _contexts.last?.context;
 
-  static get name => _contexts.last?.routeName;
+  static String get name => _contexts.last?.routeName;
 
-  static void add(BuildContext context, [String routeName = 'screen']) {
+  static void add(BuildContext context, [String routeName = 'some screen']) {
     _contexts.add(ContextScreen(routeName, context));
     print('added context $routeName ');
   }
 
   static void pop() {
-    final last = _contexts.last;
+    final ContextScreen last = _contexts.last;
     _contexts.remove(last);
     print('popped context ${last.routeName}');
   }

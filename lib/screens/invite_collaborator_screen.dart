@@ -149,7 +149,7 @@ class _InviteCollaboratorScreenState extends State<InviteCollaboratorScreen> {
     try {
       final uid = Provider.of<Auth>(context, listen: false).user.uid;
       await widget.memberMgr.inviteCollaborators(uid, widget.cid, emails);
-      if (this.mounted) Navigator.of(screenCtx).pop();
+      if (this.mounted) Navigator.of(context).pop();
       AppSnackBar.showSuccess(
         screenCtx,
         message: emails.length > 1 ? 'Invitations were sent.' : 'An invitation was sent.',

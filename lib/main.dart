@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:justclass/providers/auth.dart';
-import 'package:justclass/providers/class.dart';
 import 'package:justclass/providers/class_manager.dart';
 import 'package:justclass/screens/auth_screen.dart';
-import 'package:justclass/screens/class_screen.dart';
 import 'package:justclass/screens/home_screen.dart';
 import 'package:justclass/screens/splash_screen.dart';
 import 'package:justclass/themes.dart';

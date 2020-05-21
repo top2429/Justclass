@@ -23,7 +23,7 @@ class UpdateClassInfoScreen extends StatefulWidget {
 }
 
 class _UpdateClassInfoScreenState extends State<UpdateClassInfoScreen> {
-  BuildContext screenCtx;
+  BuildContext _screenCtx;
 
   // the primary color of this class, just a quick reference
   Color _color;
@@ -44,7 +44,7 @@ class _UpdateClassInfoScreenState extends State<UpdateClassInfoScreen> {
   void initState() {
     _setUpData(widget.cls);
     WidgetsBinding.instance
-        .addPostFrameCallback((_) => AppContext.add(screenCtx, '${UpdateClassInfoScreen.routeName} ${widget.cls.cid}'));
+        .addPostFrameCallback((_) => AppContext.add(_screenCtx, '${UpdateClassInfoScreen.routeName} ${widget.cls.cid}'));
     super.initState();
   }
 
@@ -79,14 +79,14 @@ class _UpdateClassInfoScreenState extends State<UpdateClassInfoScreen> {
   }
 
   void _updateClassDetails(BuildContext context) async {
-    isInputSimilarToData() ? Navigator.of(context).pop() : _showLoadingSpin();
+    _isInputSimilarToData() ? Navigator.of(context).pop() : _showLoadingSpin();
     try {
       _updateBtn.currentState.changeState(false);
       final uid = Provider.of<Auth>(context, listen: false).user.uid;
       await widget.cls.updateDetails(uid, input);
       Navigator.of(context).pop();
     } catch (error) {
-      if (this.mounted) AppSnackBar.showError(screenCtx, message: error.toString());
+      if (this.mounted) AppSnackBar.showError(_screenCtx, message: error.toString());
     } finally {
       _hideLoadingSpin();
       _updateBtn.currentState?.changeState(true);
@@ -102,7 +102,7 @@ class _UpdateClassInfoScreenState extends State<UpdateClassInfoScreen> {
     if (this.mounted) setState(() => _loading = false);
   }
 
-  bool isInputSimilarToData() {
+  bool _isInputSimilarToData() {
     if (input.title != data.title ||
         input.subject != data.subject ||
         input.section != data.section ||
@@ -121,7 +121,7 @@ class _UpdateClassInfoScreenState extends State<UpdateClassInfoScreen> {
         backgroundColor: _color,
         appBar: _buildTopBar(),
         body: Builder(builder: (context) {
-          screenCtx = context;
+          _screenCtx = context;
           return SafeArea(
             child: ClipRRect(
               borderRadius: const BorderRadius.only(topLeft: Radius.circular(15), topRight: Radius.circular(15)),

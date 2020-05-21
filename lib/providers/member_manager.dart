@@ -70,4 +70,12 @@ class MemberManager extends ChangeNotifier {
       throw error;
     }
   }
+
+  Future<void> inviteStudents(String uid, String cid, Set<String> emails) async {
+    try {
+      await ApiCall.inviteMembers(uid, cid, emails, ClassRole.STUDENT);
+    } catch (error) {
+      throw error;
+    }
+  }
 }

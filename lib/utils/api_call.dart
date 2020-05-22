@@ -178,86 +178,86 @@ class ApiCall {
           .toList();
 
       // for testing purpose only
-      members
-        ..addAll([
-          Member(
-            displayName: 'Bot 1',
-            uid: '2',
-            role: ClassRole.COLLABORATOR,
-            joinDatetime: 123,
-            photoUrl: 'https://placekitten.com/131/131',
-          ),
-          Member(
-            displayName: 'Bot 1',
-            uid: '1',
-            role: ClassRole.STUDENT,
-            joinDatetime: 123,
-            photoUrl: 'https://placekitten.com/162/162',
-          ),
-          Member(
-            displayName: 'Bot 2',
-            uid: '1',
-            role: ClassRole.STUDENT,
-            joinDatetime: 123,
-            photoUrl: 'https://placekitten.com/149/149',
-          ),
-          Member(
-            displayName: 'Bot 3',
-            uid: '1',
-            role: ClassRole.STUDENT,
-            joinDatetime: 123,
-            photoUrl: null,
-          ),
-          Member(
-            displayName: 'Bot 4',
-            uid: '1',
-            role: ClassRole.STUDENT,
-            joinDatetime: 123,
-            photoUrl: 'https://placekitten.com/153/153',
-          ),
-          Member(
-            displayName: 'Bot 5',
-            uid: '1',
-            role: ClassRole.STUDENT,
-            joinDatetime: 123,
-            photoUrl: 'https://placekitten.com/144/144',
-          ),
-          Member(
-            displayName: 'Bot 6',
-            uid: '1',
-            role: ClassRole.STUDENT,
-            joinDatetime: 123,
-            photoUrl: 'https://placekitten.com/154/154',
-          ),
-          Member(
-            displayName: 'Bot 7',
-            uid: '1',
-            role: ClassRole.STUDENT,
-            joinDatetime: 123,
-            photoUrl: 'https://placekitten.com/155/155',
-          ),
-          Member(
-            displayName: 'Bot 8',
-            uid: '1',
-            role: ClassRole.STUDENT,
-            joinDatetime: 123,
-            photoUrl: 'https://placekitten.com/156/156',
-          ),
-          Member(
-            displayName: 'A Bot 9',
-            uid: '1',
-            role: ClassRole.STUDENT,
-            joinDatetime: 123,
-            photoUrl: null,
-          ),
-          Member(
-            displayName: 'Bot 10',
-            uid: '1',
-            role: ClassRole.STUDENT,
-            joinDatetime: 123,
-            photoUrl: 'https://placekitten.com/110/110',
-          )
-        ]);
+//      members
+//        ..addAll([
+//          Member(
+//            displayName: 'Bot 1',
+//            uid: '2',
+//            role: ClassRole.COLLABORATOR,
+//            joinDatetime: 123,
+//            photoUrl: 'https://placekitten.com/131/131',
+//          ),
+//          Member(
+//            displayName: 'Bot 1',
+//            uid: '1',
+//            role: ClassRole.STUDENT,
+//            joinDatetime: 123,
+//            photoUrl: 'https://placekitten.com/162/162',
+//          ),
+//          Member(
+//            displayName: 'Bot 2',
+//            uid: '1',
+//            role: ClassRole.STUDENT,
+//            joinDatetime: 123,
+//            photoUrl: 'https://placekitten.com/149/149',
+//          ),
+//          Member(
+//            displayName: 'Bot 3',
+//            uid: '1',
+//            role: ClassRole.STUDENT,
+//            joinDatetime: 123,
+//            photoUrl: null,
+//          ),
+//          Member(
+//            displayName: 'Bot 4',
+//            uid: '1',
+//            role: ClassRole.STUDENT,
+//            joinDatetime: 123,
+//            photoUrl: 'https://placekitten.com/153/153',
+//          ),
+//          Member(
+//            displayName: 'Bot 5',
+//            uid: '1',
+//            role: ClassRole.STUDENT,
+//            joinDatetime: 123,
+//            photoUrl: 'https://placekitten.com/144/144',
+//          ),
+//          Member(
+//            displayName: 'Bot 6',
+//            uid: '1',
+//            role: ClassRole.STUDENT,
+//            joinDatetime: 123,
+//            photoUrl: 'https://placekitten.com/154/154',
+//          ),
+//          Member(
+//            displayName: 'Bot 7',
+//            uid: '1',
+//            role: ClassRole.STUDENT,
+//            joinDatetime: 123,
+//            photoUrl: 'https://placekitten.com/155/155',
+//          ),
+//          Member(
+//            displayName: 'Bot 8',
+//            uid: '1',
+//            role: ClassRole.STUDENT,
+//            joinDatetime: 123,
+//            photoUrl: 'https://placekitten.com/156/156',
+//          ),
+//          Member(
+//            displayName: 'A Bot 9',
+//            uid: '1',
+//            role: ClassRole.STUDENT,
+//            joinDatetime: 123,
+//            photoUrl: null,
+//          ),
+//          Member(
+//            displayName: 'Bot 10',
+//            uid: '1',
+//            role: ClassRole.STUDENT,
+//            joinDatetime: 123,
+//            photoUrl: 'https://placekitten.com/110/110',
+//          )
+//        ]);
       return members;
     } catch (error) {
       throw error;
@@ -297,20 +297,20 @@ class ApiCall {
           .toList();
 
       // for testing purpose only
-      members.addAll([
-        Member(
-          uid: '1',
-          email: 'test@gmail.com',
-          displayName: 'Test',
-          photoUrl: 'https://placekitten.com/100/100',
-        ),
-        Member(
-          uid: '2',
-          email: 'bot@hsu.com',
-          displayName: 'Bot',
-          photoUrl: 'https://placekitten.com/101/101',
-        ),
-      ]);
+//      members.addAll([
+//        Member(
+//          uid: '1',
+//          email: 'test@gmail.com',
+//          displayName: 'Test',
+//          photoUrl: 'https://placekitten.com/100/100',
+//        ),
+//        Member(
+//          uid: '2',
+//          email: 'bot@hsu.com',
+//          displayName: 'Bot',
+//          photoUrl: 'https://placekitten.com/101/101',
+//        ),
+//      ]);
 
       return members;
     } catch (error) {

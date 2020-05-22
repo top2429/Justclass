@@ -12,7 +12,7 @@ class LeaveClassAlertDialog extends StatelessWidget {
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(8))),
       titlePadding: EdgeInsets.zero,
       title: Container(
-        height: 70,
+        height: 60,
         decoration: BoxDecoration(
           color: Colors.red.shade600,
           borderRadius: const BorderRadius.only(topRight: Radius.circular(8), topLeft: Radius.circular(8)),

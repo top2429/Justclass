@@ -240,9 +240,11 @@ class _InviteCollaboratorScreenState extends State<InviteCollaboratorScreen> {
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         if (members.isEmpty)
-          Padding(
-            padding: const EdgeInsets.all(10),
-            child: const Text('No suggestions', style: TextStyle(color: Colors.grey, fontSize: 14)),
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.all(10),
+              child: const Text('No suggestions', style: TextStyle(color: Colors.grey, fontSize: 14)),
+            ),
           ),
         if (members.isNotEmpty)
           ...members

@@ -52,7 +52,7 @@ class ClassListViewState extends State<ClassListView> {
   Future<void> _fetchClassListFirstLoad() async {
     try {
       await Provider.of<ClassManager>(context, listen: false).fetchClassList();
-      setState(() => _didFirstLoad = true);
+      if (this.mounted) setState(() => _didFirstLoad = true);
     } catch (error) {
       AppSnackBar.showError(context, message: error.toString());
       if (this.mounted) {
@@ -67,7 +67,7 @@ class ClassListViewState extends State<ClassListView> {
   Future<void> _fetchClassList() async {
     try {
       await Provider.of<ClassManager>(context, listen: false).fetchClassList();
-      setState(() => _hasError = false);
+      if (this.mounted) setState(() => _hasError = false);
     } catch (error) {
       AppSnackBar.showError(context, message: error.toString());
     }

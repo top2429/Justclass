@@ -28,7 +28,7 @@ dependencies:
   curved_navigation_bar: ^0.3.2
   file_picker: ^1.7.1
   mime: ^0.9.6+3
-  connectivity: ^0.4.8+5
+  connectivity: ^0.4.8+6
   google_fonts: ^1.0.0
 
   # The following adds the Cupertino Icons font to your application.

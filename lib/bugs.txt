@@ -1,3 +1,5 @@
 FIXME: willPopScope in HomeScreen is not consistent, sometimes the drawer pops first, sometimes the backdropScaffold pops first.
 
+FIXME: app crashes on the first run when external-storage access permission is granting, everything is fine afterwards.
+
 

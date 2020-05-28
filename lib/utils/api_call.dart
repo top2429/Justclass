@@ -6,7 +6,6 @@ import 'package:justclass/models/member.dart';
 import 'package:justclass/models/user.dart';
 import 'package:justclass/providers/class.dart';
 import 'package:justclass/utils/http_exception.dart';
-import 'package:justclass/utils/test.dart';
 import 'package:justclass/widgets/create_class_form.dart';
 
 class ApiCall {
@@ -152,7 +151,7 @@ class ApiCall {
   static Future<Class> fetchClassDetails(String cid) async {
     try {
       checkInternetConnection();
-      await Test.delay(1);
+      await Future.delayed(const Duration(seconds: 1));
       // TODO: Implementation for class info screen in student mode
     } catch (error) {
       throw error;
@@ -343,6 +342,21 @@ class ApiCall {
 
       final response = await http.delete(url, headers: _headers);
       if (response.statusCode >= 400) throw HttpException(message: 'Unable to leave class!');
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  static Future<dynamic> fetchNotifications(String uid) async {
+    try {
+      checkInternetConnection();
+      final url = 'https://justclass-da0b0.appspot.com/api/v1/notification/$uid';
+
+      final response = await http.get(url, headers: _headers);
+      if (response.statusCode >= 400) throw HttpException(message: 'Unable to fetch notications!');
+
+      final notificationData = json.decode(response.body) as List<dynamic>;
+      print(notificationData);
     } catch (error) {
       throw error;
     }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:justclass/utils/api_call.dart';
 import 'package:justclass/utils/app_context.dart';
 
 class NotificationScreen extends StatefulWidget {
@@ -25,6 +26,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
 
   @override
   Widget build(BuildContext context) {
+    ApiCall.fetchNotifications('113883110036755984283');
     return Scaffold(
       body: Builder(
         builder: (context) {

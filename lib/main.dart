@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
       child: Consumer<Auth>(
         builder: (_, auth, __) {
           return MaterialApp(
-            debugShowCheckedModeBanner: false,
+//            debugShowCheckedModeBanner: false,
             title: 'JustClass',
             theme: Themes.forApp,
             home: _buildFirstScreen(auth),
@@ -42,14 +42,7 @@ class MyApp extends StatelessWidget {
   }
 
   Widget _buildFirstScreen(Auth auth) {
-//    return ClassScreen(
-//        cls: Class(
-//      cid: '1',
-//      role: ClassRole.OWNER,
-//      theme: 3,
-//      permissionCode: PermissionCode.VCP,
-//      title: 'Class Test',
-//    ));
+//    return NotificationScreen();
     return (auth.user == null)
         ? FutureBuilder(
             future: auth.tryAutoSignIn(),

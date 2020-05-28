@@ -72,7 +72,7 @@ class _NewNoteScreenTeacherState extends State<NewNoteScreenTeacher> {
       throw HttpException();
       Navigator.of(context).pop();
     } catch (error) {
-      AppSnackBar.showError(screenCtx, message: "Unable to post notes!");
+      AppSnackBar.showError(screenCtx, message: "Unable to post new note!");
     } finally {
       _hideLoadingSpin();
     }
@@ -94,31 +94,49 @@ class _NewNoteScreenTeacherState extends State<NewNoteScreenTeacher> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      appBar: _buildAppBar(),
-      body: Builder(builder: (context) {
-        screenCtx = context;
-        return Stack(
-          children: <Widget>[
-            SingleChildScrollView(
-              child: Column(
-                children: <Widget>[
-                  _buildNoteInput(),
-                  Divider(),
-                  if (_files.isNotEmpty) ..._buildFileList(),
-                ],
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        backgroundColor: widget.theme.primaryColor,
+        appBar: _buildAppBar(),
+        body: LayoutBuilder(builder: (context, constraints) {
+          screenCtx = context;
+          final bottom = MediaQuery.of(context).viewInsets.bottom;
+          return SafeArea(
+            child: ClipRRect(
+              borderRadius: const BorderRadius.only(topLeft: Radius.circular(15), topRight: Radius.circular(15)),
+              child: Container(
+                color: Colors.white,
+                height: constraints.maxHeight,
+                alignment: Alignment.topCenter,
+                child: Container(
+                  height: constraints.maxHeight - bottom,
+                  child: Stack(
+                    children: <Widget>[
+                      ListView(
+                        physics: ClampingScrollPhysics(),
+                        children: <Widget>[
+                          _buildNoteInput(),
+                          Divider(),
+                          if (_files.isNotEmpty) ..._buildFileList(),
+                        ],
+                      ),
+                      Visibility(visible: _loading, child: OpaqueProgressIndicator()),
+                    ],
+                  ),
+                ),
               ),
             ),
-            Visibility(visible: _loading, child: OpaqueProgressIndicator()),
-          ],
-        );
-      }),
+          );
+        }),
+      ),
     );
   }
 
   Widget _buildAppBar() {
     return AppBar(
+      elevation: 0,
       backgroundColor: widget.theme.primaryColor,
       leading: AppIconButton.cancel(onPressed: () => Navigator.of(context).pop()),
       actions: <Widget>[

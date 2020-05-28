@@ -169,34 +169,40 @@ class _InviteStudentScreenState extends State<InviteStudentScreen> {
       onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
       child: Scaffold(
         backgroundColor: widget.color,
+        resizeToAvoidBottomInset: false,
         appBar: _buildTopBar(widget.color, 'Invite students'),
-        body: Builder(builder: (context) {
+        body: LayoutBuilder(builder: (context, constraints) {
           screenCtx = context;
+          final bottom = MediaQuery.of(context).viewInsets.bottom;
           return SafeArea(
             child: ClipRRect(
               borderRadius: const BorderRadius.only(topLeft: Radius.circular(15), topRight: Radius.circular(15)),
               child: Container(
                 color: Colors.white,
-                height: double.infinity,
-                child: Stack(
-                  children: <Widget>[
-                    SingleChildScrollView(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          if (emails.isNotEmpty) _buildEmailList(),
-                          _buildTextField(),
-                          _buildLoadingIndicator(),
-                          if (members != null) _buildSuggestedMemberList(),
-                          if (members == null && !suggesting) _buildRecipientBtn(inputCtrl.text),
-                        ],
+                height: constraints.maxHeight,
+                alignment: Alignment.topCenter,
+                child: Container(
+                  height: constraints.maxHeight - bottom,
+                  child: Stack(
+                    children: <Widget>[
+                      SingleChildScrollView(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            if (emails.isNotEmpty) _buildEmailList(),
+                            _buildTextField(),
+                            _buildLoadingIndicator(),
+                            if (members != null) _buildSuggestedMemberList(),
+                            if (members == null && !suggesting) _buildRecipientBtn(inputCtrl.text),
+                          ],
+                        ),
                       ),
-                    ),
-                    Visibility(
-                      visible: sending,
-                      child: OpaqueProgressIndicator(),
-                    ),
-                  ],
+                      Visibility(
+                        visible: sending,
+                        child: OpaqueProgressIndicator(),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),

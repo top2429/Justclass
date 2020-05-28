@@ -75,8 +75,9 @@ class Class with ChangeNotifier {
   int createdTimestamp;
   int lastEdit;
 
-  List<Member> _members = [];
-  List<Note> _notes = [];
+  List<Member> _members;
+
+  List<Note> _notes;
 
   Class({
     @required this.cid,

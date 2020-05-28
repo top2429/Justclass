@@ -79,7 +79,7 @@ class ScaleDrawerWrapperState extends State<ScaleDrawerWrapper> with SingleTicke
       double delta = details.primaryDelta / 300;
       _controller.value += delta;
 
-      if (_controller.value == 1) setState(() => _isOffScreen = true);
+      if (_controller.value > 0 && !_isOffScreen) setState(() => _isOffScreen = true);
       if (_controller.value == 0) setState(() => _isOffScreen = false);
     }
   }

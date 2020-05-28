@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:justclass/providers/note_manager.dart';
 import 'package:justclass/utils/app_context.dart';
 import 'package:justclass/utils/http_exception.dart';
 import 'package:justclass/utils/mime_type.dart';
@@ -15,11 +16,13 @@ import '../themes.dart';
 
 class NewNoteScreenTeacher extends StatefulWidget {
   static const routeName = 'new-note-screen-teacher';
+
+  final NoteManager noteMgr;
   final ClassTheme theme;
   final String uid;
   final String cid;
 
-  const NewNoteScreenTeacher({this.theme, this.cid, this.uid});
+  const NewNoteScreenTeacher({@required this.noteMgr, this.theme, this.cid, this.uid});
 
   @override
   _NewNoteScreenTeacherState createState() => _NewNoteScreenTeacherState();
@@ -36,6 +39,9 @@ class _NewNoteScreenTeacherState extends State<NewNoteScreenTeacher> {
 
   // a map of <file name, file path>
   Map<String, String> _files = {};
+
+  // storing the user input
+  String content;
 
   @override
   void initState() {
@@ -64,15 +70,13 @@ class _NewNoteScreenTeacherState extends State<NewNoteScreenTeacher> {
     setState(() {});
   }
 
-  void _sendNote(BuildContext context) async {
+  void _postNote(BuildContext context) async {
     _showLoadingSpin();
     try {
-      // TODO: call api from note manager
-      await Future.delayed(const Duration(seconds: 3));
-      throw HttpException();
-      Navigator.of(context).pop();
+      await widget.noteMgr.postNote(widget.uid, widget.cid, content, _files);
+//      if (this.mounted) Navigator.of(context).pop();
     } catch (error) {
-      AppSnackBar.showError(screenCtx, message: "Unable to post new note!");
+      AppSnackBar.showError(screenCtx, message: error.toString());
     } finally {
       _hideLoadingSpin();
     }
@@ -148,7 +152,7 @@ class _NewNoteScreenTeacherState extends State<NewNoteScreenTeacher> {
         AppIconButton(
           icon: const Icon(Icons.send),
           tooltip: 'Post',
-          onPressed: (!_valid || _loading) ? null : () => _sendNote(context),
+          onPressed: (!_valid || _loading) ? null : () => _postNote(context),
         ),
         const SizedBox(width: 5),
       ],
@@ -166,6 +170,7 @@ class _NewNoteScreenTeacherState extends State<NewNoteScreenTeacher> {
         textInputAction: TextInputAction.newline,
         decoration: const InputDecoration(labelText: 'Share with your class'),
         onChanged: (val) {
+          content = val;
           setState(() => _valid = NewNoteValidator.validateNote(val) == null);
         },
       ),

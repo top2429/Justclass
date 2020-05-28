@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:justclass/models/class_details_data.dart';
 import 'package:justclass/models/member.dart';
@@ -30,7 +31,7 @@ class ApiCall {
         }),
       );
       if (response.statusCode >= 400)
-        throw HttpException(message: 'Unable to update user data. Status code: ${response.statusCode}.');
+        throw HttpException(message: 'Unable to update user data! ${response.statusCode}.');
 
       final isNew = json.decode(response.body)['newUser'];
       return isNew;
@@ -55,7 +56,8 @@ class ApiCall {
           'theme': data.theme,
         }),
       );
-      if (response.statusCode >= 400) throw HttpException(message: 'Unable to create new class!');
+      if (response.statusCode >= 400)
+        throw HttpException(message: 'Unable to create new class! ${response.statusCode}');
 
       final info = json.decode(response.body);
       final newClass = Class.fromJson(info);
@@ -71,7 +73,8 @@ class ApiCall {
       checkInternetConnection();
       final url = 'https://justclass-da0b0.appspot.com/api/v1/classroom/$uid';
       final response = await http.get(url, headers: _headers);
-      if (response.statusCode >= 400) throw HttpException(message: 'Unable to fetch class data!');
+      if (response.statusCode >= 400)
+        throw HttpException(message: 'Unable to fetch class data! ${response.statusCode}');
 
       final List<Class> classList = [];
       final classesData = json.decode(response.body) as List<dynamic>;
@@ -89,7 +92,7 @@ class ApiCall {
       final response = await http.put(url, headers: _headers);
       if (response.statusCode == 417)
         throw HttpException(message: 'Class code does not exist!');
-      else if (response.statusCode >= 400) throw HttpException(message: 'Unable to join class!');
+      else if (response.statusCode >= 400) throw HttpException(message: 'Unable to join class! ${response.statusCode}');
 
       final data = json.decode(response.body);
       return Class.fromJson(data);
@@ -103,7 +106,7 @@ class ApiCall {
       checkInternetConnection();
       final url = 'https://justclass-da0b0.appspot.com/api/v1/classroom/$uid/$cid';
       final response = await http.delete(url, headers: _headers);
-      if (response.statusCode >= 400) throw HttpException(message: 'Unable to remove class!');
+      if (response.statusCode >= 400) throw HttpException(message: 'Unable to remove class! ${response.statusCode}');
     } catch (error) {
       throw error;
     }
@@ -125,7 +128,8 @@ class ApiCall {
             'description': data.description,
             'studentsNotePermission': data.permissionCode.name,
           }));
-      if (response.statusCode >= 400) throw HttpException(message: 'Unable to update class info!');
+      if (response.statusCode >= 400)
+        throw HttpException(message: 'Unable to update class info! ${response.statusCode}');
     } catch (error) {
       throw error;
     }
@@ -140,7 +144,8 @@ class ApiCall {
         headers: _headers,
         body: json.encode({'classroomId': cid}),
       );
-      if (response.statusCode >= 400) throw HttpException(message: 'Unable to generate new class code!');
+      if (response.statusCode >= 400)
+        throw HttpException(message: 'Unable to generate new class code! ${response.statusCode}');
       final newCode = json.decode(response.body)['publicCode'];
       return newCode;
     } catch (error) {
@@ -163,7 +168,8 @@ class ApiCall {
       checkInternetConnection();
       final url = 'https://justclass-da0b0.appspot.com/api/v1/classroom/members/$uid/$cid';
       final response = await http.get(url, headers: _headers);
-      if (response.statusCode >= 400) throw HttpException(message: 'Unable to fetch member list!');
+      if (response.statusCode >= 400)
+        throw HttpException(message: 'Unable to fetch member list! ${response.statusCode}');
 
       final memberData = json.decode(response.body) as List<dynamic>;
       final members = memberData
@@ -283,7 +289,7 @@ class ApiCall {
       checkInternetConnection();
       final url = 'https://justclass-da0b0.appspot.com/api/v1/classroom/lookup/$uid/$cid/${role.name}?keyword=$keyword';
       final response = await http.get(url, headers: _headers);
-      if (response.statusCode >= 400) throw HttpException(message: 'Unable to suggest users!');
+      if (response.statusCode >= 400) throw HttpException(message: 'Unable to suggest users! ${response.statusCode}');
 
       final memberData = json.decode(response.body) as List<dynamic>;
       final members = memberData
@@ -329,7 +335,8 @@ class ApiCall {
           ...emails.map((e) => {'email': e, 'role': role.name}),
         ]),
       );
-      if (response.statusCode >= 400) throw HttpException(message: 'Unable to send invitations!');
+      if (response.statusCode >= 400)
+        throw HttpException(message: 'Unable to send invitations! ${response.statusCode}');
     } catch (error) {
       throw error;
     }
@@ -353,10 +360,34 @@ class ApiCall {
       final url = 'https://justclass-da0b0.appspot.com/api/v1/notification/$uid';
 
       final response = await http.get(url, headers: _headers);
-      if (response.statusCode >= 400) throw HttpException(message: 'Unable to fetch notications!');
+      if (response.statusCode >= 400)
+        throw HttpException(message: 'Unable to fetch notifications! ${response.statusCode}');
 
       final notificationData = json.decode(response.body) as List<dynamic>;
       print(notificationData);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  static Future<void> postNote(String uid, String cid, String content, Map<String, String> files) async {
+    try {
+      checkInternetConnection();
+      final url = 'https://justcass-da0b0.appspot.com/api/v1/note/$uid/$cid';
+
+      // Reference: https://stackoverflow.com/questions/44841729/how-to-upload-image-in-flutter
+      final request = http.MultipartRequest('POST', Uri.parse(url))..fields['content'] = content;
+      files.forEach((name, path) async {
+        final file = await http.MultipartFile.fromPath('attachments', path, filename: name);
+        request.files.add(file);
+      });
+      final response = await request.send();
+
+      if (response.statusCode >= 400) throw HttpException(message: 'Unable to post notes! ${response.statusCode}');
+
+      final byteData = await response.stream.toBytes();
+      var strData = String.fromCharCodes(byteData);
+      debugPrint(strData);
     } catch (error) {
       throw error;
     }

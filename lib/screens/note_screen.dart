@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:justclass/providers/auth.dart';
 import 'package:justclass/providers/class.dart';
+import 'package:justclass/providers/note_manager.dart';
 import 'package:justclass/screens/new_note_screen_teacher.dart';
 import 'package:justclass/screens/update_class_info_screen.dart';
 import 'package:justclass/utils/constants.dart';
@@ -23,37 +24,45 @@ class _NoteScreenState extends State<NoteScreen> with AutomaticKeepAliveClientMi
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    final theme = Themes.forClass(Provider.of<Class>(context).theme);
+    final cls = Provider.of<Class>(context);
+    final theme = Themes.forClass(cls.theme);
 
-    return Scaffold(
-      backgroundColor: theme.primaryColor,
-      resizeToAvoidBottomInset: false,
-      body: Container(
-        color: Colors.white,
-        child: RefreshIndicator(
-          onRefresh: () {
-            return Future.value(null);
-          },
-          displacement: 63,
-          child: CustomScrollView(
-            slivers: <Widget>[
-              NoteScreenTopBar(),
-              SliverList(
-                delegate: SliverChildListDelegate([
-                  const SizedBox(height: 30),
-                  buildTestNote(context),
-                  buildTestNote(context),
-                  buildTestNote(context),
-                  buildTestNote(context),
-                  buildTestNote(context),
-                  const SizedBox(height: 130),
-                ]),
-              )
-            ],
-          ),
-        ),
+    return ChangeNotifierProvider.value(
+      value: NoteManager(cls.notes),
+      child: Builder(
+        builder: (context) {
+          return Scaffold(
+            backgroundColor: theme.primaryColor,
+            resizeToAvoidBottomInset: false,
+            body: Container(
+              color: Colors.white,
+              child: RefreshIndicator(
+                onRefresh: () {
+                  return Future.value(null);
+                },
+                displacement: 63,
+                child: CustomScrollView(
+                  slivers: <Widget>[
+                    NoteScreenTopBar(),
+                    SliverList(
+                      delegate: SliverChildListDelegate([
+                        const SizedBox(height: 30),
+                        buildTestNote(context),
+                        buildTestNote(context),
+                        buildTestNote(context),
+                        buildTestNote(context),
+                        buildTestNote(context),
+                        const SizedBox(height: 130),
+                      ]),
+                    )
+                  ],
+                ),
+              ),
+            ),
+            floatingActionButton: _buildAddNoteBtn(context, theme),
+          );
+        }
       ),
-      floatingActionButton: _buildAddNoteBtn(context, theme),
     );
   }
 
@@ -79,6 +88,7 @@ class _NoteScreenState extends State<NoteScreen> with AutomaticKeepAliveClientMi
                 builder: (_) => NewNoteScreenTeacher(
                   theme: theme,
                   uid: auth.user.uid,
+                  noteMgr: Provider.of<NoteManager>(context),
                   cid: Provider.of<Class>(context, listen: false).cid,
                 ),
               ),

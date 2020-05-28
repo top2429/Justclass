@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:justclass/models/class_details_data.dart';
 import 'package:justclass/models/member.dart';
+import 'package:justclass/models/note.dart';
 import 'package:justclass/utils/api_call.dart';
 
 enum ClassRole { OWNER, COLLABORATOR, STUDENT }
@@ -73,7 +74,9 @@ class Class with ChangeNotifier {
   int theme;
   int createdTimestamp;
   int lastEdit;
-  List<Member> _members;
+
+  List<Member> _members = [];
+  List<Note> _notes = [];
 
   Class({
     @required this.cid,
@@ -112,6 +115,8 @@ class Class with ChangeNotifier {
   }
 
   List<Member> get members => _members;
+
+  List<Note> get notes => _notes;
 
   Future<void> fetchDetails() async {
     try {

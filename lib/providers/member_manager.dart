@@ -4,10 +4,11 @@ import 'package:justclass/providers/class.dart';
 import 'package:justclass/utils/api_call.dart';
 
 class MemberManager extends ChangeNotifier {
+  List<Member> members;
+
   Member owner;
   List<Member> collaborators;
   List<Member> students;
-  List<Member> members;
 
   MemberManager(this.members) {
     owner = members.firstWhere((m) => m.role == ClassRole.OWNER);

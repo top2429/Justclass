@@ -22,7 +22,7 @@ class _MemberScreenState extends State<MemberScreen> with AutomaticKeepAliveClie
     return Scaffold(
       backgroundColor: color,
       appBar: _buildTopBar(context, color, cls.title),
-      floatingActionButton: SizedBox(height: 50),
+      floatingActionButton: const SizedBox(height: 50),
       body: SafeArea(
         child: ClipRRect(
           borderRadius: const BorderRadius.only(topLeft: Radius.circular(15), topRight: Radius.circular(15)),

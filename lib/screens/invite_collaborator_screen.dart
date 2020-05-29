@@ -287,7 +287,7 @@ class _InviteCollaboratorScreenState extends State<InviteCollaboratorScreen> {
         enabledBorder: const OutlineInputBorder(borderSide: BorderSide(color: Colors.transparent)),
         focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: Colors.transparent)),
         labelText: 'Name or email address',
-        floatingLabelBehavior: FloatingLabelBehavior.never,
+        hasFloatingPlaceholder: false,
       ),
       onChanged: onInputChange,
     );

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:justclass/providers/auth.dart';
 import 'package:justclass/providers/class.dart';
 import 'package:justclass/providers/note_manager.dart';
 import 'package:provider/provider.dart';
@@ -19,9 +18,9 @@ class _NoteScreenListState extends State<NoteScreenList> with AutomaticKeepAlive
   bool hasError = false;
   bool didFirstLoad = false;
 
-  Future<void> fetchNotesFirstLoad(NoteManager noteMgr, String uid) async {
+  Future<void> fetchNotesFirstLoad(Class cls) async {
     try {
-      await noteMgr.fetchNotes();
+      await cls.fetchNoteList();
       setState(() => didFirstLoad = true);
     } catch (error) {
       if (this.mounted) {
@@ -34,9 +33,9 @@ class _NoteScreenListState extends State<NoteScreenList> with AutomaticKeepAlive
     }
   }
 
-  Future<void> fetchNotes(NoteManager noteMgr, String uid) async {
+  Future<void> fetchNotes(Class cls) async {
     try {
-      await noteMgr.fetchNotes();
+      await cls.fetchNoteList();
       setState(() => hasError = false);
     } catch (error) {
       if (this.mounted) AppSnackBar.showError(context, message: error.toString());
@@ -49,13 +48,12 @@ class _NoteScreenListState extends State<NoteScreenList> with AutomaticKeepAlive
     final cls = Provider.of<Class>(context);
     final noteMgr = Provider.of<NoteManager>(context);
     final color = Themes.forClass(cls.theme).primaryColor;
-    final uid = Provider.of<Auth>(context, listen: false).user.uid;
 
     return Container(
       color: Colors.white,
       child: RefreshIndicator(
         color: color,
-        onRefresh: () => fetchNotes(noteMgr, uid),
+        onRefresh: !didFirstLoad ? () => Future.value(null) : () => fetchNotes(cls),
         displacement: 63,
         child: CustomScrollView(
           slivers: <Widget>[
@@ -63,7 +61,7 @@ class _NoteScreenListState extends State<NoteScreenList> with AutomaticKeepAlive
             Builder(
               builder: (context) {
                 if (!didFirstLoad && noteMgr.notes.length == 0) {
-                  fetchNotesFirstLoad(noteMgr, uid);
+                  fetchNotesFirstLoad(cls);
                   return SliverToBoxAdapter(
                     child: SpinKitDualRing(color: color, lineWidth: 2.5, size: 40),
                   );
@@ -73,7 +71,7 @@ class _NoteScreenListState extends State<NoteScreenList> with AutomaticKeepAlive
                     : SliverList(
                         delegate: SliverChildListDelegate([
                           const SizedBox(height: 30),
-                          ...noteMgr.notes
+                          ...cls.notes
                               .map((e) => ListTile(
                                     title: Text(e.author.displayName),
                                     subtitle: Text(e.content),

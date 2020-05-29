@@ -77,7 +77,7 @@ class Class with ChangeNotifier {
 
   List<Member> _members;
 
-  List<Note> _notes = [];
+  List<Note> _notes;
 
   Class({
     @required this.cid,
@@ -158,6 +158,15 @@ class Class with ChangeNotifier {
   Future<void> fetchMemberList(String uid) async {
     try {
       _members = await ApiCall.fetchMemberList(uid, cid);
+      notifyListeners();
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  Future<void> fetchNoteList() async {
+    try {
+      _notes = await ApiCall.fetchNotes(cid);
       notifyListeners();
     } catch (error) {
       throw error;

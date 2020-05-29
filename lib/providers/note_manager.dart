@@ -11,14 +11,6 @@ class NoteManager extends ChangeNotifier {
     @required this.notes,
   });
 
-  Future<void> fetchNotes() async {
-    try {
-      notes = await ApiCall.fetchNotes(cid);
-    } catch (error) {
-      throw error;
-    }
-  }
-
   Future<void> postNote(String uid, String content, Map<String, String> files) async {
     try {
       final newNote = await ApiCall.postNote(uid, cid, content, files);

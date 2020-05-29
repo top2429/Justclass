@@ -9,9 +9,14 @@ import 'package:provider/provider.dart';
 
 import '../themes.dart';
 
-class NoteScreen extends StatelessWidget {
+class NoteScreen extends StatefulWidget {
   static const screenName = 'note-screen';
 
+  @override
+  _NoteScreenState createState() => _NoteScreenState();
+}
+
+class _NoteScreenState extends State<NoteScreen> {
   @override
   Widget build(BuildContext context) {
     final cls = Provider.of<Class>(context);

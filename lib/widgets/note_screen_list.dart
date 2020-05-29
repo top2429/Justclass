@@ -8,7 +8,6 @@ import 'package:provider/provider.dart';
 import '../themes.dart';
 import 'app_snack_bar.dart';
 import 'note_screen_top_bar.dart';
-import 'fetch_progress_indicator.dart';
 
 class NoteScreenList extends StatefulWidget {
   @override
@@ -17,7 +16,6 @@ class NoteScreenList extends StatefulWidget {
 
 class _NoteScreenListState extends State<NoteScreenList> with AutomaticKeepAliveClientMixin {
   bool get wantKeepAlive => true;
-
   bool hasError = false;
   bool didFirstLoad = false;
 
@@ -48,7 +46,6 @@ class _NoteScreenListState extends State<NoteScreenList> with AutomaticKeepAlive
   @override
   Widget build(BuildContext context) {
     super.build(context);
-
     final cls = Provider.of<Class>(context);
     final noteMgr = Provider.of<NoteManager>(context);
     final color = Themes.forClass(cls.theme).primaryColor;
@@ -65,7 +62,7 @@ class _NoteScreenListState extends State<NoteScreenList> with AutomaticKeepAlive
             NoteScreenTopBar(),
             Builder(
               builder: (context) {
-                if (!didFirstLoad && noteMgr.notes == null) {
+                if (!didFirstLoad && noteMgr.notes.length == 0) {
                   fetchNotesFirstLoad(noteMgr, uid);
                   return SliverToBoxAdapter(
                     child: SpinKitDualRing(color: color, lineWidth: 2.5, size: 40),
@@ -76,10 +73,12 @@ class _NoteScreenListState extends State<NoteScreenList> with AutomaticKeepAlive
                     : SliverList(
                         delegate: SliverChildListDelegate([
                           const SizedBox(height: 30),
-                          ...noteMgr.notes.map((e) => ListTile(
-                            title: Text(e.author.displayName),
-                            subtitle: Text(e.content),
-                          )).toList(),
+                          ...noteMgr.notes
+                              .map((e) => ListTile(
+                                    title: Text(e.author.displayName),
+                                    subtitle: Text(e.content),
+                                  ))
+                              .toList(),
                           const SizedBox(height: 130),
                         ]),
                       );

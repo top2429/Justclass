@@ -167,7 +167,6 @@ class _NewNoteScreenTeacherState extends State<NewNoteScreenTeacher> {
       child: TextFormField(
         minLines: 1,
         maxLines: 5,
-        autofocus: true,
         keyboardType: TextInputType.multiline,
         textInputAction: TextInputAction.newline,
         decoration: const InputDecoration(labelText: 'Share with your class'),

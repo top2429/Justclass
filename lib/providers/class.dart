@@ -77,7 +77,7 @@ class Class with ChangeNotifier {
 
   List<Member> _members;
 
-  List<Note> _notes;
+  List<Note> _notes = [];
 
   Class({
     @required this.cid,

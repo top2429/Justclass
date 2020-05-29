@@ -372,7 +372,24 @@ class ApiCall {
     }
   }
 
-  static Future<void> postNote(String uid, String cid, String content, Map<String, String> files) async {
+  static Future<List<Note>> fetchNotes(String cid) async {
+    try {
+      checkInternetConnection();
+      final url = 'https://justclass-da0b0.appspot.com/api/v1/note/$cid';
+
+      final response = await http.get(url, headers: _headers);
+
+      if (response.statusCode >= 400) throw HttpException(message: 'Unable to fetch notes! ${response.statusCode}');
+
+      final data = json.decode(response.body) as List<dynamic>;
+      final List<Note> notes = data.map((note) => Note.fromJson(note)).toList();
+      return notes;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  static Future<Note> postNote(String uid, String cid, String content, Map<String, String> files) async {
     try {
       checkInternetConnection();
       final url = 'https://justclass-da0b0.appspot.com/api/v1/note/$uid/$cid';
@@ -392,7 +409,7 @@ class ApiCall {
       final strData = String.fromCharCodes(byteData);
       final data = json.decode(strData);
 
-//      return Note();
+      return Note.fromJson(data);
     } catch (error) {
       throw error;
     }

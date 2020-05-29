@@ -19,6 +19,30 @@ class Note {
     this.commentCount,
     this.attachments,
   });
+
+  Note.fromJson(dynamic json) {
+    this.noteId = json['noteId'];
+    this.content = json['content'];
+    this.createdAt = json['createdAt'];
+    this.deletedAt = json['deletedAt'];
+    this.commentCount = json['commentsCount'];
+    this.author = User(
+      uid: json['author']['localId'],
+      email: json['author']['email'],
+      photoUrl: json['author']['photoUrl'],
+      displayName: json['author']['displayName'],
+    );
+    if (json['attachments'] == null) return;
+    this.attachments = (json['attachments'] as List<dynamic>)
+        .map((e) => Attachment(
+              fileId: e['fileId'],
+              type: e['type'],
+              name: e['name'],
+              size: e['size'],
+              createdAt: e['createdAt'],
+            ))
+        .toList();
+  }
 }
 
 class Attachment {

@@ -22,7 +22,7 @@ class NewNoteScreenTeacher extends StatefulWidget {
   final String uid;
   final String cid;
 
-  const NewNoteScreenTeacher({@required this.noteMgr, this.theme, this.cid, this.uid});
+  NewNoteScreenTeacher({@required this.noteMgr, this.theme, this.cid, this.uid});
 
   @override
   _NewNoteScreenTeacherState createState() => _NewNoteScreenTeacherState();
@@ -72,7 +72,7 @@ class _NewNoteScreenTeacherState extends State<NewNoteScreenTeacher> {
   void _postNote(BuildContext context) async {
     _showLoadingSpin();
     try {
-      await widget.noteMgr.postNote(widget.uid, widget.cid, content, _files);
+      await widget.noteMgr.postNote(widget.uid, content, _files);
       FilePicker.clearTemporaryFiles();
       if (this.mounted) Navigator.of(context).pop();
       AppSnackBar.showSuccess(screenCtx,

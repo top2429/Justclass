@@ -53,21 +53,21 @@ class _NoteScreenListState extends State<NoteScreenList> with AutomaticKeepAlive
       color: Colors.white,
       child: RefreshIndicator(
         color: color,
-        onRefresh: !didFirstLoad ? () => Future.value(null) : () => fetchNotes(cls),
+        onRefresh: () => fetchNotes(cls),
         displacement: 63,
         child: CustomScrollView(
           slivers: <Widget>[
             NoteScreenTopBar(),
             Builder(
               builder: (context) {
-                if (!didFirstLoad && noteMgr.notes.length == 0) {
+                if (!didFirstLoad && noteMgr.notes == null) {
                   fetchNotesFirstLoad(cls);
                   return SliverToBoxAdapter(
                     child: SpinKitDualRing(color: color, lineWidth: 2.5, size: 40),
                   );
                 }
                 return (hasError)
-                    ? SliverToBoxAdapter(child: Icon(Icons.warning))
+                    ? SliverToBoxAdapter(child: Icon(Icons.error, color: Colors.amber, size: 45))
                     : SliverList(
                         delegate: SliverChildListDelegate([
                           const SizedBox(height: 30),

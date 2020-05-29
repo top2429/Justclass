@@ -1,13 +1,14 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:justclass/models/member.dart';
 import 'package:justclass/providers/class.dart';
 import 'package:justclass/utils/api_call.dart';
 
 class MemberManager extends ChangeNotifier {
+  List<Member> members;
+
   Member owner;
   List<Member> collaborators;
   List<Member> students;
-  List<Member> members;
 
   MemberManager(this.members) {
     owner = members.firstWhere((m) => m.role == ClassRole.OWNER);
@@ -35,13 +36,47 @@ class MemberManager extends ChangeNotifier {
     students.remove(member);
     notifyListeners();
     try {
-      await ApiCall.removeCollaborator();
+      await ApiCall.removeStudent();
       members.remove(member);
     } catch (error) {
       students.insert(index, member);
       throw error;
     } finally {
       notifyListeners();
+    }
+  }
+
+  Future<List<Member>> fetchSuggestedCollaborators(String uid, String cid, String keyword) async {
+    try {
+      final collaborators = await ApiCall.fetchSuggestedMembers(uid, cid, ClassRole.COLLABORATOR, keyword);
+      return collaborators;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  Future<List<Member>> fetchSuggestedStudents(String uid, String cid, String keyword) async {
+    try {
+      final students = await ApiCall.fetchSuggestedMembers(uid, cid, ClassRole.STUDENT, keyword);
+      return students;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  Future<void> inviteCollaborators(String uid, String cid, Set<String> emails) async {
+    try {
+      await ApiCall.inviteMembers(uid, cid, emails, ClassRole.COLLABORATOR);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  Future<void> inviteStudents(String uid, String cid, Set<String> emails) async {
+    try {
+      await ApiCall.inviteMembers(uid, cid, emails, ClassRole.STUDENT);
+    } catch (error) {
+      throw error;
     }
   }
 }

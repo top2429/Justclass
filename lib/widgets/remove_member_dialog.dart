@@ -12,8 +12,18 @@ class RemoveMemberDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      titlePadding: const EdgeInsets.all(0),
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(8))),
-      title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+      title: Container(
+        height: 50,
+        width: double.infinity,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: color,
+          borderRadius: BorderRadius.only(topLeft: const Radius.circular(8), topRight: const Radius.circular(8)),
+        ),
+        child: Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 19, color: Colors.white)),
+      ),
       content: ListTile(
         leading: MemberAvatar(photoUrl: member.photoUrl, displayName: member.displayName, color: color),
         title: Text(member.displayName),

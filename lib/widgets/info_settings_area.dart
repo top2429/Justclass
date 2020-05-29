@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:justclass/models/class_details_data.dart';
 import 'package:justclass/providers/auth.dart';
 import 'package:justclass/widgets/app_snack_bar.dart';
@@ -140,6 +141,16 @@ class _InfoSettingsAreaState extends State<InfoSettingsArea> {
           ),
         ),
         ListTile(
+          onTap: () {
+            Clipboard.setData(ClipboardData(text: widget.input.classCode));
+            Scaffold.of(context).showSnackBar(SnackBar(
+              behavior: SnackBarBehavior.floating,
+              elevation: 2,
+              backgroundColor: Themes.forClass(widget.theme).primaryColor,
+              duration: const Duration(seconds: 1),
+              content: const Text('Class code copied.'),
+            ));
+          },
           contentPadding: const EdgeInsets.only(left: 20),
           title: Text('Class Code'),
           subtitle: Text(widget.input.classCode),
@@ -153,6 +164,7 @@ class _InfoSettingsAreaState extends State<InfoSettingsArea> {
               ];
             },
             onSelected: (val) {
+              FocusScope.of(context).requestFocus(FocusNode());
               if (val == 'reset') _resetClassCode(context);
             },
           ),

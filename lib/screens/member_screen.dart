@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:justclass/providers/class.dart';
 import 'package:justclass/themes.dart';
@@ -45,7 +44,7 @@ class _MemberScreenState extends State<MemberScreen> with AutomaticKeepAliveClie
       title: Text(title, overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 17)),
       actions: <Widget>[
         AppIconButton(
-          icon: Icon(Icons.extension, size: 22),
+          icon: const Icon(Icons.extension, size: 22),
           tooltip: 'Role Pass',
           onPressed: () {},
         ),

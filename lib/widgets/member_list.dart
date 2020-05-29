@@ -28,11 +28,13 @@ class _MemberListState extends State<MemberList> {
         didFirstLoad = true;
       });
     } catch (error) {
-      if (this.mounted) AppSnackBar.showError(context, message: error.toString());
-      setState(() {
-        didFirstLoad = true;
-        hasError = true;
-      });
+      if (this.mounted) {
+        AppSnackBar.showError(context, message: error.toString());
+        setState(() {
+          didFirstLoad = true;
+          hasError = true;
+        });
+      }
     }
   }
 

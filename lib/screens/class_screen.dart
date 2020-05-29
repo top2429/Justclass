@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:justclass/providers/class.dart';
 import 'package:justclass/screens/note_screen.dart';
 import 'package:justclass/screens/topic_screen.dart';
+import 'package:justclass/utils/app_context.dart';
 import 'package:justclass/widgets/home_drawer_content.dart';
 import 'package:justclass/widgets/scale_drawer_wrapper.dart';
 import 'package:provider/provider.dart';
@@ -10,28 +11,51 @@ import 'package:provider/provider.dart';
 import '../themes.dart';
 import 'member_screen.dart';
 
-class ClassScreen extends StatelessWidget {
-  static const routeName = '/class';
+class ClassScreen extends StatefulWidget {
+  static const routeName = 'class-screen';
   final Class cls; // cls is class, since class is a keyword in Dart so I cannot use it
 
   ClassScreen({@required this.cls});
 
   @override
+  _ClassScreenState createState() => _ClassScreenState();
+}
+
+class _ClassScreenState extends State<ClassScreen> {
+  BuildContext screenCtx;
+
+  @override
+  void initState() {
+    WidgetsBinding.instance
+        .addPostFrameCallback((_) => AppContext.add(screenCtx, '${ClassScreen.routeName} ${widget.cls.cid}'));
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    AppContext.pop();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider.value(
-      value: cls,
+      value: widget.cls,
       child: Consumer<Class>(
         builder: (_, cls, child) => Scaffold(
           backgroundColor: Themes.forClass(cls.theme).primaryColor,
           body: child,
         ),
-        child: ScaleDrawerWrapper(
-          drawerContent: HomeDrawerContent(),
-          topScaffold: Scaffold(
-            backgroundColor: Colors.transparent,
-            body: ClassScreenContent(),
-          ),
-        ),
+        child: Builder(builder: (context) {
+          screenCtx = context;
+          return ScaleDrawerWrapper(
+            drawerContent: HomeDrawerContent(),
+            topScaffold: Scaffold(
+              backgroundColor: Colors.transparent,
+              body: ClassScreenContent(),
+            ),
+          );
+        }),
       ),
     );
   }
@@ -84,17 +108,4 @@ class _ClassScreenContentState extends State<ClassScreenContent> {
       ],
     );
   }
-
-//  Widget _getScreen(int index) {
-//    switch (index) {
-//      case 0:
-//        return NoteScreen();
-//      case 1:
-//        return TopicScreen();
-//      case 2:
-//        return MemberScreen();
-//      default:
-//        return null;
-//    }
-//  }
 }

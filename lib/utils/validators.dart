@@ -1,9 +1,9 @@
-class EmailPassValidator {
-  static final _emailRegExp = RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
+final emailRegExp = RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
 
+class EmailPassValidator {
   static String validateEmail(String email) {
     if (email.isEmpty) return "Please provide an email";
-    if (!_emailRegExp.hasMatch(email)) return "Invalid email";
+    if (!emailRegExp.hasMatch(email)) return "Invalid email";
     return null;
   }
 
@@ -37,12 +37,18 @@ class NewNoteValidator {
   }
 }
 
-
 class JoinClassValidator {
   static String validateCode(String code) {
     if (code.isEmpty) return "Please provide a note";
     const len = 8;
-    if (code.length < len) return "A note needs to contain at least $len ${len == 1 ? "character" : "characters"}";
+    if (code.length != len) return "A note needs to contain at least $len ${len == 1 ? "character" : "characters"}";
+    return null;
+  }
+}
+
+class InviteTeacherValidator {
+  static String validateEmail(String email) {
+    if (!emailRegExp.hasMatch(email)) return "Invalid email";
     return null;
   }
 }

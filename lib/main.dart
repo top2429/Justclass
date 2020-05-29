@@ -4,6 +4,7 @@ import 'package:justclass/providers/class_manager.dart';
 import 'package:justclass/screens/auth_screen.dart';
 import 'package:justclass/screens/home_screen.dart';
 import 'package:justclass/screens/splash_screen.dart';
+import 'package:justclass/screens/notification_screen.dart';
 import 'package:justclass/themes.dart';
 import 'package:provider/provider.dart';
 
@@ -25,12 +26,14 @@ class MyApp extends StatelessWidget {
       child: Consumer<Auth>(
         builder: (_, auth, __) {
           return MaterialApp(
+//            debugShowCheckedModeBanner: false,
             title: 'JustClass',
             theme: Themes.forApp,
             home: _buildFirstScreen(auth),
             routes: {
               AuthScreen.routeName: (_) => AuthScreen(),
               HomeScreen.routeName: (_) => HomeScreen(),
+              NotificationScreen.routeName: (_) => NotificationScreen(),
             },
           );
         },
@@ -39,14 +42,7 @@ class MyApp extends StatelessWidget {
   }
 
   Widget _buildFirstScreen(Auth auth) {
-//    return ClassScreen(
-//        cls: Class(
-//      cid: '1',
-//      role: ClassRole.OWNER,
-//      theme: 3,
-//      permissionCode: PermissionCode.VCP,
-//      title: 'Class Test',
-//    ));
+//    return NotificationScreen();
     return (auth.user == null)
         ? FutureBuilder(
             future: auth.tryAutoSignIn(),

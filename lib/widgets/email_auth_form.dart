@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:justclass/utils/validator.dart';
+import 'package:justclass/utils/validators.dart';
 
 class EmailAuthForm extends StatefulWidget {
   final Function changeLoadingStatus;

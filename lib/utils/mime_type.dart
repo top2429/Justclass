@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+enum ViewFileType { AUDIO, IMAGE, VIDEO, PDF, OTHER }
+
 class MimeType {
   static ViewFileType toViewFileType(String mime) {
     if (mime == 'application/pdf') return ViewFileType.PDF;
@@ -32,5 +34,3 @@ class MimeType {
     return icon;
   }
 }
-
-enum ViewFileType { AUDIO, IMAGE, VIDEO, PDF, OTHER }

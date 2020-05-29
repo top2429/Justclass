@@ -15,7 +15,9 @@ class OAuthRow extends StatelessWidget {
 
   void _signInFacebook(Auth auth, BuildContext context) async {
     _changeLoadingStatus(true);
-    try {} catch (error) {} finally {
+    try {} catch (error) {
+      AppSnackBar.showError(context, message: error.toString());
+    } finally {
       _changeLoadingStatus(false);
     }
   }
@@ -26,7 +28,7 @@ class OAuthRow extends StatelessWidget {
       await auth.signInGoogle();
       if (auth.user != null) _toHomeScreen(context);
     } catch (error) {
-      AppSnackBar.showError(context, message: error.toString(),bgColor: Colors.white.withOpacity(0.9));
+      AppSnackBar.showError(context, message: error.toString());
     } finally {
       _changeLoadingStatus(false);
     }

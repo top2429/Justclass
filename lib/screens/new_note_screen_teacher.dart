@@ -2,9 +2,11 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:justclass/providers/note_manager.dart';
+import 'package:justclass/utils/app_context.dart';
 import 'package:justclass/utils/http_exception.dart';
 import 'package:justclass/utils/mime_type.dart';
-import 'package:justclass/utils/validator.dart';
+import 'package:justclass/utils/validators.dart';
 import 'package:justclass/widgets/app_icon_button.dart';
 import 'package:justclass/widgets/app_snack_bar.dart';
 import 'package:justclass/widgets/opaque_progress_indicator.dart';
@@ -13,44 +15,70 @@ import 'package:mime/mime.dart';
 import '../themes.dart';
 
 class NewNoteScreenTeacher extends StatefulWidget {
+  static const routeName = 'new-note-screen-teacher';
+
+  final NoteManager noteMgr;
   final ClassTheme theme;
   final String uid;
   final String cid;
 
-  const NewNoteScreenTeacher({this.theme, this.cid, this.uid});
+  NewNoteScreenTeacher({@required this.noteMgr, this.theme, this.cid, this.uid});
 
   @override
   _NewNoteScreenTeacherState createState() => _NewNoteScreenTeacherState();
 }
 
 class _NewNoteScreenTeacherState extends State<NewNoteScreenTeacher> {
+  BuildContext screenCtx;
+
+  // a flag indicating if the form is valid
   bool _valid = false;
-  Map<String, String> _files = {};
+
+  // a flag showing that whether request is sending or not
   bool _loading = false;
 
+  // a map of <file name, file path>
+  Map<String, String> _files = {};
+
+  // storing the user input
+  String content;
+
+  @override
+  void initState() {
+    WidgetsBinding.instance
+        .addPostFrameCallback((_) => AppContext.add(screenCtx, '${NewNoteScreenTeacher.routeName} ${widget.cid}'));
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    AppContext.pop();
+    super.dispose();
+  }
+
   void _pickFiles(BuildContext context) async {
-    FilePicker.clearTemporaryFiles();
     _showLoadingSpin();
     try {
       final files = await FilePicker.getMultiFilePath(type: FileType.any);
       if (files != null) _files.addAll(files);
     } catch (error) {
-      AppSnackBar.showError(context, message: "Unable to attach files!");
+      AppSnackBar.showError(screenCtx, message: "Unable to attach files!");
     } finally {
       _hideLoadingSpin();
     }
     setState(() {});
   }
 
-  void _sendNote(BuildContext context) async {
+  void _postNote(BuildContext context) async {
     _showLoadingSpin();
     try {
-      // TODO: call api from note manager
-      await Future.delayed(const Duration(seconds: 3));
-      throw HttpException();
-      Navigator.of(context).pop();
+      await widget.noteMgr.postNote(widget.uid, content, _files);
+      FilePicker.clearTemporaryFiles();
+      if (this.mounted) Navigator.of(context).pop();
+      AppSnackBar.showSuccess(screenCtx,
+          message: 'Your note has been posted.', delay: const Duration(milliseconds: 500));
     } catch (error) {
-      if (this.mounted) AppSnackBar.showError(context, message: "Unable to post notes!");
+      AppSnackBar.showError(screenCtx, message: error.toString());
     } finally {
       _hideLoadingSpin();
     }
@@ -72,51 +100,62 @@ class _NewNoteScreenTeacherState extends State<NewNoteScreenTeacher> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      appBar: _buildAppBar(),
-      body: Stack(
-        children: <Widget>[
-          SingleChildScrollView(
-            child: Column(
-              children: <Widget>[
-                _buildNoteInput(),
-                Divider(),
-                if (_files.isNotEmpty) ..._buildFileList(),
-              ],
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).requestFocus(FocusNode()),
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        backgroundColor: widget.theme.primaryColor,
+        appBar: _buildAppBar(),
+        body: LayoutBuilder(builder: (context, constraints) {
+          screenCtx = context;
+          final bottom = MediaQuery.of(context).viewInsets.bottom;
+          return SafeArea(
+            child: ClipRRect(
+              borderRadius: const BorderRadius.only(topLeft: Radius.circular(15), topRight: Radius.circular(15)),
+              child: Container(
+                color: Colors.white,
+                height: constraints.maxHeight,
+                alignment: Alignment.topCenter,
+                child: Container(
+                  height: constraints.maxHeight - bottom,
+                  child: Stack(
+                    children: <Widget>[
+                      ListView(
+                        physics: ClampingScrollPhysics(),
+                        children: <Widget>[
+                          _buildNoteInput(),
+                          Divider(),
+                          if (_files.isNotEmpty) ..._buildFileList(),
+                        ],
+                      ),
+                      Visibility(visible: _loading, child: OpaqueProgressIndicator()),
+                    ],
+                  ),
+                ),
+              ),
             ),
-          ),
-          Visibility(visible: _loading, child: OpaqueProgressIndicator()),
-        ],
+          );
+        }),
       ),
     );
   }
 
   Widget _buildAppBar() {
     return AppBar(
+      elevation: 0,
       backgroundColor: widget.theme.primaryColor,
-      leading: AppIconButton(
-        tooltip: 'Cancel',
-        icon: const Icon(Icons.close),
-        onPressed: () {
-          Navigator.of(context).pop();
-        },
-      ),
+      leading: AppIconButton.cancel(onPressed: () => Navigator.of(context).pop()),
       actions: <Widget>[
-        Builder(builder: (context) {
-          return AppIconButton(
-            icon: const Icon(Icons.attachment),
-            tooltip: 'Attachment',
-            onPressed: _loading ? null : () => _pickFiles(context),
-          );
-        }),
-        Builder(builder: (context) {
-          return AppIconButton(
-            icon: const Icon(Icons.send),
-            tooltip: 'Post',
-            onPressed: (!_valid || _loading) ? null : () => _sendNote(context),
-          );
-        }),
+        AppIconButton(
+          icon: const Icon(Icons.attachment),
+          tooltip: 'Attachment',
+          onPressed: _loading ? null : () => _pickFiles(context),
+        ),
+        AppIconButton(
+          icon: const Icon(Icons.send),
+          tooltip: 'Post',
+          onPressed: (!_valid || _loading) ? null : () => _postNote(context),
+        ),
         const SizedBox(width: 5),
       ],
     );
@@ -128,11 +167,11 @@ class _NewNoteScreenTeacherState extends State<NewNoteScreenTeacher> {
       child: TextFormField(
         minLines: 1,
         maxLines: 5,
-        autofocus: true,
         keyboardType: TextInputType.multiline,
         textInputAction: TextInputAction.newline,
         decoration: const InputDecoration(labelText: 'Share with your class'),
         onChanged: (val) {
+          content = val;
           setState(() => _valid = NewNoteValidator.validateNote(val) == null);
         },
       ),
@@ -140,7 +179,7 @@ class _NewNoteScreenTeacherState extends State<NewNoteScreenTeacher> {
   }
 
   List<Widget> _buildFileList() {
-    final iconMap = _files.map((key, val) => MapEntry(key, MimeType.toIcon(lookupMimeType(val))));
+    final iconMap = _files.map((name, path) => MapEntry(name, MimeType.toIcon(lookupMimeType(path))));
 
     return iconMap.keys
         .map((key) => Padding(
@@ -152,7 +191,7 @@ class _NewNoteScreenTeacherState extends State<NewNoteScreenTeacher> {
                     child: Icon(iconMap[key], size: 30, color: widget.theme.primaryColor),
                   ),
                   Expanded(child: Text(key)),
-                  AppIconButton.clear(
+                  AppIconButton.cancel(
                     icon: const Icon(Icons.clear, color: Colors.black54, size: 20),
                     onPressed: () => _removeFile(key),
                   ),

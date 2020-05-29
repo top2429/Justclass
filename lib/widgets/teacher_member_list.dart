@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:justclass/models/member.dart';
 import 'package:justclass/providers/class.dart';
 import 'package:justclass/providers/member_manager.dart';
+import 'package:justclass/screens/invite_collaborator_screen.dart';
 import 'package:justclass/widgets/app_snack_bar.dart';
 import 'package:justclass/widgets/member_avatar.dart';
 import 'package:justclass/widgets/member_role_title.dart';
@@ -16,9 +17,7 @@ class TeacherMemberList extends StatefulWidget {
 }
 
 class _TeacherMemberListState extends State<TeacherMemberList> {
-  void removeCollaborators(Member member) async {
-    final memberMgr = Provider.of<MemberManager>(context, listen: false);
-    final color = Themes.forClass(Provider.of<Class>(context, listen: false).theme).primaryColor;
+  void removeCollaborators(Member member, Color color, MemberManager memberMgr) async {
     try {
       final result = await showDialog(
         context: context,
@@ -26,20 +25,36 @@ class _TeacherMemberListState extends State<TeacherMemberList> {
       );
       if (result != null && result) await memberMgr.removeCollaborator(member);
     } catch (error) {
-      if (this.mounted) AppSnackBar.showError(context, message: error.toString());
+      if (this.mounted) AppSnackBar.showContextError(context, message: error.toString());
     }
   }
 
-  void addCollaborators() {}
+  void addCollaborators(Color color, MemberManager memberMgr, String cid) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => InviteCollaboratorScreen(
+          memberMgr: memberMgr,
+          color: color,
+          cid: cid,
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
+    final cls = Provider.of<Class>(context);
+    final color = Themes.forClass(cls.theme).primaryColor;
     final memberMgr = Provider.of<MemberManager>(context);
-    final color = Themes.forClass(Provider.of<Class>(context).theme).primaryColor;
 
     return Column(
       children: <Widget>[
-        MemberRoleTitle(color: color, title: 'Teachers', tooltip: 'Invite Teachers', onPressed: addCollaborators),
+        MemberRoleTitle(
+          color: color,
+          title: 'Teachers',
+          tooltip: 'Invite Teachers',
+          onPressed: () => addCollaborators(color, memberMgr, cls.cid),
+        ),
         ListTile(
           contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 2),
           leading: MemberAvatar(
@@ -47,7 +62,11 @@ class _TeacherMemberListState extends State<TeacherMemberList> {
             displayName: memberMgr.owner.displayName,
             color: color,
           ),
-          title: Text(memberMgr.owner.displayName, overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 15)),
+          title: Text(
+            memberMgr.owner.displayName,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(fontSize: 15),
+          ),
         ),
         ...memberMgr.collaborators.map(
           (t) => ListTile(
@@ -61,7 +80,7 @@ class _TeacherMemberListState extends State<TeacherMemberList> {
                 shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5))),
                 itemBuilder: (_) => [const PopupMenuItem(child: Text('Remove'), value: 'remove', height: 40)],
                 onSelected: (val) {
-                  if (val == 'remove') removeCollaborators(t);
+                  if (val == 'remove') removeCollaborators(t, color, memberMgr);
                 },
               ),
             ),

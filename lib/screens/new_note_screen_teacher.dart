@@ -57,7 +57,6 @@ class _NewNoteScreenTeacherState extends State<NewNoteScreenTeacher> {
   }
 
   void _pickFiles(BuildContext context) async {
-    FilePicker.clearTemporaryFiles();
     _showLoadingSpin();
     try {
       final files = await FilePicker.getMultiFilePath(type: FileType.any);
@@ -74,7 +73,10 @@ class _NewNoteScreenTeacherState extends State<NewNoteScreenTeacher> {
     _showLoadingSpin();
     try {
       await widget.noteMgr.postNote(widget.uid, widget.cid, content, _files);
-//      if (this.mounted) Navigator.of(context).pop();
+      FilePicker.clearTemporaryFiles();
+      if (this.mounted) Navigator.of(context).pop();
+      AppSnackBar.showSuccess(screenCtx,
+          message: 'Your note has been posted.', delay: const Duration(milliseconds: 500));
     } catch (error) {
       AppSnackBar.showError(screenCtx, message: error.toString());
     } finally {
@@ -178,7 +180,7 @@ class _NewNoteScreenTeacherState extends State<NewNoteScreenTeacher> {
   }
 
   List<Widget> _buildFileList() {
-    final iconMap = _files.map((key, val) => MapEntry(key, MimeType.toIcon(lookupMimeType(val))));
+    final iconMap = _files.map((name, path) => MapEntry(name, MimeType.toIcon(lookupMimeType(path))));
 
     return iconMap.keys
         .map((key) => Padding(

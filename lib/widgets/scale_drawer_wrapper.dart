@@ -131,11 +131,11 @@ class ScaleDrawerWrapperState extends State<ScaleDrawerWrapper> with SingleTicke
                 child: Container(
                   decoration: BoxDecoration(
                     color: Colors.transparent,
-                    boxShadow: [BoxShadow(color: Colors.black38, blurRadius: 15, offset: Offset(3, 3))],
-                    borderRadius: !_isOffScreen ? BorderRadius.zero : BorderRadius.circular(15),
+                    boxShadow: const [BoxShadow(color: Colors.black38, blurRadius: 15, offset: Offset(3, 3))],
+                    borderRadius: !_isOffScreen ? BorderRadius.zero : const BorderRadius.all(Radius.circular(15)),
                   ),
                   child: ClipRRect(
-                    borderRadius: !_isOffScreen ? BorderRadius.zero : BorderRadius.circular(15),
+                    borderRadius: !_isOffScreen ? BorderRadius.zero : const BorderRadius.all(Radius.circular(15)),
                     child: IgnorePointer(ignoring: _isOffScreen, child: widget.topScaffold),
                   ),
 //                  child: ClipRRect(child: widget.topScaffold),

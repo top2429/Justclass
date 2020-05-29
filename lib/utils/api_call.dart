@@ -1,13 +1,15 @@
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
 import 'package:justclass/models/class_details_data.dart';
 import 'package:justclass/models/member.dart';
+import 'package:justclass/models/note.dart';
 import 'package:justclass/models/user.dart';
 import 'package:justclass/providers/class.dart';
 import 'package:justclass/utils/http_exception.dart';
 import 'package:justclass/widgets/create_class_form.dart';
+import 'package:mime/mime.dart';
 
 class ApiCall {
   static const _headers = {'Content-type': 'application/json', 'Accept': 'application/json'};
@@ -373,12 +375,13 @@ class ApiCall {
   static Future<void> postNote(String uid, String cid, String content, Map<String, String> files) async {
     try {
       checkInternetConnection();
-      final url = 'https://justcass-da0b0.appspot.com/api/v1/note/$uid/$cid';
+      final url = 'https://justclass-da0b0.appspot.com/api/v1/note/$uid/$cid';
 
       // Reference: https://stackoverflow.com/questions/44841729/how-to-upload-image-in-flutter
       final request = http.MultipartRequest('POST', Uri.parse(url))..fields['content'] = content;
       files.forEach((name, path) async {
-        final file = await http.MultipartFile.fromPath('attachments', path, filename: name);
+        final file = await http.MultipartFile.fromPath('attachments', path,
+            filename: name, contentType: MediaType(lookupMimeType(path), ''));
         request.files.add(file);
       });
       final response = await request.send();
@@ -386,8 +389,10 @@ class ApiCall {
       if (response.statusCode >= 400) throw HttpException(message: 'Unable to post notes! ${response.statusCode}');
 
       final byteData = await response.stream.toBytes();
-      var strData = String.fromCharCodes(byteData);
-      debugPrint(strData);
+      final strData = String.fromCharCodes(byteData);
+      final data = json.decode(strData);
+
+//      return Note();
     } catch (error) {
       throw error;
     }

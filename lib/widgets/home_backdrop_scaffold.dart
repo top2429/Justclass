@@ -65,7 +65,7 @@ class HomeBackdropScaffoldState extends State<HomeBackdropScaffold> with SingleT
   Future<bool> _onWillPopScope() async {
     if (_frontLayerKey.currentState.isOffstage) {
       swap();
-      return null;
+      return false;
     }
     return true;
   }

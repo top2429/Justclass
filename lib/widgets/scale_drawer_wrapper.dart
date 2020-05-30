@@ -59,12 +59,12 @@ class ScaleDrawerWrapperState extends State<ScaleDrawerWrapper> with SingleTicke
     (_controller.isCompleted) ? close() : open();
   }
 
-  Future<bool> _onWillPop() {
+  Future<bool> _onWillPop() async {
     if (!_controller.isDismissed) {
       close();
-      return Future.value(false);
+      return false;
     }
-    return Future.value(true);
+    return true;
   }
 
   void _onHorizontalDragStart(DragStartDetails details) {
@@ -108,7 +108,7 @@ class ScaleDrawerWrapperState extends State<ScaleDrawerWrapper> with SingleTicke
       onHorizontalDragUpdate: _onHorizontalDragUpdate,
       onHorizontalDragEnd: _onHorizontalDragEnd,
       child: WillPopScope(
-        onWillPop: () => _onWillPop(),
+        onWillPop: _onWillPop,
         child: Stack(
           children: <Widget>[
             Positioned(

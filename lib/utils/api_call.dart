@@ -405,8 +405,7 @@ class ApiCall {
 
       if (response.statusCode >= 400) throw HttpException(message: 'Unable to post notes! ${response.statusCode}');
 
-      final byteData = await response.stream.toBytes();
-      final strData = String.fromCharCodes(byteData);
+      final strData = await response.stream.bytesToString();
       final data = json.decode(strData);
 
       return Note.fromJson(data);

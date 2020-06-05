@@ -27,12 +27,12 @@ class EmailAuthFormState extends State<EmailAuthForm> with SingleTickerProviderS
   final _passwordController = TextEditingController();
   final _confirmController = TextEditingController();
 
-  // a flag indicating whether the email input is empty, this is needed to hide clearEmail button
+  // flags indicating whether the inputs are empty, this is needed to hide or show trailing buttons
   bool _isEmailEmpty = true;
-
-  // TODO: change to show or hide password
   bool _isPasswordEmpty = true;
   bool _isConfirmEmpty = true;
+
+  bool _isPasswordVisible = false;
 
   // after the user presses the sign button once, the auto-validation feature will be on
   bool _autoValidate = false;
@@ -89,8 +89,17 @@ class EmailAuthFormState extends State<EmailAuthForm> with SingleTickerProviderS
 
   void _setFormToInitState() {
     _unFocus();
-    setState(() => _autoValidate = false);
+    setState(() {
+      _autoValidate = false;
+      _isPasswordVisible = false;
+      _isEmailEmpty = true;
+      _isPasswordEmpty = true;
+      _isConfirmEmpty = true;
+    });
     _form.currentState.reset();
+    _emailController.clear();
+    _passwordController.clear();
+    _confirmController.clear();
   }
 
   void _unFocus() {
@@ -234,7 +243,7 @@ class EmailAuthFormState extends State<EmailAuthForm> with SingleTickerProviderS
       const SizedBox(height: 5),
       TextFormField(
         autovalidate: _autoValidate,
-        obscureText: true,
+        obscureText: !_isPasswordVisible,
         cursorColor: Colors.white70,
         style: const TextStyle(color: Colors.white70, fontSize: 17),
         textInputAction: (_isSigningIn) ? TextInputAction.done : TextInputAction.next,
@@ -250,22 +259,16 @@ class EmailAuthFormState extends State<EmailAuthForm> with SingleTickerProviderS
           suffixIcon: (_isPasswordEmpty)
               ? const SizedBox(width: 0)
               : IconButton(
-                  icon: const Icon(Icons.cancel, color: Colors.white54),
-                  onPressed: () {
-                    WidgetsBinding.instance.addPostFrameCallback((_) => _passwordController.clear());
-                    setState(() => _isPasswordEmpty = true);
-                  },
+                  icon: Icon(_isPasswordVisible ? Icons.visibility : Icons.visibility_off, color: Colors.white54),
+                  onPressed: () => setState(() => _isPasswordVisible = !_isPasswordVisible),
                 ),
           errorStyle: const TextStyle(color: Colors.amberAccent, fontSize: 14),
-          errorText: null,
+          errorMaxLines: 2,
         ),
         focusNode: _passwordFocusNode,
         controller: _passwordController,
         onEditingComplete: _isSigningIn ? null : () => FocusScope.of(context).requestFocus(_confirmFocusNode),
-        onChanged: (val) {
-          if (val.length > 1) return;
-          setState(() => _isPasswordEmpty = val.isEmpty);
-        },
+        onChanged: (val) => setState(() => _isPasswordEmpty = val.isEmpty),
         validator: EmailPassValidator.validatePassword,
       ),
     ];
@@ -307,14 +310,11 @@ class EmailAuthFormState extends State<EmailAuthForm> with SingleTickerProviderS
                         },
                       ),
                 errorStyle: const TextStyle(color: Colors.amberAccent, fontSize: 14),
-                errorText: null,
+                errorMaxLines: 2,
               ),
               focusNode: _confirmFocusNode,
               controller: _confirmController,
-              onChanged: (val) {
-                if (val.length > 1) return;
-                setState(() => _isConfirmEmpty = val.isEmpty);
-              },
+              onChanged: (val) => setState(() => _isConfirmEmpty = val.isEmpty),
               validator: (val) => EmailPassValidator.validateConfirm(val, _passwordController.text),
             ),
           ],

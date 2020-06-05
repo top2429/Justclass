@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:justclass/providers/class.dart';
 import 'package:justclass/providers/note_manager.dart';
+import 'package:justclass/utils/constants.dart';
+import 'package:justclass/widgets/note_tile.dart';
 import 'package:provider/provider.dart';
 
 import '../themes.dart';
@@ -60,24 +62,21 @@ class _NoteScreenListState extends State<NoteScreenList> with AutomaticKeepAlive
             NoteScreenTopBar(),
             Builder(
               builder: (context) {
+                final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+                final bottomBarHeight = isPortrait ? bottomBarPortraitHeight : bottomBarLandscapeHeight;
+                final noteListHeight = MediaQuery.of(context).size.height - sliverTopBarHeight - bottomBarHeight;
+
                 if (!didFirstLoad && noteMgr.notes == null) {
                   fetchNotesFirstLoad(cls);
-                  return SliverToBoxAdapter(
-                    child: SpinKitDualRing(color: color, lineWidth: 2.5, size: 40),
-                  );
+                  return buildLoadingSpinner(noteListHeight, color);
                 }
                 return (hasError)
-                    ? SliverToBoxAdapter(child: Icon(Icons.error, color: Colors.amber, size: 45))
+                    ? buildErrorPrompt(noteListHeight)
                     : SliverList(
                         delegate: SliverChildListDelegate([
-                          const SizedBox(height: 30),
-                          ...cls.notes
-                              .map((e) => ListTile(
-                                    title: Text(e.author.displayName),
-                                    subtitle: Text(e.content),
-                                  ))
-                              .toList(),
-                          const SizedBox(height: 130),
+                          const SizedBox(height: 10),
+                          ...cls.notes.map((note) => NoteTile(note: note, color: color)).toList(),
+                          const SizedBox(height: 140),
                         ]),
                       );
               },
@@ -86,25 +85,38 @@ class _NoteScreenListState extends State<NoteScreenList> with AutomaticKeepAlive
         ),
       ),
     );
-
-//    if (!didFirstLoad && cls.members == null) {
-//      fetchNotesFirstLoad(noteMgr, uid);
-//      return FetchProgressIndicator(color: color);
-//    }
-//    return (hasError) ? RefreshableErrorPrompt(onRefresh: () => fetchNotes(noteMgr, uid)) : buildSliverList();
-//    return buildSliverList();
   }
 
-  Widget buildTestNote(BuildContext context) {
-    final cls = Provider.of<Class>(context);
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        border: Border.all(color: Themes.forClass(cls.theme).primaryColor),
-        borderRadius: const BorderRadius.all(Radius.circular(5)),
+  Widget buildLoadingSpinner(double noteListHeight, Color color) {
+    return SliverToBoxAdapter(
+      child: Container(
+        height: noteListHeight,
+        alignment: Alignment.center,
+        child: SpinKitDualRing(color: color, lineWidth: 2.5, size: 40),
       ),
-      child: Container(height: 150),
     );
   }
+
+  Widget buildErrorPrompt(double noteListHeight) {
+    return SliverToBoxAdapter(
+      child: Container(
+        height: noteListHeight,
+        alignment: Alignment.center,
+        child: Icon(Icons.error, color: Colors.amber, size: 45),
+      ),
+    );
+  }
+
+//  Widget buildTestNote(BuildContext context) {
+//    final cls = Provider.of<Class>(context);
+//    return Container(
+//      margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+//      padding: const EdgeInsets.all(10),
+//      decoration: BoxDecoration(
+//        border: Border.all(color: Themes.forClass(cls.theme).primaryColor),
+//        borderRadius: const BorderRadius.all(Radius.circular(5)),
+//      ),
+//      child: Container(height: 150),
+//    );
+//  }
 }

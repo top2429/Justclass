@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:justclass/providers/class.dart';
 import 'package:justclass/screens/update_class_info_screen.dart';
+import 'package:justclass/utils/constants.dart';
 import 'package:provider/provider.dart';
 
 import '../themes.dart';
@@ -9,11 +10,11 @@ import 'app_icon_button.dart';
 class NoteScreenTopBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-//    final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+
     final cls = Provider.of<Class>(context);
     return SliverAppBar(
       elevation: 5,
-      expandedHeight: 130,
+      expandedHeight: sliverTopBarHeight,
       forceElevated: true,
       backgroundColor: Themes.forClass(cls.theme).primaryColor,
       flexibleSpace: FlexibleSpaceBar(

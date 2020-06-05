@@ -4,6 +4,7 @@ import 'package:justclass/providers/class.dart';
 import 'package:justclass/screens/note_screen.dart';
 import 'package:justclass/screens/topic_screen.dart';
 import 'package:justclass/utils/app_context.dart';
+import 'package:justclass/utils/constants.dart';
 import 'package:justclass/widgets/home_drawer_content.dart';
 import 'package:justclass/widgets/scale_drawer_wrapper.dart';
 import 'package:provider/provider.dart';
@@ -92,7 +93,7 @@ class _ClassScreenContentState extends State<ClassScreenContent> {
           child: Consumer<Class>(
             builder: (_, cls, __) => CurvedNavigationBar(
               color: Themes.forClass(cls.theme).primaryColor,
-              height: isPortrait ? 55 : 50,
+              height: isPortrait ? bottomBarPortraitHeight : bottomBarLandscapeHeight,
               backgroundColor: Colors.transparent,
               animationDuration: const Duration(milliseconds: 500),
               index: _index,

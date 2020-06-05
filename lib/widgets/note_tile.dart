@@ -36,10 +36,13 @@ class NoteTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
     const double padding = 15;
 
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+      margin: isPortrait
+          ? const EdgeInsets.symmetric(vertical: 5, horizontal: 10)
+          : const EdgeInsets.symmetric(vertical: 10, horizontal: 25),
       decoration: BoxDecoration(
         border: Border.all(color: Colors.grey.shade400, width: 0.7),
         borderRadius: const BorderRadius.all(Radius.circular(5)),
@@ -123,7 +126,7 @@ class NoteTile extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 10),
                     decoration: BoxDecoration(
                       borderRadius: const BorderRadius.all(Radius.circular(20)),
-                      border: Border.all(color: Colors.grey.shade400, width: 0.7),
+                      border: Border.all(color: Colors.grey.shade200, width: 0.7),
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,

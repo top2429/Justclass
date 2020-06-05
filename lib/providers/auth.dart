@@ -156,13 +156,10 @@ class Auth with ChangeNotifier {
           await _googleSignIn.signOut();
           break;
         case AuthType.FIREBASE_EMAIL_PASS:
-          // TODO: Handle this case.
           break;
         case AuthType.OAUTH_FACEBOOK:
           // TODO: Handle this case.
           break;
-        default:
-          return;
       }
     } finally {
       _user = null;

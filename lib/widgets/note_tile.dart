@@ -67,7 +67,7 @@ class NoteTile extends StatelessWidget {
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Flexible(
           child: ListTile(
@@ -92,6 +92,7 @@ class NoteTile extends StatelessWidget {
               child: Material(
                 color: Colors.transparent,
                 child: PopupMenuButton(
+                  offset: const Offset(0, 10),
                   icon: const Icon(Icons.more_vert, color: Colors.grey),
                   tooltip: 'Options',
                   itemBuilder: (_) => [
@@ -126,7 +127,7 @@ class NoteTile extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 10),
                     decoration: BoxDecoration(
                       borderRadius: const BorderRadius.all(Radius.circular(20)),
-                      border: Border.all(color: Colors.grey.shade400, width: 0.5),
+                      color: color.withOpacity(0.05),
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,

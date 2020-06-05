@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:justclass/providers/auth.dart';
+import 'package:justclass/screens/home_screen.dart';
 import 'package:justclass/utils/validators.dart';
 import 'package:justclass/widgets/app_snack_bar.dart';
 import 'package:provider/provider.dart';
@@ -53,6 +54,10 @@ class EmailAuthFormState extends State<EmailAuthForm> with SingleTickerProviderS
     );
 
     super.initState();
+  }
+
+  void _toHomeScreen(BuildContext context) {
+    Navigator.of(context).pushReplacementNamed(HomeScreen.routeName);
   }
 
   @override
@@ -111,13 +116,14 @@ class EmailAuthFormState extends State<EmailAuthForm> with SingleTickerProviderS
   Future<void> signIn() async {
     if (!_form.currentState.validate()) return;
     FocusScope.of(context).requestFocus(FocusNode());
-    print(123);
     try {
       this.widget.setLoadingStatus(true);
-      await Provider.of<Auth>(context, listen: false).signInEmailPasswordFirebase(
+      final auth = Provider.of<Auth>(context, listen: false);
+      await auth.signInEmailPasswordFirebase(
         _emailController.text,
         _passwordController.text,
       );
+      if (auth.user != null) _toHomeScreen(context);
     } catch (error) {
       AppSnackBar.showContextError(context, message: error.toString());
     } finally {
@@ -130,10 +136,12 @@ class EmailAuthFormState extends State<EmailAuthForm> with SingleTickerProviderS
     FocusScope.of(context).requestFocus(FocusNode());
     try {
       this.widget.setLoadingStatus(true);
-      await Provider.of<Auth>(context, listen: false).signUpEmailPasswordFirebase(
+      final auth = Provider.of<Auth>(context, listen: false);
+      await auth.signUpEmailPasswordFirebase(
         _emailController.text,
         _passwordController.text,
       );
+      if (auth.user != null) _toHomeScreen(context);
     } catch (error) {
       AppSnackBar.showContextError(context, message: error.toString());
     } finally {

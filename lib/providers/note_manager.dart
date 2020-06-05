@@ -20,4 +20,17 @@ class NoteManager extends ChangeNotifier {
       throw error;
     }
   }
+
+  Future<void> removeNote(String uid, String nid) async {
+    final index = notes.indexWhere((n) => n.noteId == nid);
+    final removedNote = notes.removeAt(index);
+    notifyListeners();
+    try {
+      await ApiCall.removeNote(uid, nid);
+    } catch (error) {
+      notes.insert(index, removedNote);
+      notifyListeners();
+      throw (error);
+    }
+  }
 }

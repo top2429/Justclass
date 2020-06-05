@@ -3,14 +3,36 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:justclass/models/note.dart';
 import 'package:justclass/models/user.dart';
+import 'package:justclass/providers/auth.dart';
+import 'package:justclass/providers/note_manager.dart';
 import 'package:justclass/utils/mime_type.dart';
+import 'package:justclass/widgets/app_snack_bar.dart';
 import 'package:justclass/widgets/member_avatar.dart';
+import 'package:justclass/widgets/remove_note_alert_dialog.dart';
+import 'package:provider/provider.dart';
 
 class NoteTile extends StatelessWidget {
   final Note note;
   final Color color;
 
   NoteTile({this.note, this.color});
+
+  Future<void> removeNote(BuildContext context) async {
+    try {
+      final uid = Provider.of<Auth>(context, listen: false).user.uid;
+      final noteMgr = Provider.of<NoteManager>(context, listen: false);
+
+      var result = await showDialog<bool>(
+        context: context,
+        builder: (_) => RemoveNoteAlertDialog(),
+      );
+
+      result ??= false;
+      if (result) await noteMgr.removeNote(uid, note.noteId);
+    } catch (error) {
+      AppSnackBar.showError(context, message: error.toString());
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +47,7 @@ class NoteTile extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          buildNoteTopBar(),
+          buildNoteTopBar(context),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: padding),
             child: Text(note.content),
@@ -37,7 +59,7 @@ class NoteTile extends StatelessWidget {
     );
   }
 
-  Widget buildNoteTopBar() {
+  Widget buildNoteTopBar(BuildContext context) {
     final User author = note.author;
 
     return Row(
@@ -46,7 +68,8 @@ class NoteTile extends StatelessWidget {
       children: <Widget>[
         Flexible(
           child: ListTile(
-            leading: MemberAvatar(photoUrl: author.photoUrl, displayName: author.displayName, color: color),
+            leading: MemberAvatar(
+                photoUrl: author.photoUrl, displayName: author.displayName, color: color),
             title: Text(
               author.displayName,
               overflow: TextOverflow.ellipsis,
@@ -74,6 +97,9 @@ class NoteTile extends StatelessWidget {
                 ],
                 onSelected: (val) {
                   if (val == 'edit') {}
+                  if (val == 'remove') {
+                    removeNote(context);
+                  }
                 },
               ),
             ),

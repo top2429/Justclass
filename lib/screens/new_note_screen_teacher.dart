@@ -45,8 +45,8 @@ class _NewNoteScreenTeacherState extends State<NewNoteScreenTeacher> {
 
   @override
   void initState() {
-    WidgetsBinding.instance
-        .addPostFrameCallback((_) => AppContext.add(screenCtx, '${NewNoteScreenTeacher.routeName} ${widget.cid}'));
+    WidgetsBinding.instance.addPostFrameCallback(
+        (_) => AppContext.add(screenCtx, '${NewNoteScreenTeacher.routeName} ${widget.cid}'));
     super.initState();
   }
 
@@ -76,7 +76,7 @@ class _NewNoteScreenTeacherState extends State<NewNoteScreenTeacher> {
       FilePicker.clearTemporaryFiles();
       if (this.mounted) Navigator.of(context).pop();
       AppSnackBar.showSuccess(screenCtx,
-          message: 'Your note has been posted.', delay: const Duration(milliseconds: 500));
+          message: 'Your note has been posted.', delay: const Duration(milliseconds: 400));
     } catch (error) {
       AppSnackBar.showError(screenCtx, message: error.toString());
     } finally {
@@ -111,7 +111,8 @@ class _NewNoteScreenTeacherState extends State<NewNoteScreenTeacher> {
           final bottom = MediaQuery.of(context).viewInsets.bottom;
           return SafeArea(
             child: ClipRRect(
-              borderRadius: const BorderRadius.only(topLeft: Radius.circular(15), topRight: Radius.circular(15)),
+              borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(15), topRight: Radius.circular(15)),
               child: Container(
                 color: Colors.white,
                 height: constraints.maxHeight,
@@ -180,7 +181,8 @@ class _NewNoteScreenTeacherState extends State<NewNoteScreenTeacher> {
   }
 
   List<Widget> _buildFileList() {
-    final iconMap = _files.map((name, path) => MapEntry(name, MimeType.toIcon(lookupMimeType(path))));
+    final iconMap =
+        _files.map((name, path) => MapEntry(name, MimeType.toIcon(lookupMimeType(path))));
 
     return iconMap.keys
         .map((key) => Padding(

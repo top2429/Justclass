@@ -63,8 +63,10 @@ class _NoteScreenListState extends State<NoteScreenList> with AutomaticKeepAlive
             Builder(
               builder: (context) {
                 final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
-                final bottomBarHeight = isPortrait ? bottomBarPortraitHeight : bottomBarLandscapeHeight;
-                final noteListHeight = MediaQuery.of(context).size.height - sliverTopBarHeight - bottomBarHeight;
+                final bottomBarHeight =
+                    isPortrait ? bottomBarPortraitHeight : bottomBarLandscapeHeight;
+                final noteListHeight =
+                    MediaQuery.of(context).size.height - sliverTopBarHeight - bottomBarHeight;
 
                 if (!didFirstLoad && noteMgr.notes == null) {
                   fetchNotesFirstLoad(cls);
@@ -72,15 +74,44 @@ class _NoteScreenListState extends State<NoteScreenList> with AutomaticKeepAlive
                 }
                 return (hasError)
                     ? buildErrorPrompt(noteListHeight)
-                    : SliverList(
-                        delegate: SliverChildListDelegate([
-                          const SizedBox(height: 10),
-                          ...cls.notes.map((note) => NoteTile(note: note, color: color)).toList(),
-                          const SizedBox(height: 140),
-                        ]),
-                      );
+                    : (cls.notes.isEmpty)
+                        ? buildNoNotePrompt(color)
+                        : SliverList(
+                            delegate: SliverChildListDelegate([
+                              const SizedBox(height: 10),
+                              ...cls.notes
+                                  .map((note) => NoteTile(note: note, color: color))
+                                  .toList(),
+                              const SizedBox(height: 140),
+                            ]),
+                          );
               },
             ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget buildNoNotePrompt(Color color) {
+    final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+
+    return SliverToBoxAdapter(
+      child: Container(
+        margin: isPortrait
+            ? const EdgeInsets.all(25)
+            : const EdgeInsets.symmetric(horizontal: 100, vertical: 25),
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: color.withOpacity(0.05),
+          borderRadius: const BorderRadius.all(Radius.circular(5)),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Icon(isPortrait ? Icons.crop_portrait : Icons.crop_landscape, color: color, size: 30),
+            const SizedBox(width: 20),
+            Text('Empty Board', style: TextStyle(fontSize: 16)),
           ],
         ),
       ),

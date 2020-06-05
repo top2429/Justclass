@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:justclass/models/note.dart';
@@ -13,11 +14,10 @@ class NoteTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final User author = note.author;
     const double padding = 15;
 
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
+      margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
       decoration: BoxDecoration(
         border: Border.all(color: Colors.grey.shade400, width: 0.7),
         borderRadius: const BorderRadius.all(Radius.circular(5)),
@@ -25,7 +25,27 @@ class NoteTile extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          ListTile(
+          buildNoteTopBar(),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: padding),
+            child: Text(note.content),
+          ),
+          if (note.attachments != null) buildAttachmentList(padding),
+          const SizedBox(height: 20),
+        ],
+      ),
+    );
+  }
+
+  Widget buildNoteTopBar() {
+    final User author = note.author;
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        Flexible(
+          child: ListTile(
             leading: MemberAvatar(photoUrl: author.photoUrl, displayName: author.displayName, color: color),
             title: Text(
               author.displayName,
@@ -37,14 +57,29 @@ class NoteTile extends StatelessWidget {
               style: const TextStyle(color: Colors.grey),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: padding),
-            child: Text(note.content),
+        ),
+        ClipRRect(
+          borderRadius: const BorderRadius.all(Radius.circular(25)),
+          child: SizedBox(
+            width: 50,
+            height: 50,
+            child: Material(
+              color: Colors.transparent,
+              child: PopupMenuButton(
+                icon: const Icon(Icons.more_vert, color: Colors.grey),
+                tooltip: 'Options',
+                itemBuilder: (_) => [
+                  const PopupMenuItem(child: Text('Edit'), value: 'edit', height: 40),
+                  const PopupMenuItem(child: Text('Remove'), value: 'remove', height: 40),
+                ],
+                onSelected: (val) {
+                  if (val == 'edit') {}
+                },
+              ),
+            ),
           ),
-          if (note.attachments != null) buildAttachmentList(padding),
-          const SizedBox(height: 15),
-        ],
-      ),
+        )
+      ],
     );
   }
 

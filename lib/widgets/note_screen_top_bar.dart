@@ -13,7 +13,7 @@ class NoteScreenTopBar extends StatelessWidget {
 
     final cls = Provider.of<Class>(context);
     return SliverAppBar(
-      elevation: 5,
+      elevation: 3,
       expandedHeight: sliverTopBarHeight,
       forceElevated: true,
       backgroundColor: Themes.forClass(cls.theme).primaryColor,

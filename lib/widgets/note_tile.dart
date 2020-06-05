@@ -17,9 +17,8 @@ class NoteTile extends StatelessWidget {
 
   NoteTile({this.note, this.color});
 
-  Future<void> removeNote(BuildContext context) async {
+  Future<void> removeNote(BuildContext context, String uid) async {
     try {
-      final uid = Provider.of<Auth>(context, listen: false).user.uid;
       final noteMgr = Provider.of<NoteManager>(context, listen: false);
 
       var result = await showDialog<bool>(
@@ -41,7 +40,7 @@ class NoteTile extends StatelessWidget {
 
     return Container(
       margin: isPortrait
-          ? const EdgeInsets.symmetric(vertical: 5, horizontal: 10)
+          ? const EdgeInsets.symmetric(vertical: 6, horizontal: 15)
           : const EdgeInsets.symmetric(vertical: 10, horizontal: 25),
       decoration: BoxDecoration(
         border: Border.all(color: Colors.grey.shade400, width: 0.7),
@@ -63,6 +62,7 @@ class NoteTile extends StatelessWidget {
   }
 
   Widget buildNoteTopBar(BuildContext context) {
+    final uid = Provider.of<Auth>(context, listen: false).user.uid;
     final User author = note.author;
 
     return Row(
@@ -71,43 +71,43 @@ class NoteTile extends StatelessWidget {
       children: <Widget>[
         Flexible(
           child: ListTile(
-            leading: MemberAvatar(
-                photoUrl: author.photoUrl, displayName: author.displayName, color: color),
+            leading: MemberAvatar(photoUrl: author.photoUrl, displayName: author.displayName, color: color),
             title: Text(
               author.displayName,
               overflow: TextOverflow.ellipsis,
               style: const TextStyle(fontSize: 15),
             ),
             subtitle: Text(
-              DateFormat('MMM d').format(DateTime.fromMillisecondsSinceEpoch(note.createdAt)),
+              DateFormat('MMM d yyyy').format(DateTime.fromMillisecondsSinceEpoch(note.createdAt)),
               style: const TextStyle(color: Colors.grey),
             ),
           ),
         ),
-        ClipRRect(
-          borderRadius: const BorderRadius.all(Radius.circular(25)),
-          child: SizedBox(
-            width: 50,
-            height: 50,
-            child: Material(
-              color: Colors.transparent,
-              child: PopupMenuButton(
-                icon: const Icon(Icons.more_vert, color: Colors.grey),
-                tooltip: 'Options',
-                itemBuilder: (_) => [
-                  const PopupMenuItem(child: Text('Edit'), value: 'edit', height: 40),
-                  const PopupMenuItem(child: Text('Remove'), value: 'remove', height: 40),
-                ],
-                onSelected: (val) {
-                  if (val == 'edit') {}
-                  if (val == 'remove') {
-                    removeNote(context);
-                  }
-                },
+        if (note.author.uid == uid)
+          ClipRRect(
+            borderRadius: const BorderRadius.all(Radius.circular(25)),
+            child: SizedBox(
+              width: 50,
+              height: 50,
+              child: Material(
+                color: Colors.transparent,
+                child: PopupMenuButton(
+                  icon: const Icon(Icons.more_vert, color: Colors.grey),
+                  tooltip: 'Options',
+                  itemBuilder: (_) => [
+                    const PopupMenuItem(child: Text('Edit'), value: 'edit', height: 40),
+                    const PopupMenuItem(child: Text('Remove'), value: 'remove', height: 40),
+                  ],
+                  onSelected: (val) {
+                    if (val == 'edit') {}
+                    if (val == 'remove') {
+                      removeNote(context, uid);
+                    }
+                  },
+                ),
               ),
             ),
-          ),
-        )
+          )
       ],
     );
   }
@@ -126,7 +126,7 @@ class NoteTile extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 10),
                     decoration: BoxDecoration(
                       borderRadius: const BorderRadius.all(Radius.circular(20)),
-                      border: Border.all(color: Colors.grey.shade200, width: 0.7),
+                      border: Border.all(color: Colors.grey.shade400, width: 0.5),
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,

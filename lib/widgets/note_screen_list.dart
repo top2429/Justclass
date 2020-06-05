@@ -63,10 +63,8 @@ class _NoteScreenListState extends State<NoteScreenList> with AutomaticKeepAlive
             Builder(
               builder: (context) {
                 final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
-                final bottomBarHeight =
-                    isPortrait ? bottomBarPortraitHeight : bottomBarLandscapeHeight;
-                final noteListHeight =
-                    MediaQuery.of(context).size.height - sliverTopBarHeight - bottomBarHeight;
+                final bottomBarHeight = isPortrait ? bottomBarPortraitHeight : bottomBarLandscapeHeight;
+                final noteListHeight = MediaQuery.of(context).size.height - sliverTopBarHeight - bottomBarHeight;
 
                 if (!didFirstLoad && noteMgr.notes == null) {
                   fetchNotesFirstLoad(cls);
@@ -79,9 +77,7 @@ class _NoteScreenListState extends State<NoteScreenList> with AutomaticKeepAlive
                         : SliverList(
                             delegate: SliverChildListDelegate([
                               const SizedBox(height: 10),
-                              ...cls.notes
-                                  .map((note) => NoteTile(note: note, color: color))
-                                  .toList(),
+                              ...cls.notes.map((note) => NoteTile(note: note, color: color)).toList(),
                               const SizedBox(height: 140),
                             ]),
                           );
@@ -111,7 +107,7 @@ class _NoteScreenListState extends State<NoteScreenList> with AutomaticKeepAlive
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Icon(isPortrait ? Icons.crop_portrait : Icons.crop_landscape, color: color, size: 30),
-              const SizedBox(width: 20),
+              const SizedBox(width: 10),
               const Text('Empty Board', style: TextStyle(fontSize: 16)),
             ],
           ),

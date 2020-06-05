@@ -4,7 +4,8 @@ enum ViewFileType { AUDIO, IMAGE, VIDEO, PDF, OTHER }
 
 class MimeType {
   static ViewFileType toViewFileType(String mime) {
-    if (mime == 'application/pdf') return ViewFileType.PDF;
+    // TODO: http.MultipartFile.fromPath automatically adds a slash to the mime type
+    if (mime == 'application/pdf' || mime == 'application/pdf/') return ViewFileType.PDF;
     final type = mime.split('/')[0];
     if (type == 'audio') return ViewFileType.AUDIO;
     if (type == 'image') return ViewFileType.IMAGE;

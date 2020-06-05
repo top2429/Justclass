@@ -3,6 +3,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:justclass/providers/class.dart';
 import 'package:justclass/providers/note_manager.dart';
 import 'package:justclass/utils/constants.dart';
+import 'package:justclass/widgets/note_tile.dart';
 import 'package:provider/provider.dart';
 
 import '../themes.dart';
@@ -73,14 +74,9 @@ class _NoteScreenListState extends State<NoteScreenList> with AutomaticKeepAlive
                     ? buildErrorPrompt(noteListHeight)
                     : SliverList(
                         delegate: SliverChildListDelegate([
-                          const SizedBox(height: 30),
-                          ...cls.notes
-                              .map((e) => ListTile(
-                                    title: Text(e.author.displayName),
-                                    subtitle: Text(e.content),
-                                  ))
-                              .toList(),
-                          const SizedBox(height: 130),
+                          const SizedBox(height: 10),
+                          ...cls.notes.map((note) => NoteTile(note: note, color: color)).toList(),
+                          const SizedBox(height: 140),
                         ]),
                       );
               },
@@ -111,16 +107,16 @@ class _NoteScreenListState extends State<NoteScreenList> with AutomaticKeepAlive
     );
   }
 
-  Widget buildTestNote(BuildContext context) {
-    final cls = Provider.of<Class>(context);
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        border: Border.all(color: Themes.forClass(cls.theme).primaryColor),
-        borderRadius: const BorderRadius.all(Radius.circular(5)),
-      ),
-      child: Container(height: 150),
-    );
-  }
+//  Widget buildTestNote(BuildContext context) {
+//    final cls = Provider.of<Class>(context);
+//    return Container(
+//      margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+//      padding: const EdgeInsets.all(10),
+//      decoration: BoxDecoration(
+//        border: Border.all(color: Themes.forClass(cls.theme).primaryColor),
+//        borderRadius: const BorderRadius.all(Radius.circular(5)),
+//      ),
+//      child: Container(height: 150),
+//    );
+//  }
 }

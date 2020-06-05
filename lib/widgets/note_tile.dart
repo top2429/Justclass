@@ -113,7 +113,7 @@ class NoteTile extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.only(left: padding, right: padding, top: padding),
       child: Wrap(
-        runSpacing: 10,
+        runSpacing: 12,
         spacing: 10,
         children: <Widget>[
           ...note.attachments

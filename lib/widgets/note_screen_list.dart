@@ -97,24 +97,26 @@ class _NoteScreenListState extends State<NoteScreenList> with AutomaticKeepAlive
     final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
 
     return SliverToBoxAdapter(
-      child: Container(
-        margin: isPortrait
-            ? const EdgeInsets.all(25)
-            : const EdgeInsets.symmetric(horizontal: 100, vertical: 25),
-        padding: const EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          color: color.withOpacity(0.05),
-          borderRadius: const BorderRadius.all(Radius.circular(5)),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Icon(isPortrait ? Icons.crop_portrait : Icons.crop_landscape, color: color, size: 30),
-            const SizedBox(width: 20),
-            Text('Empty Board', style: TextStyle(fontSize: 16)),
-          ],
-        ),
-      ),
+      child: LayoutBuilder(builder: (context, constraint) {
+        return Container(
+          margin: isPortrait
+              ? const EdgeInsets.all(25)
+              : EdgeInsets.symmetric(horizontal: constraint.maxWidth * 0.2, vertical: 25),
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: color.withOpacity(0.05),
+            borderRadius: const BorderRadius.all(Radius.circular(5)),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Icon(isPortrait ? Icons.crop_portrait : Icons.crop_landscape, color: color, size: 30),
+              const SizedBox(width: 20),
+              const Text('Empty Board', style: TextStyle(fontSize: 16)),
+            ],
+          ),
+        );
+      }),
     );
   }
 
@@ -133,21 +135,8 @@ class _NoteScreenListState extends State<NoteScreenList> with AutomaticKeepAlive
       child: Container(
         height: noteListHeight,
         alignment: Alignment.center,
-        child: Icon(Icons.error, color: Colors.amber, size: 45),
+        child: const Icon(Icons.error, color: Colors.amber, size: 45),
       ),
     );
   }
-
-//  Widget buildTestNote(BuildContext context) {
-//    final cls = Provider.of<Class>(context);
-//    return Container(
-//      margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-//      padding: const EdgeInsets.all(10),
-//      decoration: BoxDecoration(
-//        border: Border.all(color: Themes.forClass(cls.theme).primaryColor),
-//        borderRadius: const BorderRadius.all(Radius.circular(5)),
-//      ),
-//      child: Container(height: 150),
-//    );
-//  }
 }

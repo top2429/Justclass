@@ -26,7 +26,6 @@ class MyApp extends StatelessWidget {
       child: Consumer<Auth>(
         builder: (_, auth, __) {
           return MaterialApp(
-//            debugShowCheckedModeBanner: false,
             title: 'JustClass',
             theme: Themes.forApp,
             home: _buildFirstScreen(auth),

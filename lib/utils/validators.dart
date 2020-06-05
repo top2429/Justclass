@@ -9,7 +9,7 @@ class EmailPassValidator {
 
   static String validatePassword(String pass) {
     if (pass.isEmpty) return "Please provide a password";
-    // TODO check the number of characters
+    if (pass.length < 6) return 'Password must have at least 6 characters!';
     // TODO check password strength
     return null;
   }

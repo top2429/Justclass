@@ -18,7 +18,7 @@ extension AuthTypes on AuthType {
       case AuthType.OAUTH_FACEBOOK:
         return 'Facebook Account';
       default:
-        return "";
+        return '';
     }
   }
 
@@ -55,10 +55,6 @@ class Auth with ChangeNotifier {
       );
       _type = AuthTypes.getType(prefs.getString(_prefsAuthTypeKey));
 
-//      // re-connect to google
-//      final val = await _googleSignIn.isSignedIn();
-//      await _googleSignIn.signInSilently();
-
       notifyListeners();
       return true;
     } catch (error) {
@@ -81,6 +77,36 @@ class Auth with ChangeNotifier {
     }
   }
 
+  Future<void> signUpEmailPasswordFirebase(String email, String password) async {
+    try {
+      final user = await ApiCall.signUpEmailPasswordFirebase(email, password);
+      if (user == null) return;
+
+      _type = AuthType.FIREBASE_EMAIL_PASS;
+      print('Auth Type: ${_type.name}');
+
+      await _storeAuthData(user);
+      notifyListeners();
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  Future<void> signInEmailPasswordFirebase(String email, String password) async {
+    try {
+      final user = await ApiCall.signInEmailPasswordFirebase(email, password);
+      if (user == null) return;
+
+      _type = AuthType.FIREBASE_EMAIL_PASS;
+      print('Auth Type: ${_type.name}');
+
+      await _storeAuthData(user);
+      notifyListeners();
+    } catch (error) {
+      throw error;
+    }
+  }
+
   Future<void> _storeAuthData(dynamic anyUser) async {
     switch (_type) {
       case AuthType.OAUTH_GOOGLE:
@@ -93,7 +119,12 @@ class Auth with ChangeNotifier {
         );
         break;
       case AuthType.FIREBASE_EMAIL_PASS:
-        // TODO: Handle this case.
+        _user = User(
+          uid: anyUser['localId'],
+          email: anyUser['email'],
+          displayName: anyUser['email'],
+          photoUrl: null,
+        );
         break;
       case AuthType.OAUTH_FACEBOOK:
         // TODO: Handle this case.

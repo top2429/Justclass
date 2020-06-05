@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 class Themes {
-  static const primaryColor = Color(0xff0c4da2); // hoa sen logo @@
+  static const primaryColor = Color(0xff0c4da2); // hoa sen logo :)
   static const List<ClassTheme> _classThemes = [
     ClassTheme(
       imageUrl: 'assets/images/themes/theme-00.jpg',
@@ -37,7 +37,7 @@ class Themes {
     ),
   ];
 
-  static List<ClassTheme> get classThemes => _classThemes;
+  static List<ClassTheme> get classThemes => [..._classThemes];
 
   static ClassTheme forClass(int theme) => _classThemes[theme];
 

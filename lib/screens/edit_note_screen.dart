@@ -93,6 +93,11 @@ class _EditNoteScreenState extends State<EditNoteScreen> {
     checkValidUpdate();
   }
 
+  void _removeNewFile(String key) {
+    _newFiles.remove(key);
+    checkValidUpdate();
+  }
+
   checkValidUpdate() {
     setState(() {
       _valid = NewNoteValidator.validateNote(content) == null &&
@@ -130,6 +135,8 @@ class _EditNoteScreenState extends State<EditNoteScreen> {
                           _buildNoteInput(),
                           Divider(),
                           if (widget.note.attachments.isNotEmpty) _buildOldFileList(color),
+                          if (_newFiles.isNotEmpty) _buildNewFileDivider(),
+                          if (_newFiles.isNotEmpty) _buildNewFileList(color),
                         ],
                       ),
                       Visibility(visible: _loading, child: OpaqueProgressIndicator()),
@@ -141,6 +148,18 @@ class _EditNoteScreenState extends State<EditNoteScreen> {
           );
         }),
       ),
+    );
+  }
+
+  Widget _buildNewFileDivider() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        const Expanded(child: Divider(endIndent: 5)),
+        Icon(Icons.note_add, size: 25, color: Colors.grey.withOpacity(0.5)),
+        const Expanded(child: Divider(indent: 5)),
+      ],
     );
   }
 
@@ -198,30 +217,31 @@ class _EditNoteScreenState extends State<EditNoteScreen> {
     );
   }
 
-//  List<Widget> _buildFileList() {
-//
-//
-//    final iconMap = widget.note.attachments.map((file) => MapEntry(name, MimeType.toIcon(lookupMimeType(file.type))));
-//
-//    return iconMap.keys
-//        .map((key) => Padding(
-//              padding: const EdgeInsets.all(5),
-//              child: Row(
-//                children: <Widget>[
-//                  Padding(
-//                    padding: const EdgeInsets.symmetric(horizontal: 10),
-//                    child: Icon(iconMap[key], size: 30, color: widget.theme.primaryColor),
-//                  ),
-//                  Expanded(child: Text(key)),
-//                  AppIconButton.cancel(
-//                    icon: const Icon(Icons.clear, color: Colors.black54, size: 20),
-//                    onPressed: () => _removeFile(key),
-//                  ),
-//                ],
-//              ),
-//            ))
-//        .toList();
-//  }
+  Widget _buildNewFileList(Color color) {
+    final iconMap = _newFiles.map((name, path) => MapEntry(name, MimeType.toIcon(lookupMimeType(path))));
+    return Column(
+      children: <Widget>[
+        ...iconMap.keys
+            .map((key) => Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  child: Row(
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: Icon(iconMap[key], size: 30, color: color),
+                      ),
+                      Expanded(child: Text(key)),
+                      AppIconButton.cancel(
+                        icon: const Icon(Icons.clear, color: Colors.black54, size: 20),
+                        onPressed: () => _removeNewFile(key),
+                      ),
+                    ],
+                  ),
+                ))
+            .toList()
+      ],
+    );
+  }
 }
 
 class OldFileTile extends StatefulWidget {

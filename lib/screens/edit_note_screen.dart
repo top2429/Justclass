@@ -2,6 +2,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:justclass/models/note.dart';
+import 'package:justclass/providers/auth.dart';
 import 'package:justclass/providers/note_manager.dart';
 import 'package:justclass/themes.dart';
 import 'package:justclass/utils/app_context.dart';
@@ -11,6 +12,7 @@ import 'package:justclass/widgets/app_icon_button.dart';
 import 'package:justclass/widgets/app_snack_bar.dart';
 import 'package:justclass/widgets/opaque_progress_indicator.dart';
 import 'package:mime/mime.dart';
+import 'package:provider/provider.dart';
 
 class EditNoteScreen extends StatefulWidget {
   static const routeName = 'update-note-screen';
@@ -62,6 +64,7 @@ class _EditNoteScreenState extends State<EditNoteScreen> {
     try {
       final files = await FilePicker.getMultiFilePath(type: FileType.any);
       if (files != null) _newFiles.addAll(files);
+      checkValidUpdate();
     } catch (error) {
       AppSnackBar.showError(screenCtx, message: "Unable to attach files!");
     } finally {
@@ -79,8 +82,27 @@ class _EditNoteScreenState extends State<EditNoteScreen> {
     if (this.mounted) setState(() => _loading = false);
   }
 
-  void _updateNote(BuildContext context) {
-    print('updated');
+  Future<void> _updateNote(BuildContext context) async {
+    _showLoadingSpin();
+    try {
+      final uid = Provider.of<Auth>(context, listen: false).user.uid;
+      await widget.noteManager.updateNote(
+        uid,
+        widget.note.noteId,
+        content,
+        _deletedFileIds,
+        _newFiles,
+      );
+      FilePicker.clearTemporaryFiles();
+
+      if (this.mounted) Navigator.of(context).pop();
+      AppSnackBar.showSuccess(screenCtx,
+          message: 'Your note has been updated.', delay: const Duration(milliseconds: 400));
+    } catch (error) {
+      AppSnackBar.showError(screenCtx, message: error.toString());
+    } finally {
+      _hideLoadingSpin();
+    }
   }
 
   addId(String id) {
@@ -120,7 +142,8 @@ class _EditNoteScreenState extends State<EditNoteScreen> {
           final bottom = MediaQuery.of(context).viewInsets.bottom;
           return SafeArea(
             child: ClipRRect(
-              borderRadius: const BorderRadius.only(topLeft: Radius.circular(15), topRight: Radius.circular(15)),
+              borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(15), topRight: Radius.circular(15)),
               child: Container(
                 color: Colors.white,
                 height: constraints.maxHeight,
@@ -152,14 +175,17 @@ class _EditNoteScreenState extends State<EditNoteScreen> {
   }
 
   Widget _buildNewFileDivider() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: <Widget>[
-        const Expanded(child: Divider(endIndent: 5)),
-        Icon(Icons.note_add, size: 25, color: Colors.grey.withOpacity(0.5)),
-        const Expanded(child: Divider(indent: 5)),
-      ],
+    return Padding(
+      padding: const EdgeInsets.only(top: 10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          const Expanded(child: Divider(endIndent: 5)),
+          Icon(Icons.note_add, size: 25, color: Colors.grey.withOpacity(0.5)),
+          const Expanded(child: Divider(indent: 5)),
+        ],
+      ),
     );
   }
 
@@ -218,7 +244,8 @@ class _EditNoteScreenState extends State<EditNoteScreen> {
   }
 
   Widget _buildNewFileList(Color color) {
-    final iconMap = _newFiles.map((name, path) => MapEntry(name, MimeType.toIcon(lookupMimeType(path))));
+    final iconMap =
+        _newFiles.map((name, path) => MapEntry(name, MimeType.toIcon(lookupMimeType(path))));
     return Column(
       children: <Widget>[
         ...iconMap.keys

@@ -33,7 +33,11 @@ class Note {
       displayName: json['author']['displayName'],
     );
     if (json['attachments'] == null) return;
-    this.attachments = (json['attachments'] as List<dynamic>)
+    setAttachments(json['attachments']);
+  }
+
+  void setAttachments(List<dynamic> data) {
+    this.attachments = data
         .map((e) => Attachment(
               fileId: e['fileId'],
               type: e['type'],
@@ -42,6 +46,10 @@ class Note {
               createdAt: e['createdAt'],
             ))
         .toList();
+  }
+
+  void setContent(String content) {
+    this.content = content;
   }
 }
 

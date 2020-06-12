@@ -33,4 +33,31 @@ class NoteManager extends ChangeNotifier {
       throw (error);
     }
   }
+
+  Future<void> updateNote(
+    String uid,
+    String nid,
+    String content,
+    List<String> deletedFileIds,
+    Map<String, String> newFiles,
+  ) async {
+    try {
+      final data = await ApiCall.updateNote(
+        uid,
+        nid,
+        content: content,
+        deletedFileIds: deletedFileIds,
+        newFiles: newFiles,
+      );
+
+      final note = notes.firstWhere((n) => n.noteId == nid);
+
+      note.setAttachments(data['attachments']);
+      note.setContent(data['content']);
+
+      notifyListeners();
+    } catch (error) {
+      throw error;
+    }
+  }
 }

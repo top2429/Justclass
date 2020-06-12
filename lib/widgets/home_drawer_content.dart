@@ -48,7 +48,7 @@ class HomeDrawerContent extends StatelessWidget {
       margin: const EdgeInsets.only(right: 20),
       padding: const EdgeInsets.symmetric(vertical: 5),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.05),
+        color: Colors.white.withOpacity(0.08),
 //        border: const Border(right: BorderSide(color: Colors.white54, width: 3)),
 //        boxShadow: const [BoxShadow(color: Colors.black26, blurRadius: 5, offset: Offset(0, 0))],
         borderRadius: const BorderRadius.only(topRight: Radius.circular(5), bottomRight: Radius.circular(5)),

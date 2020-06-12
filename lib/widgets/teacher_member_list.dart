@@ -21,7 +21,7 @@ class _TeacherMemberListState extends State<TeacherMemberList> {
     try {
       final result = await showDialog(
         context: context,
-        builder: (context) => RemoveMemberDialog(title: 'Remove teacher?', member: member, color: color),
+        builder: (context) => RemoveMemberDialog(title: 'TEACHER REMOVAL', member: member, color: color),
       );
       if (result != null && result) await memberMgr.removeCollaborator(member);
     } catch (error) {

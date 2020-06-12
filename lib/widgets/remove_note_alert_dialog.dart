@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 
 class RemoveNoteAlertDialog extends StatelessWidget {
+  final Color color;
+
+  RemoveNoteAlertDialog(this.color);
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -9,13 +13,11 @@ class RemoveNoteAlertDialog extends StatelessWidget {
       title: Container(
         height: 60,
         decoration: BoxDecoration(
-          color: Colors.red.shade600,
-          borderRadius:
-              const BorderRadius.only(topRight: Radius.circular(8), topLeft: Radius.circular(8)),
+          color: this.color,
+          borderRadius: const BorderRadius.only(topRight: Radius.circular(8), topLeft: Radius.circular(8)),
         ),
         alignment: Alignment.center,
-        child: const Text('ARE YOU SURE?',
-            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
+        child: const Text('ARE YOU SURE?', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
       ),
       content: Text(
         'Do you really want to remove this note?',

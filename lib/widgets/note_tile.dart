@@ -4,7 +4,7 @@ import 'package:justclass/models/note.dart';
 import 'package:justclass/models/user.dart';
 import 'package:justclass/providers/auth.dart';
 import 'package:justclass/providers/note_manager.dart';
-import 'package:justclass/screens/update_note_screen.dart';
+import 'package:justclass/screens/edit_note_screen.dart';
 import 'package:justclass/utils/mime_type.dart';
 import 'package:justclass/widgets/app_snack_bar.dart';
 import 'package:justclass/widgets/member_avatar.dart';
@@ -20,8 +20,7 @@ class NoteTile extends StatelessWidget {
   Future<void> removeNote(BuildContext context, String uid) async {
     try {
       final noteMgr = Provider.of<NoteManager>(context, listen: false);
-
-      var result = await showDialog<bool>(context: context, builder: (_) => RemoveNoteAlertDialog());
+      var result = await showDialog<bool>(context: context, builder: (_) => RemoveNoteAlertDialog(color));
 
       result ??= false;
       if (result) await noteMgr.removeNote(uid, note.noteId);
@@ -32,7 +31,7 @@ class NoteTile extends StatelessWidget {
 
   void toUpdateNoteScreen(BuildContext context) {
     final noteMgr = Provider.of<NoteManager>(context, listen: false);
-    Navigator.of(context).push(MaterialPageRoute(builder: (_) => UpdateNoteScreen(note: note, noteManager: noteMgr)));
+    Navigator.of(context).push(MaterialPageRoute(builder: (_) => EditNoteScreen(note: note, noteManager: noteMgr)));
   }
 
   @override

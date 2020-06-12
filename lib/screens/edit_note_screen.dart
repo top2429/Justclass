@@ -141,8 +141,7 @@ class _EditNoteScreenState extends State<EditNoteScreen> {
           final bottom = MediaQuery.of(context).viewInsets.bottom;
           return SafeArea(
             child: ClipRRect(
-              borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(15), topRight: Radius.circular(15)),
+              borderRadius: const BorderRadius.only(topLeft: Radius.circular(15), topRight: Radius.circular(15)),
               child: Container(
                 color: Colors.white,
                 height: constraints.maxHeight,
@@ -155,7 +154,7 @@ class _EditNoteScreenState extends State<EditNoteScreen> {
                         physics: ClampingScrollPhysics(),
                         children: <Widget>[
                           _buildNoteInput(),
-                          Divider(),
+                          if (_newFiles.isEmpty || widget.note.attachments != null) Divider(),
                           if (widget.note.attachments != null) _buildOldFileList(color),
                           if (_newFiles.isNotEmpty) _buildNewFileDivider(),
                           if (_newFiles.isNotEmpty) _buildNewFileList(color),
@@ -243,8 +242,7 @@ class _EditNoteScreenState extends State<EditNoteScreen> {
   }
 
   Widget _buildNewFileList(Color color) {
-    final iconMap =
-        _newFiles.map((name, path) => MapEntry(name, MimeType.toIcon(lookupMimeType(path))));
+    final iconMap = _newFiles.map((name, path) => MapEntry(name, MimeType.toIcon(lookupMimeType(path))));
     return Column(
       children: <Widget>[
         ...iconMap.keys

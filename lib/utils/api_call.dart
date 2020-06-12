@@ -60,8 +60,7 @@ class ApiCall {
     // Reference: https://firebase.google.com/docs/reference/rest/auth#section-sign-in-email-password
     try {
       checkInternetConnection();
-      const url =
-          'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=$webAPIKey';
+      const url = 'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=$webAPIKey';
       final response = await http.post(url,
           body: json.encode({
             'email': email,
@@ -170,8 +169,7 @@ class ApiCall {
       final response = await http.put(url, headers: _headers);
       if (response.statusCode == 417)
         throw HttpException(message: 'Class code does not exist!');
-      else if (response.statusCode >= 400)
-        throw HttpException(message: 'Unable to join class! ${response.statusCode}');
+      else if (response.statusCode >= 400) throw HttpException(message: 'Unable to join class! ${response.statusCode}');
 
       final data = json.decode(response.body);
       return Class.fromJson(data);
@@ -185,8 +183,7 @@ class ApiCall {
       checkInternetConnection();
       final url = 'https://justclass-da0b0.appspot.com/api/v1/classroom/$uid/$cid';
       final response = await http.delete(url, headers: _headers);
-      if (response.statusCode >= 400)
-        throw HttpException(message: 'Unable to remove class! ${response.statusCode}');
+      if (response.statusCode >= 400) throw HttpException(message: 'Unable to remove class! ${response.statusCode}');
     } catch (error) {
       throw error;
     }
@@ -218,8 +215,7 @@ class ApiCall {
   static Future<String> requestNewPublicCode(String uid, String cid) async {
     try {
       checkInternetConnection();
-      final url =
-          'https://justclass-da0b0.appspot.com/api/v1/classroom/$uid?requestNewPublicCode=true';
+      final url = 'https://justclass-da0b0.appspot.com/api/v1/classroom/$uid?requestNewPublicCode=true';
       final response = await http.patch(
         url,
         headers: _headers,
@@ -368,11 +364,9 @@ class ApiCall {
   ) async {
     try {
       checkInternetConnection();
-      final url =
-          'https://justclass-da0b0.appspot.com/api/v1/classroom/lookup/$uid/$cid/${role.name}?keyword=$keyword';
+      final url = 'https://justclass-da0b0.appspot.com/api/v1/classroom/lookup/$uid/$cid/${role.name}?keyword=$keyword';
       final response = await http.get(url, headers: _headers);
-      if (response.statusCode >= 400)
-        throw HttpException(message: 'Unable to suggest users! ${response.statusCode}');
+      if (response.statusCode >= 400) throw HttpException(message: 'Unable to suggest users! ${response.statusCode}');
 
       final memberData = json.decode(response.body) as List<dynamic>;
       final members = memberData
@@ -406,8 +400,7 @@ class ApiCall {
     }
   }
 
-  static Future<void> inviteMembers(
-      String uid, String cid, Set<String> emails, ClassRole role) async {
+  static Future<void> inviteMembers(String uid, String cid, Set<String> emails, ClassRole role) async {
     try {
       checkInternetConnection();
       final url = 'https://justclass-da0b0.appspot.com/api/v1/classroom/$uid/$cid';
@@ -461,8 +454,7 @@ class ApiCall {
 
       final response = await http.get(url, headers: _headers);
 
-      if (response.statusCode >= 400)
-        throw HttpException(message: 'Unable to fetch notes! ${response.statusCode}');
+      if (response.statusCode >= 400) throw HttpException(message: 'Unable to fetch notes! ${response.statusCode}');
 
       final data = json.decode(response.body) as List<dynamic>;
       final List<Note> notes = data.map((note) => Note.fromJson(note)).toList();
@@ -472,8 +464,7 @@ class ApiCall {
     }
   }
 
-  static Future<Note> postNote(
-      String uid, String cid, String content, Map<String, String> files) async {
+  static Future<Note> postNote(String uid, String cid, String content, Map<String, String> files) async {
     try {
       checkInternetConnection();
       final url = 'https://justclass-da0b0.appspot.com/api/v1/note/$uid/$cid';
@@ -487,8 +478,7 @@ class ApiCall {
       });
       final response = await request.send();
 
-      if (response.statusCode >= 400)
-        throw HttpException(message: 'Unable to post notes! ${response.statusCode}');
+      if (response.statusCode >= 400) throw HttpException(message: 'Unable to post notes! ${response.statusCode}');
 
       final strData = await response.stream.bytesToString();
       final data = json.decode(strData);
@@ -505,8 +495,7 @@ class ApiCall {
       final url = 'https://justclass-da0b0.appspot.com/api/v1/note/$uid/$nid';
       final response = await http.delete(url, headers: _headers);
 
-      if (response.statusCode >= 400)
-        throw HttpException(message: 'Unable to remove note! ${response.statusCode}');
+      if (response.statusCode >= 400) throw HttpException(message: 'Unable to remove note! ${response.statusCode}');
     } catch (error) {
       throw error;
     }
@@ -527,24 +516,28 @@ class ApiCall {
       if (content != null) request.fields['content'] = content;
       if (deletedFileIds != null && deletedFileIds.isNotEmpty) {
         deletedFileIds.forEach((id) {
-          request.fields['deletedAttachments'] = id;
+          final file = http.MultipartFile.fromString('deletedAttachments', id);
+          request.files.add(file);
         });
       }
       if (newFiles != null && newFiles.isNotEmpty) {
         newFiles.forEach((name, path) async {
-          final file = await http.MultipartFile.fromPath('attachments', path,
-              filename: name, contentType: MediaType(lookupMimeType(path), ''));
+          final file = await http.MultipartFile.fromPath(
+            'attachments',
+            path,
+            filename: name,
+            contentType: MediaType(lookupMimeType(path), ''),
+          );
           request.files.add(file);
         });
       }
       final response = await request.send();
 
-      if (response.statusCode >= 400)
-        throw HttpException(message: 'Unable to update note! ${response.statusCode}');
+      if (response.statusCode >= 400) throw HttpException(message: 'Unable to update note! ${response.statusCode}');
 
       final strData = await response.stream.bytesToString();
       final data = json.decode(strData);
-
+//      print(data['attachments']);
       return {
         'attachments': data['attachments'],
         'content': data['content'],

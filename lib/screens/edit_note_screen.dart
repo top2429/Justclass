@@ -70,7 +70,6 @@ class _EditNoteScreenState extends State<EditNoteScreen> {
     } finally {
 //      _hideLoadingSpin();
     }
-    setState(() {});
   }
 
   void _showLoadingSpin() {
@@ -157,7 +156,7 @@ class _EditNoteScreenState extends State<EditNoteScreen> {
                         children: <Widget>[
                           _buildNoteInput(),
                           Divider(),
-                          if (widget.note.attachments.isNotEmpty) _buildOldFileList(color),
+                          if (widget.note.attachments != null) _buildOldFileList(color),
                           if (_newFiles.isNotEmpty) _buildNewFileDivider(),
                           if (_newFiles.isNotEmpty) _buildNewFileList(color),
                         ],

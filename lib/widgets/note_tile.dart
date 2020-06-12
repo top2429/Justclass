@@ -3,8 +3,10 @@ import 'package:intl/intl.dart';
 import 'package:justclass/models/note.dart';
 import 'package:justclass/models/user.dart';
 import 'package:justclass/providers/auth.dart';
+import 'package:justclass/providers/class.dart';
 import 'package:justclass/providers/note_manager.dart';
 import 'package:justclass/screens/edit_note_screen.dart';
+import 'package:justclass/themes.dart';
 import 'package:justclass/utils/mime_type.dart';
 import 'package:justclass/widgets/app_snack_bar.dart';
 import 'package:justclass/widgets/member_avatar.dart';
@@ -31,7 +33,15 @@ class NoteTile extends StatelessWidget {
 
   void toUpdateNoteScreen(BuildContext context) {
     final noteMgr = Provider.of<NoteManager>(context, listen: false);
-    Navigator.of(context).push(MaterialPageRoute(builder: (_) => EditNoteScreen(note: note, noteManager: noteMgr)));
+    final cls = Provider.of<Class>(context, listen: false);
+    final theme = Themes.classThemes[cls.theme];
+
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (_) => EditNoteScreen(
+              note: note,
+              theme: theme,
+              noteManager: noteMgr,
+            )));
   }
 
   @override

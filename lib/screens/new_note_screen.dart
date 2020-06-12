@@ -11,7 +11,7 @@ import 'package:mime/mime.dart';
 
 import '../themes.dart';
 
-class NewNoteScreenTeacher extends StatefulWidget {
+class NewNoteScreen extends StatefulWidget {
   static const routeName = 'new-note-screen-teacher';
 
   final NoteManager noteMgr;
@@ -19,13 +19,13 @@ class NewNoteScreenTeacher extends StatefulWidget {
   final String uid;
   final String cid;
 
-  NewNoteScreenTeacher({@required this.noteMgr, this.theme, this.cid, this.uid});
+  NewNoteScreen({@required this.noteMgr, this.theme, this.cid, this.uid});
 
   @override
-  _NewNoteScreenTeacherState createState() => _NewNoteScreenTeacherState();
+  _NewNoteScreenState createState() => _NewNoteScreenState();
 }
 
-class _NewNoteScreenTeacherState extends State<NewNoteScreenTeacher> {
+class _NewNoteScreenState extends State<NewNoteScreen> {
   BuildContext screenCtx;
 
   // a flag indicating if the form is valid
@@ -42,8 +42,8 @@ class _NewNoteScreenTeacherState extends State<NewNoteScreenTeacher> {
 
   @override
   void initState() {
-    WidgetsBinding.instance.addPostFrameCallback(
-        (_) => AppContext.add(screenCtx, '${NewNoteScreenTeacher.routeName} ${widget.cid}'));
+    WidgetsBinding.instance
+        .addPostFrameCallback((_) => AppContext.add(screenCtx, '${NewNoteScreen.routeName} ${widget.cid}'));
     super.initState();
   }
 
@@ -108,8 +108,7 @@ class _NewNoteScreenTeacherState extends State<NewNoteScreenTeacher> {
           final bottom = MediaQuery.of(context).viewInsets.bottom;
           return SafeArea(
             child: ClipRRect(
-              borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(15), topRight: Radius.circular(15)),
+              borderRadius: const BorderRadius.only(topLeft: Radius.circular(15), topRight: Radius.circular(15)),
               child: Container(
                 color: Colors.white,
                 height: constraints.maxHeight,
@@ -178,8 +177,7 @@ class _NewNoteScreenTeacherState extends State<NewNoteScreenTeacher> {
   }
 
   List<Widget> _buildFileList() {
-    final iconMap =
-        _files.map((name, path) => MapEntry(name, MimeType.toIcon(lookupMimeType(path))));
+    final iconMap = _files.map((name, path) => MapEntry(name, MimeType.toIcon(lookupMimeType(path))));
 
     return iconMap.keys
         .map((key) => Padding(
@@ -190,7 +188,7 @@ class _NewNoteScreenTeacherState extends State<NewNoteScreenTeacher> {
                     padding: const EdgeInsets.symmetric(horizontal: 10),
                     child: Icon(iconMap[key], size: 30, color: widget.theme.primaryColor),
                   ),
-                  Expanded(child: Text(key)),
+                  Expanded(child: Text(key, overflow: TextOverflow.ellipsis)),
                   AppIconButton.cancel(
                     icon: const Icon(Icons.clear, color: Colors.black54, size: 20),
                     onPressed: () => _removeFile(key),

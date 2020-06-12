@@ -505,7 +505,7 @@ class ApiCall {
     String uid,
     String nid, {
     String content,
-    Map<String, String> deletedFiles,
+    List<String> deletedFileIds,
     Map<String, String> newFiles,
   }) async {
     try {
@@ -516,13 +516,12 @@ class ApiCall {
 
       if (content != null) request.fields['content'] = content;
 
-      if (deletedFiles != null && deletedFiles.isNotEmpty) {
-        deletedFiles.forEach((name, path) async {
-          final file = await http.MultipartFile.fromPath('deletedAttachments', path,
-              filename: name, contentType: MediaType(lookupMimeType(path), ''));
-          request.files.add(file);
+      if (deletedFileIds != null && deletedFileIds.isNotEmpty) {
+        deletedFileIds.forEach((id) {
+          request.fields['deletedAttachments'] = id;
         });
       }
+
       if (newFiles != null && newFiles.isNotEmpty) {
         newFiles.forEach((name, path) async {
           final file = await http.MultipartFile.fromPath('attachments', path,

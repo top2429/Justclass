@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:justclass/providers/auth.dart';
 import 'package:justclass/providers/class.dart';
 import 'package:justclass/providers/note_manager.dart';
-import 'package:justclass/screens/new_note_screen_teacher.dart';
+import 'package:justclass/screens/new_note_screen.dart';
 import 'package:justclass/utils/constants.dart';
 import 'package:justclass/widgets/note_screen_list.dart';
 import 'package:provider/provider.dart';
@@ -54,7 +54,7 @@ class _NoteScreenState extends State<NoteScreen> {
           onPressed: () {
             Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (_) => NewNoteScreenTeacher(
+                builder: (_) => NewNoteScreen(
                   theme: theme,
                   uid: auth.user.uid,
                   noteMgr: Provider.of<NoteManager>(context),

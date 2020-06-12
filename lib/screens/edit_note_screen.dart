@@ -83,6 +83,23 @@ class _EditNoteScreenState extends State<EditNoteScreen> {
     print('updated');
   }
 
+  addId(String id) {
+    _deletedFileIds.add(id);
+    checkValidUpdate();
+  }
+
+  removeId(String id) {
+    _deletedFileIds.remove(id);
+    checkValidUpdate();
+  }
+
+  checkValidUpdate() {
+    setState(() {
+      _valid = NewNoteValidator.validateNote(content) == null &&
+          (content != widget.note.content || _deletedFileIds.isNotEmpty || _newFiles.isNotEmpty);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final color = widget.theme.primaryColor;
@@ -160,10 +177,7 @@ class _EditNoteScreenState extends State<EditNoteScreen> {
         decoration: const InputDecoration(labelText: 'Share with your class'),
         onChanged: (val) {
           content = val;
-          setState(() {
-            _valid = NewNoteValidator.validateNote(val) == null &&
-                (content != widget.note.content || _deletedFileIds.isNotEmpty || _newFiles.isNotEmpty);
-          });
+          checkValidUpdate();
         },
       ),
     );
@@ -176,7 +190,8 @@ class _EditNoteScreenState extends State<EditNoteScreen> {
             .map((a) => OldFileTile(
                   color: color,
                   attachment: a,
-                  deletedFileIds: _deletedFileIds,
+                  addDeletedFileId: addId,
+                  removeDeletedFileId: removeId,
                 ))
             .toList()
       ],
@@ -212,9 +227,10 @@ class _EditNoteScreenState extends State<EditNoteScreen> {
 class OldFileTile extends StatefulWidget {
   final Color color;
   final Attachment attachment;
-  final List<String> deletedFileIds;
+  final Function addDeletedFileId;
+  final Function removeDeletedFileId;
 
-  OldFileTile({this.color, this.deletedFileIds, this.attachment});
+  OldFileTile({this.color, this.attachment, this.addDeletedFileId, this.removeDeletedFileId});
 
   @override
   _OldFileTileState createState() => _OldFileTileState();
@@ -228,16 +244,6 @@ class _OldFileTileState extends State<OldFileTile> {
   void initState() {
     _icon = MimeType.toIcon(widget.attachment.type);
     super.initState();
-  }
-
-  addId() {
-    widget.deletedFileIds.add(widget.attachment.fileId);
-    setState(() => deleted = true);
-  }
-
-  removeId() {
-    widget.deletedFileIds.remove(widget.attachment.fileId);
-    setState(() => deleted = false);
   }
 
   @override
@@ -258,7 +264,12 @@ class _OldFileTileState extends State<OldFileTile> {
             Expanded(child: Text(widget.attachment.name, overflow: TextOverflow.ellipsis)),
             AppIconButton.cancel(
               icon: Icon(deleted ? Icons.autorenew : Icons.clear, color: Colors.black54, size: 20),
-              onPressed: () => deleted ? removeId() : addId(),
+              onPressed: () {
+                deleted
+                    ? widget.removeDeletedFileId(widget.attachment.fileId)
+                    : widget.addDeletedFileId(widget.attachment.fileId);
+                setState(() => deleted = !deleted);
+              },
             ),
           ],
         ),

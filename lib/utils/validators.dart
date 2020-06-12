@@ -33,6 +33,7 @@ class NewNoteValidator {
     if (note.isEmpty) return "Please provide a note";
     const len = 1;
     if (note.length < len) return "A note needs to contain at least $len ${len == 1 ? "character" : "characters"}";
+    // TODO: check string contains only break lines
     return null;
   }
 }

@@ -21,6 +21,7 @@ class ApiCall {
   }
 
   static Future<dynamic> signUpEmailPasswordFirebase(String email, String password) async {
+    // Reference: https://firebase.google.com/docs/reference/rest/auth#section-create-email-password
     const url = 'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=$webAPIKey';
     try {
       final response = await http.post(url,
@@ -258,7 +259,7 @@ class ApiCall {
               ))
           .toList();
 
-      // for testing purpose only
+      // for testing purposes only
 //      members
 //        ..addAll([
 //          Member(
@@ -377,7 +378,7 @@ class ApiCall {
               ))
           .toList();
 
-      // for testing purpose only
+      // for testing purposes only
 //      members.addAll([
 //        Member(
 //          uid: '1',
@@ -495,6 +496,49 @@ class ApiCall {
       final response = await http.delete(url, headers: _headers);
 
       if (response.statusCode >= 400) throw HttpException(message: 'Unable to remove note! ${response.statusCode}');
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  static Future<Note> updateNote(
+    String uid,
+    String nid, {
+    String content,
+    Map<String, String> deletedFiles,
+    Map<String, String> newFiles,
+  }) async {
+    try {
+      checkInternetConnection();
+      final url = 'https://justclass-da0b0.appspot.com/api/v1/note/$uid/$nid';
+
+      final request = http.MultipartRequest('POST', Uri.parse(url));
+
+      if (content != null) request.fields['content'] = content;
+
+      if (deletedFiles != null && deletedFiles.isNotEmpty) {
+        deletedFiles.forEach((name, path) async {
+          final file = await http.MultipartFile.fromPath('deletedAttachments', path,
+              filename: name, contentType: MediaType(lookupMimeType(path), ''));
+          request.files.add(file);
+        });
+      }
+      if (newFiles != null && newFiles.isNotEmpty) {
+        newFiles.forEach((name, path) async {
+          final file = await http.MultipartFile.fromPath('attachments', path,
+              filename: name, contentType: MediaType(lookupMimeType(path), ''));
+          request.files.add(file);
+        });
+      }
+
+      final response = await request.send();
+
+      if (response.statusCode >= 400) throw HttpException(message: 'Unable to post notes! ${response.statusCode}');
+
+      final strData = await response.stream.bytesToString();
+      final data = json.decode(strData);
+
+      return Note.fromJson(data);
     } catch (error) {
       throw error;
     }

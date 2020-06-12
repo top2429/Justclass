@@ -41,6 +41,8 @@ class ClassListViewState extends State<ClassListView> {
   bool _hasError = false;
   bool _didFirstLoad = false;
 
+  ViewType get viewType => _type;
+
   set viewType(ViewType type) => setState(() => _type = type);
 
   @override

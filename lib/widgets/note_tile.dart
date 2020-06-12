@@ -1,10 +1,10 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:justclass/models/note.dart';
 import 'package:justclass/models/user.dart';
 import 'package:justclass/providers/auth.dart';
 import 'package:justclass/providers/note_manager.dart';
+import 'package:justclass/screens/update_note_screen.dart';
 import 'package:justclass/utils/mime_type.dart';
 import 'package:justclass/widgets/app_snack_bar.dart';
 import 'package:justclass/widgets/member_avatar.dart';
@@ -21,16 +21,18 @@ class NoteTile extends StatelessWidget {
     try {
       final noteMgr = Provider.of<NoteManager>(context, listen: false);
 
-      var result = await showDialog<bool>(
-        context: context,
-        builder: (_) => RemoveNoteAlertDialog(),
-      );
+      var result = await showDialog<bool>(context: context, builder: (_) => RemoveNoteAlertDialog());
 
       result ??= false;
       if (result) await noteMgr.removeNote(uid, note.noteId);
     } catch (error) {
       AppSnackBar.showError(context, message: error.toString());
     }
+  }
+
+  void toUpdateNoteScreen(BuildContext context) {
+    final noteMgr = Provider.of<NoteManager>(context, listen: false);
+    Navigator.of(context).push(MaterialPageRoute(builder: (_) => UpdateNoteScreen(note: note, noteManager: noteMgr)));
   }
 
   @override
@@ -93,6 +95,7 @@ class NoteTile extends StatelessWidget {
                 color: Colors.transparent,
                 child: PopupMenuButton(
                   offset: const Offset(0, 10),
+                  shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5))),
                   icon: const Icon(Icons.more_vert, color: Colors.grey),
                   tooltip: 'Options',
                   itemBuilder: (_) => [
@@ -100,7 +103,9 @@ class NoteTile extends StatelessWidget {
                     const PopupMenuItem(child: Text('Remove'), value: 'remove', height: 40),
                   ],
                   onSelected: (val) {
-                    if (val == 'edit') {}
+                    if (val == 'edit') {
+                      toUpdateNoteScreen(context);
+                    }
                     if (val == 'remove') {
                       removeNote(context, uid);
                     }

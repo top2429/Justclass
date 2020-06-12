@@ -90,6 +90,22 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildPopupMenu() {
+    PopupMenuItem appPopupMenuItem(String title, ViewType type) {
+      final chosen = _classListView.currentState.viewType == type;
+
+      return PopupMenuItem(
+        child: Text(
+          title,
+          style: TextStyle(
+            color: chosen ? Themes.primaryColor : Colors.blueGrey,
+            fontWeight: chosen ? FontWeight.bold : FontWeight.normal,
+          ),
+        ),
+        value: type,
+        height: 40,
+      );
+    }
+
     return ClipRRect(
       borderRadius: const BorderRadius.all(Radius.circular(kToolbarHeight / 2)),
       child: SizedBox(
@@ -102,10 +118,10 @@ class _HomeScreenState extends State<HomeScreen> {
             shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5))),
             offset: const Offset(0, 40),
             itemBuilder: (_) => [
-              const PopupMenuItem(child: Text('Joined'), value: ViewType.JOINED, height: 40),
-              const PopupMenuItem(child: Text('Created'), value: ViewType.CREATED, height: 40),
-              const PopupMenuItem(child: Text('Collaborating'), value: ViewType.COLLABORATING, height: 40),
-              const PopupMenuItem(child: Text('All'), value: ViewType.ALL, height: 40),
+              appPopupMenuItem('Joined', ViewType.JOINED),
+              appPopupMenuItem('Created', ViewType.CREATED),
+              appPopupMenuItem('Collaborating', ViewType.COLLABORATING),
+              appPopupMenuItem('All', ViewType.ALL),
             ],
             onSelected: (viewType) => _classListView.currentState.viewType = viewType,
           ),

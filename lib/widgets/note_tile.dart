@@ -74,6 +74,7 @@ class NoteTile extends StatelessWidget {
 
   Widget buildNoteTopBar(BuildContext context) {
     final uid = Provider.of<Auth>(context, listen: false).user.uid;
+    final ownerId = Provider.of<Class>(context, listen: false).ownerUid;
     final User author = note.author;
 
     return Row(
@@ -94,7 +95,7 @@ class NoteTile extends StatelessWidget {
             ),
           ),
         ),
-        if (note.author.uid == uid)
+        if (uid == author.uid || uid == ownerId)
           ClipRRect(
             borderRadius: const BorderRadius.all(Radius.circular(25)),
             child: SizedBox(
@@ -108,7 +109,7 @@ class NoteTile extends StatelessWidget {
                   icon: const Icon(Icons.more_vert, color: Colors.grey),
                   tooltip: 'Options',
                   itemBuilder: (_) => [
-                    const PopupMenuItem(child: Text('Edit'), value: 'edit', height: 40),
+                    if (uid == author.uid) const PopupMenuItem(child: Text('Edit'), value: 'edit', height: 40),
                     const PopupMenuItem(child: Text('Remove'), value: 'remove', height: 40),
                   ],
                   onSelected: (val) {

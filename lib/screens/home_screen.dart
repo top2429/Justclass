@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:justclass/themes.dart';
 import 'package:justclass/utils/app_context.dart';
 import 'package:justclass/widgets/app_icon_button.dart';
@@ -49,7 +50,8 @@ class _HomeScreenState extends State<HomeScreen> {
           drawerContent: HomeDrawerContent(),
           topScaffold: HomeBackdropScaffold(
             key: _backdropScaffold,
-            title: const Text("JustClass", style: TextStyle(fontWeight: FontWeight.bold)),
+            title: Text("JustClass",
+                style: GoogleFonts.quicksand(textStyle: const TextStyle(fontWeight: FontWeight.bold))),
             dropDistance: dropDistance,
             backColor: Theme.of(context).backgroundColor,
             leading:

@@ -32,11 +32,16 @@ class Note {
       photoUrl: json['author']['photoUrl'],
       displayName: json['author']['displayName'],
     );
-    if (json['attachments'] == null) return;
+
     setAttachments(json['attachments']);
   }
 
   void setAttachments(List<dynamic> data) {
+    if (data == null) {
+      this.attachments = null;
+      return;
+    }
+
     this.attachments = data
         .map((e) => Attachment(
               fileId: e['fileId'],

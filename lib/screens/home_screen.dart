@@ -50,8 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
           drawerContent: HomeDrawerContent(),
           topScaffold: HomeBackdropScaffold(
             key: _backdropScaffold,
-            title: Text("JustClass",
-                style: GoogleFonts.quicksand(textStyle: const TextStyle(fontWeight: FontWeight.bold))),
+            title: const Text("JustClass", style: TextStyle(fontWeight: FontWeight.bold)),
             dropDistance: dropDistance,
             backColor: Theme.of(context).backgroundColor,
             leading:

@@ -54,15 +54,17 @@ class _NewNoteScreenState extends State<NewNoteScreen> {
   }
 
   void _pickFiles(BuildContext context) async {
-    FocusScope.of(context).unfocus();
+    setState(() => _loading = true);
     try {
       final files = await FilePicker.getMultiFilePath(type: FileType.any);
-      if (files != null) _files.addAll(files);
-      setState(() {});
+      if (files != null) {
+        _files.addAll(files);
+        setState(() {});
+      }
     } catch (error) {
       AppSnackBar.showError(screenCtx, message: "Unable to attach files!");
     } finally {
-//      _hideLoadingSpin();
+      _hideLoadingSpin();
     }
   }
 

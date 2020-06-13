@@ -42,8 +42,8 @@ class _NewNoteScreenState extends State<NewNoteScreen> {
 
   @override
   void initState() {
-    WidgetsBinding.instance.addPostFrameCallback(
-        (_) => AppContext.add(screenCtx, '${NewNoteScreen.routeName} ${widget.cid}'));
+    WidgetsBinding.instance
+        .addPostFrameCallback((_) => AppContext.add(screenCtx, '${NewNoteScreen.routeName} ${widget.cid}'));
     super.initState();
   }
 
@@ -54,10 +54,11 @@ class _NewNoteScreenState extends State<NewNoteScreen> {
   }
 
   void _pickFiles(BuildContext context) async {
-//    _showLoadingSpin();
+    FocusScope.of(context).unfocus();
     try {
       final files = await FilePicker.getMultiFilePath(type: FileType.any);
       if (files != null) _files.addAll(files);
+      setState(() {});
     } catch (error) {
       AppSnackBar.showError(screenCtx, message: "Unable to attach files!");
     } finally {
@@ -107,8 +108,7 @@ class _NewNoteScreenState extends State<NewNoteScreen> {
           final bottom = MediaQuery.of(context).viewInsets.bottom;
           return SafeArea(
             child: ClipRRect(
-              borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(15), topRight: Radius.circular(15)),
+              borderRadius: const BorderRadius.only(topLeft: Radius.circular(15), topRight: Radius.circular(15)),
               child: Container(
                 color: Colors.white,
                 height: constraints.maxHeight,
@@ -177,8 +177,7 @@ class _NewNoteScreenState extends State<NewNoteScreen> {
   }
 
   List<Widget> _buildFileList() {
-    final iconMap =
-        _files.map((name, path) => MapEntry(name, MimeType.toIcon(lookupMimeType(path))));
+    final iconMap = _files.map((name, path) => MapEntry(name, MimeType.toIcon(lookupMimeType(path))));
 
     return iconMap.keys
         .map((key) => Padding(

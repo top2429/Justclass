@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:justclass/providers/auth.dart';
+import 'package:justclass/providers/class.dart';
 import 'package:justclass/screens/auth_screen.dart';
 import 'package:justclass/screens/notification_screen.dart';
 import 'package:justclass/widgets/member_avatar.dart';
 import 'package:provider/provider.dart';
+
+import '../themes.dart';
 
 class HomeDrawerContent extends StatelessWidget {
   Future<void> signOut(BuildContext context) async {
@@ -36,13 +39,13 @@ class HomeDrawerContent extends StatelessWidget {
   Widget buildUserInfoBar(BuildContext context) {
     final user = Provider.of<Auth>(context).user;
 
-//    Color color;
-//    try {
-//      final theme = Provider.of<Class>(context).theme;
-//      color = Themes.classThemes[theme].primaryColor;
-//    } catch (error) {
-//      color = Themes.primaryColor;
-//    }
+    Color color;
+    try {
+      final theme = Provider.of<Class>(context).theme;
+      color = Themes.classThemes[theme].primaryColor;
+    } catch (error) {
+      color = Themes.primaryColor;
+    }
 
     return Container(
       margin: const EdgeInsets.only(right: 20),
@@ -61,7 +64,7 @@ class HomeDrawerContent extends StatelessWidget {
             color: Colors.white70,
             borderRadius: const BorderRadius.all(Radius.circular(21.6)),
           ),
-          child: MemberAvatar(color: Colors.red, displayName: user.displayName, photoUrl: user.photoUrl),
+          child: MemberAvatar(color: color, displayName: user.displayName, photoUrl: user.photoUrl),
         ),
         title: Text(
           user.displayName,

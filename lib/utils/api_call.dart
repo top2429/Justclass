@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'package:justclass/models/class_details_data.dart';
@@ -542,6 +543,18 @@ class ApiCall {
         'attachments': data['attachments'],
         'content': data['content'],
       };
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  static Future<void> downloadFile(String fileId, String filePath, Function onReceive) async {
+    try {
+      checkInternetConnection();
+      final url = 'https://justclass-da0b0.appspot.com/api/v1/file/$fileId';
+
+      final dio = Dio();
+      await dio.download(url, filePath, onReceiveProgress: onReceive);
     } catch (error) {
       throw error;
     }

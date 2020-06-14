@@ -10,6 +10,7 @@ import 'package:justclass/themes.dart';
 import 'package:justclass/utils/mime_type.dart';
 import 'package:justclass/widgets/app_snack_bar.dart';
 import 'package:justclass/widgets/member_avatar.dart';
+import 'package:justclass/widgets/note_file_chip.dart';
 import 'package:justclass/widgets/remove_note_alert_dialog.dart';
 import 'package:provider/provider.dart';
 
@@ -135,28 +136,7 @@ class NoteTile extends StatelessWidget {
         runSpacing: 12,
         spacing: 10,
         children: <Widget>[
-          ...note.attachments
-              .map((a) => Container(
-                    height: 30,
-                    constraints: const BoxConstraints(maxWidth: 300),
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    decoration: BoxDecoration(
-                      borderRadius: const BorderRadius.all(Radius.circular(20)),
-                      color: color.withOpacity(0.05),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        Icon(MimeType.toIcon(a.type), color: color, size: 20),
-                        const SizedBox(width: 5),
-                        Flexible(
-                          child: Text(a.name, overflow: TextOverflow.ellipsis),
-                        ),
-                      ],
-                    ),
-                  ))
-              .toList(),
+          ...note.attachments.map((a) => NoteFileChip(attachment: a, color: color)).toList(),
         ],
       ),
     );

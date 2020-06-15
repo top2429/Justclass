@@ -9,6 +9,7 @@ import 'package:justclass/models/note.dart';
 import 'package:justclass/models/user.dart';
 import 'package:justclass/providers/class.dart';
 import 'package:justclass/utils/http_exception.dart';
+import 'package:justclass/utils/internet_connection.dart';
 import 'package:justclass/widgets/create_class_form.dart';
 import 'package:mime/mime.dart';
 
@@ -17,14 +18,16 @@ import '../keys.dart';
 class ApiCall {
   static const _headers = {'Content-type': 'application/json', 'Accept': 'application/json'};
 
-  static checkInternetConnection() {
-    // TODO: check internet
+  static Future<void> checkInternetConnection() async {
+    final result = await InternetConnection().isConnected();
+    if (!result) throw HttpException(message: 'No internet connection!');
   }
 
   static Future<dynamic> signUpEmailPasswordFirebase(String email, String password) async {
     // Reference: https://firebase.google.com/docs/reference/rest/auth#section-create-email-password
     const url = 'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=$webAPIKey';
     try {
+      await checkInternetConnection();
       final response = await http.post(url,
           body: json.encode({
             'email': email,
@@ -60,7 +63,7 @@ class ApiCall {
   static Future<dynamic> signInEmailPasswordFirebase(String email, String password) async {
     // Reference: https://firebase.google.com/docs/reference/rest/auth#section-sign-in-email-password
     try {
-      checkInternetConnection();
+      await checkInternetConnection();
       const url = 'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=$webAPIKey';
       final response = await http.post(url,
           body: json.encode({
@@ -74,8 +77,6 @@ class ApiCall {
         String message = '';
         switch (data['error']['message']) {
           case 'EMAIL_NOT_FOUND':
-            message = 'The email address or password was wrong!';
-            break;
           case 'INVALID_PASSWORD':
             message = 'The email address or password was wrong!';
             break;
@@ -96,7 +97,7 @@ class ApiCall {
 
   static Future<bool> postUserData(User user) async {
     try {
-      checkInternetConnection();
+      await checkInternetConnection();
       const url = 'https://justclass-da0b0.appspot.com/api/v1/user';
       final response = await http.post(
         url,
@@ -121,7 +122,7 @@ class ApiCall {
   static Future<Class> createClass(String uid, CreateClassFormData data) async {
     try {
       await Future.delayed(Duration(seconds: 5));
-      checkInternetConnection();
+      await checkInternetConnection();
       final url = 'https://justclass-da0b0.appspot.com/api/v1/classroom/$uid';
       final response = await http.post(
         url,
@@ -148,7 +149,7 @@ class ApiCall {
 
   static Future<List<Class>> fetchClassList(String uid) async {
     try {
-      checkInternetConnection();
+      await checkInternetConnection();
       final url = 'https://justclass-da0b0.appspot.com/api/v1/classroom/$uid';
       final response = await http.get(url, headers: _headers);
       if (response.statusCode >= 400)
@@ -165,7 +166,7 @@ class ApiCall {
 
   static Future<Class> joinClassWithCode(String uid, String publicCode) async {
     try {
-      checkInternetConnection();
+      await checkInternetConnection();
       final url = 'https://justclass-da0b0.appspot.com/api/v1/classroom/$uid/$publicCode';
       final response = await http.put(url, headers: _headers);
       if (response.statusCode == 417)
@@ -181,7 +182,7 @@ class ApiCall {
 
   static Future<void> removeOwnedClass(String uid, String cid) async {
     try {
-      checkInternetConnection();
+      await checkInternetConnection();
       final url = 'https://justclass-da0b0.appspot.com/api/v1/classroom/$uid/$cid';
       final response = await http.delete(url, headers: _headers);
       if (response.statusCode >= 400) throw HttpException(message: 'Unable to remove class! ${response.statusCode}');
@@ -192,7 +193,7 @@ class ApiCall {
 
   static Future<void> updateClassDetails(String uid, String cid, ClassDetailsData data) async {
     try {
-      checkInternetConnection();
+      await checkInternetConnection();
       final url = 'https://justclass-da0b0.appspot.com/api/v1/classroom/$uid';
       final response = await http.patch(url,
           headers: _headers,
@@ -215,7 +216,7 @@ class ApiCall {
 
   static Future<String> requestNewPublicCode(String uid, String cid) async {
     try {
-      checkInternetConnection();
+      await checkInternetConnection();
       final url = 'https://justclass-da0b0.appspot.com/api/v1/classroom/$uid?requestNewPublicCode=true';
       final response = await http.patch(
         url,
@@ -233,7 +234,7 @@ class ApiCall {
 
   static Future<void> fetchClassDetails(String cid) async {
     try {
-      checkInternetConnection();
+      await checkInternetConnection();
       await Future.delayed(const Duration(seconds: 1));
       // TODO: Implementation for class info screen in student mode
     } catch (error) {
@@ -243,7 +244,7 @@ class ApiCall {
 
   static Future<List<Member>> fetchMemberList(String uid, String cid) async {
     try {
-      checkInternetConnection();
+      await checkInternetConnection();
       final url = 'https://justclass-da0b0.appspot.com/api/v1/classroom/members/$uid/$cid';
       final response = await http.get(url, headers: _headers);
       if (response.statusCode >= 400)
@@ -364,7 +365,7 @@ class ApiCall {
     String keyword,
   ) async {
     try {
-      checkInternetConnection();
+      await checkInternetConnection();
       final url = 'https://justclass-da0b0.appspot.com/api/v1/classroom/lookup/$uid/$cid/${role.name}?keyword=$keyword';
       final response = await http.get(url, headers: _headers);
       if (response.statusCode >= 400) throw HttpException(message: 'Unable to suggest users! ${response.statusCode}');
@@ -403,7 +404,7 @@ class ApiCall {
 
   static Future<void> inviteMembers(String uid, String cid, Set<String> emails, ClassRole role) async {
     try {
-      checkInternetConnection();
+      await checkInternetConnection();
       final url = 'https://justclass-da0b0.appspot.com/api/v1/classroom/$uid/$cid';
 
       final response = await http.patch(
@@ -422,7 +423,7 @@ class ApiCall {
 
   static Future<void> leaveCLass(String uid, String cid) async {
     try {
-      checkInternetConnection();
+      await checkInternetConnection();
       final url = 'https://justclass-da0b0.appspot.com/api/v1/classroom/leave/$uid/$cid';
 
       final response = await http.delete(url, headers: _headers);
@@ -434,7 +435,7 @@ class ApiCall {
 
   static Future<dynamic> fetchNotifications(String uid) async {
     try {
-      checkInternetConnection();
+      await checkInternetConnection();
       final url = 'https://justclass-da0b0.appspot.com/api/v1/notification/$uid';
 
       final response = await http.get(url, headers: _headers);
@@ -450,7 +451,7 @@ class ApiCall {
 
   static Future<List<Note>> fetchNotes(String cid) async {
     try {
-      checkInternetConnection();
+      await checkInternetConnection();
       final url = 'https://justclass-da0b0.appspot.com/api/v1/note/$cid';
 
       final response = await http.get(url, headers: _headers);
@@ -467,7 +468,7 @@ class ApiCall {
 
   static Future<Note> postNote(String uid, String cid, String content, Map<String, String> files) async {
     try {
-      checkInternetConnection();
+      await checkInternetConnection();
       final url = 'https://justclass-da0b0.appspot.com/api/v1/note/$uid/$cid';
 
       // Reference: https://stackoverflow.com/questions/44841729/how-to-upload-image-in-flutter
@@ -492,7 +493,7 @@ class ApiCall {
 
   static Future<void> removeNote(String uid, String nid) async {
     try {
-      checkInternetConnection();
+      await checkInternetConnection();
       final url = 'https://justclass-da0b0.appspot.com/api/v1/note/$uid/$nid';
       final response = await http.delete(url, headers: _headers);
 
@@ -510,7 +511,7 @@ class ApiCall {
     Map<String, String> newFiles,
   }) async {
     try {
-      checkInternetConnection();
+      await checkInternetConnection();
       final url = 'https://justclass-da0b0.appspot.com/api/v1/note/$uid/$nid';
 
       final request = http.MultipartRequest('PATCH', Uri.parse(url));
@@ -550,7 +551,7 @@ class ApiCall {
 
   static Future<void> downloadFile(String fileId, String filePath, Function onReceive) async {
     try {
-      checkInternetConnection();
+      await checkInternetConnection();
       final url = 'https://justclass-da0b0.appspot.com/api/v1/file/$fileId';
 
       final dio = Dio();

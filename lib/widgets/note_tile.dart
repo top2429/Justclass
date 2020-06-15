@@ -7,7 +7,6 @@ import 'package:justclass/providers/class.dart';
 import 'package:justclass/providers/note_manager.dart';
 import 'package:justclass/screens/edit_note_screen.dart';
 import 'package:justclass/themes.dart';
-import 'package:justclass/utils/mime_type.dart';
 import 'package:justclass/widgets/app_snack_bar.dart';
 import 'package:justclass/widgets/member_avatar.dart';
 import 'package:justclass/widgets/note_file_chip.dart';

@@ -549,13 +549,16 @@ class ApiCall {
     }
   }
 
-  static Future<void> downloadFile(String fileId, String filePath, Function onReceive) async {
+  static Future<void> downloadFile(String fileId, String filePath, Function onReceive, CancelToken token) async {
     try {
       await checkInternetConnection();
       final url = 'https://justclass-da0b0.appspot.com/api/v1/file/$fileId';
-
-      final dio = Dio();
-      await dio.download(url, filePath, onReceiveProgress: onReceive);
+      try {
+        final dio = Dio();
+        await dio.download(url, filePath, onReceiveProgress: onReceive, cancelToken: token);
+      } catch (error) {
+        throw HttpException(message: "Unable to download the file!");
+      }
     } catch (error) {
       throw error;
     }

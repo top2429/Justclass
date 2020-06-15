@@ -4,6 +4,7 @@ import 'package:justclass/providers/auth.dart';
 import 'package:justclass/providers/class.dart';
 import 'package:justclass/screens/auth_screen.dart';
 import 'package:justclass/screens/notification_screen.dart';
+import 'package:justclass/utils/internet_connection.dart';
 import 'package:justclass/widgets/member_avatar.dart';
 import 'package:provider/provider.dart';
 
@@ -27,7 +28,7 @@ class HomeDrawerContent extends StatelessWidget {
         child: Column(
           children: <Widget>[
             const SizedBox(height: 45),
-            buildUserInfoBar(context),
+            DrawerUserInfoBar(),
             const SizedBox(height: 20),
             buildActionButtons(context),
           ],
@@ -36,7 +37,57 @@ class HomeDrawerContent extends StatelessWidget {
     );
   }
 
-  Widget buildUserInfoBar(BuildContext context) {
+  Widget buildActionButtons(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(right: 20),
+      child: Column(
+        children: <Widget>[
+          ListTile(
+            dense: true,
+            leading: const Icon(Icons.notifications_none, color: Colors.white),
+            title: const Text('Notifications', style: TextStyle(color: Colors.white, fontSize: 15)),
+            onTap: () => toNotificationScreen(context),
+          ),
+          ListTile(
+            dense: true,
+            leading: const Icon(Icons.launch, color: Colors.white),
+            title: const Text('Sign Out', style: TextStyle(color: Colors.white, fontSize: 15)),
+            onTap: () => signOut(context),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class DrawerUserInfoBar extends StatefulWidget {
+  @override
+  _DrawerUserInfoBarState createState() => _DrawerUserInfoBarState();
+}
+
+class _DrawerUserInfoBarState extends State<DrawerUserInfoBar> {
+  int num = DateTime.now().millisecondsSinceEpoch;
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      InternetConnection().isConnected().then((status) {
+        if (!status) {
+          InternetConnection().subscribe(
+              onConnected: () {
+                this.setState(() {
+                  num = DateTime.now().millisecondsSinceEpoch;
+                });
+              },
+              onLost: () {});
+        }
+      });
+    });
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final user = Provider.of<Auth>(context).user;
 
     Color color;
@@ -64,7 +115,12 @@ class HomeDrawerContent extends StatelessWidget {
             color: Colors.white70,
             borderRadius: const BorderRadius.all(Radius.circular(21.6)),
           ),
-          child: MemberAvatar(color: color, displayName: user.displayName, photoUrl: user.photoUrl),
+          child: MemberAvatar(
+            color: color,
+            displayName: user.displayName,
+            photoUrl: user.photoUrl,
+            num: num,
+          ),
         ),
         title: Text(
           user.displayName,
@@ -80,28 +136,6 @@ class HomeDrawerContent extends StatelessWidget {
                   color: Colors.white70,
                 ))
             : null,
-      ),
-    );
-  }
-
-  Widget buildActionButtons(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(right: 20),
-      child: Column(
-        children: <Widget>[
-          ListTile(
-            dense: true,
-            leading: const Icon(Icons.notifications_none, color: Colors.white),
-            title: const Text('Notifications', style: TextStyle(color: Colors.white, fontSize: 15)),
-            onTap: () => toNotificationScreen(context),
-          ),
-          ListTile(
-            dense: true,
-            leading: const Icon(Icons.launch, color: Colors.white),
-            title: const Text('Sign Out', style: TextStyle(color: Colors.white, fontSize: 15)),
-            onTap: () => signOut(context),
-          ),
-        ],
       ),
     );
   }

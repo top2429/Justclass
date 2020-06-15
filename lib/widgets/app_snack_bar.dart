@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:justclass/utils/app_context.dart';
 
 class AppSnackBar {
+  static const errorDuration = 5;
+
   static void showContextError(
     BuildContext context, {
     String message = 'Something went wrong!',
@@ -12,7 +14,7 @@ class AppSnackBar {
       SnackBar(
         elevation: 2,
         backgroundColor: bgColor,
-        duration: const Duration(seconds: 3600),
+        duration: const Duration(seconds: errorDuration),
         behavior: SnackBarBehavior.floating,
         content: Text(message, style: const TextStyle(color: Colors.black)),
         action: SnackBarAction(
@@ -36,7 +38,7 @@ class AppSnackBar {
       SnackBar(
         elevation: 2,
         backgroundColor: bgColor,
-        duration: const Duration(seconds: 3600),
+        duration: const Duration(seconds: errorDuration),
         behavior: SnackBarBehavior.floating,
         content: Text(message, style: const TextStyle(color: Colors.black)),
         action: SnackBarAction(

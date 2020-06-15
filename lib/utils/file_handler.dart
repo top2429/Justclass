@@ -5,7 +5,7 @@ import 'package:open_file/open_file.dart';
 import 'dart:io' as io;
 
 class FileHandler {
-  static Future<void> openFile(String fileId, String name, Function onReceive) async {
+  static Future<void> openFileURL(String fileId, String name, Function onReceive) async {
     try {
       // create a temporary file path
       final dir = await getTemporaryDirectory();
@@ -19,7 +19,10 @@ class FileHandler {
 
       // open the file
       final result = await OpenFile.open(filePath);
-      if (result.type != ResultType.done) throw HttpException(message: result.message);
+      if (result.type != ResultType.done) {
+        if (result.type == ResultType.noAppToOpen) throw HttpException(message: 'No app found to open this file!');
+        throw HttpException(message: result.message);
+      }
     } catch (error) {
       throw error;
     }

@@ -15,15 +15,25 @@ class NoteFileChip extends StatefulWidget {
 }
 
 class _NoteFileChipState extends State<NoteFileChip> {
+  bool downloading = false;
+  double percent = 0.0;
+
   Future<void> openFile() async {
     try {
-      await FileHandler.openFile(widget.attachment.fileId, widget.attachment.name, onReceiveFile);
+      setState(() => downloading = true);
+      await FileHandler.openFileURL(widget.attachment.fileId, widget.attachment.name, onReceiveFile);
     } catch (error) {
       if (this.mounted) AppSnackBar.showError(context, message: error.toString());
+    } finally {
+      if (this.mounted) setState(() => downloading = false);
     }
   }
 
-  onReceiveFile(int current, int total) {}
+  onReceiveFile(int current, int total) {
+    if (!this.mounted) return;
+    double result = (current / total * 100).roundToDouble() / 100;
+    if (percent != result) setState(() => percent = result);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,16 +42,35 @@ class _NoteFileChipState extends State<NoteFileChip> {
       child: Container(
         height: 30,
         constraints: const BoxConstraints(maxWidth: 300),
-        padding: const EdgeInsets.symmetric(horizontal: 10),
+        padding: const EdgeInsets.only(right: 10),
         decoration: BoxDecoration(
-          borderRadius: const BorderRadius.all(Radius.circular(20)),
+          borderRadius: const BorderRadius.all(Radius.circular(15)),
           color: widget.color.withOpacity(0.05),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Icon(MimeType.toIcon(widget.attachment.type), color: widget.color, size: 20),
+            if (!downloading)
+              Container(
+                width: 30,
+                height: 30,
+                alignment: Alignment.centerRight,
+                child: Icon(MimeType.toIcon(widget.attachment.type), color: widget.color, size: 20),
+              ),
+            if (downloading)
+              Container(
+                height: 26,
+                width: 26,
+                margin: const EdgeInsets.only(right: 2, left: 2),
+                alignment: Alignment.centerRight,
+                child: CircularProgressIndicator(
+                  value: percent,
+                  strokeWidth: 4,
+                  valueColor: AlwaysStoppedAnimation(widget.color),
+                  backgroundColor: widget.color.withOpacity(0.3),
+                ),
+              ),
             const SizedBox(width: 5),
             Flexible(
               child: Text(widget.attachment.name, overflow: TextOverflow.ellipsis),

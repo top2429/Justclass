@@ -48,29 +48,31 @@ class Notification {
     this.classSubject = json['classroom']['subject'];
     this.classTitle = json['classroom']['title'];
 
-    if (json['invoker'] != null)
-      this.invoker = User(
-        uid: json['invoker']['localId'],
-        email: json['invoker']['email'],
-        photoUrl: json['invoker']['photoUrl'],
-        displayName: json['invoker']['displayName'],
-      );
+    this.invoker = User(
+      uid: json['invoker']['localId'],
+      email: json['invoker']['email'],
+      photoUrl: json['invoker']['photoUrl'],
+      displayName: json['invoker']['displayName'],
+    );
 
     invokeTime = json['invokeTime'];
 
     this.notificationType = NotificationTypes.getType(json['notificationType']);
     switch (this.notificationType) {
       case NotificationType.INVITATION:
-        this.others['invitationStatus'] = json['invitationStatus'];
+        this.others = {
+          'invitationStatus': json['invitationStatus'],
+          'role': json['role'],
+        };
         break;
       case NotificationType.ROLE_CHANGE:
-        // TODO: Handle this case.
+        this.others = {};
         break;
       case NotificationType.KICKED:
-        // TODO: Handle this case.
+        this.others = {};
         break;
       case NotificationType.CLASSROOM_DELETED:
-        // TODO: Handle this case.
+        this.others = {};
         break;
       case NotificationType.OTHERS:
         // TODO: Handle this case.

@@ -6,11 +6,12 @@ import 'package:justclass/models/user.dart';
 import 'package:justclass/providers/notification_manager.dart';
 import 'package:justclass/widgets/app_snack_bar.dart';
 import 'package:justclass/widgets/member_avatar.dart';
+import 'package:justclass/widgets/opaque_progress_indicator.dart';
 import 'package:provider/provider.dart';
+import 'package:justclass/widgets/fetch_progress_indicator.dart';
+import 'package:justclass/widgets/refreshable_error_prompt.dart';
 
 import '../themes.dart';
-import 'fetch_progress_indicator.dart';
-import 'refreshable_error_prompt.dart';
 
 class NotificationList extends StatefulWidget {
   @override
@@ -19,10 +20,21 @@ class NotificationList extends StatefulWidget {
 
 class _NotificationListState extends State<NotificationList> {
   static const double padding = 15;
+  bool loading = false;
 
   Future<void> fetchMemberList(String uid) async {
     try {
       await Provider.of<NotificationManager>(context, listen: false).fetchNotificationList();
+    } catch (error) {
+      if (this.mounted) AppSnackBar.showError(context, message: error.toString());
+    }
+  }
+
+  Future<void> acceptInvitation(String notId) async {
+    try {
+      setState(() => loading = true);
+      await Provider.of<NotificationManager>(context, listen: false).acceptInvitation(notId);
+      if (this.mounted) setState(() => loading = false);
     } catch (error) {
       if (this.mounted) AppSnackBar.showError(context, message: error.toString());
     }
@@ -44,10 +56,16 @@ class _NotificationListState extends State<NotificationList> {
     return RefreshIndicator(
       color: Themes.primaryColor,
       onRefresh: () => fetchMemberList(notMgr.uid),
-      child: ListView(
+      child: Stack(
         children: <Widget>[
-          const SizedBox(height: 20),
-          ...notMgr.notifications.map((n) => buildInvitationTile(n)).toList(),
+          ListView(
+            children: <Widget>[
+              const SizedBox(height: 20),
+              ...notMgr.notifications.map((n) => buildInvitationTile(n)).toList(),
+              const SizedBox(height: 20),
+            ],
+          ),
+          Visibility(visible: loading, child: OpaqueProgressIndicator()),
         ],
       ),
     );
@@ -67,12 +85,12 @@ class _NotificationListState extends State<NotificationList> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-//          buildNoteTopBar(n.invoker, n.invokeTime),
+          buildNoteTopBar(n.invoker, n.invokeTime),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: padding),
             child: buildNotificationContent(n),
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 15),
         ],
       ),
     );
@@ -91,7 +109,7 @@ class _NotificationListState extends State<NotificationList> {
         style: const TextStyle(fontSize: 15),
       ),
       subtitle: Text(
-        DateFormat('HH mm  MMM d yyyy').format(DateTime.fromMillisecondsSinceEpoch(time)),
+        DateFormat('HH:mm  MMM d yyyy').format(DateTime.fromMillisecondsSinceEpoch(time)),
         style: const TextStyle(color: Colors.grey),
       ),
     );
@@ -100,25 +118,58 @@ class _NotificationListState extends State<NotificationList> {
   Widget buildNotificationContent(app.Notification n) {
     switch (n.notificationType) {
       case NotificationType.INVITATION:
+        final accepted = (n.others['invitationStatus'] == 'ACCEPTED');
         return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Text('Invited'),
-            n.others['invitationStatus'] == 'PENDING'
-                ? Container(
-                    child: OutlineButton(
-                      child: Text('Accept'),
-                      onPressed: () {},
-                    ),
-                  )
-                : Container(),
+            RichText(
+              text: TextSpan(
+                children: <TextSpan>[
+                  const TextSpan(text: 'You are invited to the class '),
+                  TextSpan(
+                    text: n.classTitle,
+                    style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.black87),
+                  ),
+                  TextSpan(text: ' as a ${n.others['role'].toString().toLowerCase()}.'),
+                ],
+                style: const TextStyle(color: Colors.black87, fontSize: 15, height: 1.5),
+              ),
+            ),
+            const SizedBox(height: 7),
+            Align(
+                alignment: Alignment.centerRight,
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 5),
+                  child: OutlineButton(
+                    highlightedBorderColor: Colors.transparent,
+//                    borderSide: BorderSide(color: Themes.primaryColor),
+                    child: Text(accepted ? 'ACCEPTED' : 'ACCEPT',
+                        style: TextStyle(
+                          color: accepted ? Colors.grey : Themes.primaryColor,
+                          fontWeight: FontWeight.bold,
+                        )),
+                    onPressed: accepted ? null : () => acceptInvitation(n.notificationId),
+                  ),
+                )),
           ],
         );
       case NotificationType.ROLE_CHANGE:
+        // TODO: change later
         return Text('role changed');
       case NotificationType.KICKED:
-        return Text('kicked');
+        // TODO: change later
+        return Text('You\'re kicked from the class ${n.classTitle}');
       case NotificationType.CLASSROOM_DELETED:
-        return Text('Deleted');
+        return RichText(
+          text: TextSpan(
+            children: <TextSpan>[
+              const TextSpan(text: 'The class '),
+              TextSpan(text: n.classTitle, style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.black87)),
+              const TextSpan(text: ' has been removed.'),
+            ],
+            style: const TextStyle(color: Colors.black87, fontSize: 15, height: 1.5),
+          ),
+        );
       case NotificationType.OTHERS:
       default:
         return Container();

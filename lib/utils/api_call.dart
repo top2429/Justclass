@@ -576,7 +576,6 @@ class ApiCall {
       final List<Notification> notList = [];
       final notData = json.decode(response.body) as List<dynamic>;
       notData.forEach((not) => notList.add(Notification.fromJson(not)));
-
       return notList;
     } catch (error) {
       throw (error);

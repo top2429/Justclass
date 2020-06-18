@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:justclass/models/notification.dart';
 import 'package:justclass/utils/api_call.dart';
+import 'package:justclass/widgets/app_snack_bar.dart';
 
 class NotificationManager extends ChangeNotifier {
   String _uid;
@@ -22,6 +23,7 @@ class NotificationManager extends ChangeNotifier {
       _notifications = await ApiCall.getNotificationList(_uid);
       firstLoadSucceeded = true;
     } catch (error) {
+      AppSnackBar.showError(null, message: error.toString());
       firstLoadSucceeded = false;
     } finally {
       notifyListeners();
@@ -40,8 +42,8 @@ class NotificationManager extends ChangeNotifier {
   Future<void> acceptInvitation(String notificationId) async {
     try {
       await ApiCall.acceptInvitation(uid, notificationId);
-      final not = this._notifications.firstWhere((n) => n.notificationId == notificationId);
-      not.others['invitationStatus'] = 'ACCEPTED';
+      this._notifications.firstWhere((n) => n.notificationId == notificationId)
+        ..others['invitationStatus'] = 'ACCEPTED';
       notifyListeners();
     } catch (error) {
       throw error;

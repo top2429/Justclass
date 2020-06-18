@@ -13,14 +13,16 @@ class NotificationManager extends ChangeNotifier {
   bool firstLoadSucceeded;
 
   set uid(String uid) {
+    print("set uid");
     this._uid = uid;
-    fetchNotificationListFirstLoad();
+    this.fetchNotificationListFirstLoad();
   }
 
   Future<void> fetchNotificationListFirstLoad() async {
     try {
       _notifications = await ApiCall.getNotificationList(_uid);
       firstLoadSucceeded = true;
+      print(123);
     } catch (error) {
       firstLoadSucceeded = false;
     } finally {

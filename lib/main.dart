@@ -27,7 +27,9 @@ class MyApp extends StatelessWidget {
           create: (_) => NotificationManager(),
           update: (_, auth, notMgr) {
             // TODO: Try catch
-            return notMgr..uid = auth.user.uid;
+            print('change notifier');
+            notMgr.uid = auth.user.uid;
+            return notMgr;
           },
         ),
       ],

@@ -5,7 +5,6 @@ import 'package:justclass/providers/notification_manager.dart';
 import 'package:justclass/screens/auth_screen.dart';
 import 'package:justclass/screens/home_screen.dart';
 import 'package:justclass/screens/splash_screen.dart';
-import 'package:justclass/screens/notification_screen.dart';
 import 'package:justclass/themes.dart';
 import 'package:provider/provider.dart';
 
@@ -19,19 +18,13 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => Auth()),
-        ChangeNotifierProxyProvider<Auth, NotificationManager>(
-          create: (_) => NotificationManager(),
-          update: (_, auth, notMgr) {
-//            notMgr.setUid(auth.user.uid);
-            print('change notification');
-            return notMgr..uid = auth.user.uid;
-          },
-        ),
         ChangeNotifierProxyProvider<Auth, ClassManager>(
           create: (_) => ClassManager(),
-          update: (_, auth, classMgr) {
-            return classMgr..uid = auth.user.uid;
-          },
+          update: (_, auth, classMgr) => classMgr..uid = auth.user.uid,
+        ),
+        ChangeNotifierProxyProvider<Auth, NotificationManager>(
+          create: (_) => NotificationManager(),
+          update: (_, auth, notMgr) => notMgr..uid = auth.user.uid,
         ),
       ],
       child: Consumer<Auth>(
@@ -44,7 +37,6 @@ class MyApp extends StatelessWidget {
             routes: {
               AuthScreen.routeName: (_) => AuthScreen(),
               HomeScreen.routeName: (_) => HomeScreen(),
-              NotificationScreen.routeName: (_) => NotificationScreen(),
             },
           );
         },
@@ -53,7 +45,6 @@ class MyApp extends StatelessWidget {
   }
 
   Widget _buildFirstScreen(Auth auth) {
-//    return NotificationScreen();
     return (auth.user == null)
         ? FutureBuilder(
             future: auth.tryAutoSignIn(),

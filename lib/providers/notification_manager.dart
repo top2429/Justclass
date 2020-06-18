@@ -12,10 +12,7 @@ class NotificationManager extends ChangeNotifier {
 
   bool firstLoadSucceeded;
 
-  set uid(String uid) => this._uid = uid;
-
-  void setUid(String uid) {
-    print("set uid");
+  set uid(String uid) {
     this._uid = uid;
     this.fetchNotificationListFirstLoad();
   }
@@ -24,7 +21,6 @@ class NotificationManager extends ChangeNotifier {
     try {
       _notifications = await ApiCall.getNotificationList(_uid);
       firstLoadSucceeded = true;
-      print(123);
     } catch (error) {
       firstLoadSucceeded = false;
     } finally {

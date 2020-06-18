@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:justclass/providers/auth.dart';
 import 'package:justclass/providers/class.dart';
+import 'package:justclass/providers/notification_manager.dart';
 import 'package:justclass/screens/auth_screen.dart';
 import 'package:justclass/screens/notification_screen.dart';
 import 'package:justclass/utils/internet_connection.dart';
@@ -17,23 +18,32 @@ class HomeDrawerContent extends StatelessWidget {
   }
 
   void toNotificationScreen(BuildContext context) {
-    Navigator.of(context).pushNamed(NotificationScreen.routeName);
+    try {
+      final cid = Provider.of<Class>(context, listen: false).cid;
+      Navigator.of(context).push(MaterialPageRoute(builder: (_) => NotificationScreen(cid)));
+    } catch (error) {
+      Navigator.of(context).push(MaterialPageRoute(builder: (_) => NotificationScreen()));
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(right: 10),
-      child: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            const SizedBox(height: 45),
-            DrawerUserInfoBar(),
-            const SizedBox(height: 20),
-            buildActionButtons(context),
-          ],
-        ),
-      ),
+    return Consumer<NotificationManager>(
+      builder: (_, notMgr, __) {
+        return Padding(
+          padding: const EdgeInsets.only(right: 10),
+          child: SingleChildScrollView(
+            child: Column(
+              children: <Widget>[
+                const SizedBox(height: 45),
+                DrawerUserInfoBar(),
+                const SizedBox(height: 20),
+                buildActionButtons(context),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 

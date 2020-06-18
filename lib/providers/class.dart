@@ -22,7 +22,7 @@ extension ClassRoles on ClassRole {
   static ClassRole getType(String role) {
     if (role == 'OWNER')
       return ClassRole.OWNER;
-    else if (role == 'TEACHER')
+    else if (role == 'COLLABORATOR')
       return ClassRole.COLLABORATOR;
     else if (role == 'STUDENT')
       return ClassRole.STUDENT;

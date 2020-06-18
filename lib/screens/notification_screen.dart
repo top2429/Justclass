@@ -59,7 +59,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
       elevation: 0,
       backgroundColor: Themes.primaryColor,
       automaticallyImplyLeading: false,
-      title: const Text('Notifications'),
+      title: const Text('Notifications', style: TextStyle(fontWeight: FontWeight.bold)),
     );
   }
 }

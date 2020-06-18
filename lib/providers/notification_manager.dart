@@ -14,10 +14,10 @@ class NotificationManager extends ChangeNotifier {
 
   set uid(String uid) {
     this._uid = uid;
-    this.fetchNotificationListFirstLoad();
+    this._fetchNotificationListFirstLoad();
   }
 
-  Future<void> fetchNotificationListFirstLoad() async {
+  Future<void> _fetchNotificationListFirstLoad() async {
     try {
       _notifications = await ApiCall.getNotificationList(_uid);
       firstLoadSucceeded = true;

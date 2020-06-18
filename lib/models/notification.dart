@@ -1,6 +1,6 @@
 import 'package:justclass/models/user.dart';
 
-enum NotificationType { INVITATION, ROLE_CHANGE, UNDEFINED }
+enum NotificationType { INVITATION, ROLE_CHANGE, KICKED, CLASSROOM_DELETED, OTHERS }
 
 extension NotificationTypes on NotificationType {
   String get name {
@@ -9,8 +9,12 @@ extension NotificationTypes on NotificationType {
         return 'INVITATION';
       case NotificationType.ROLE_CHANGE:
         return 'ROLE_CHANGE';
+      case NotificationType.KICKED:
+        return 'KICKED';
+      case NotificationType.CLASSROOM_DELETED:
+        return 'CLASSROOM_DELETED';
       default:
-        return 'UNDEFINED';
+        return 'OTHERS';
     }
   }
 
@@ -19,8 +23,12 @@ extension NotificationTypes on NotificationType {
       return NotificationType.INVITATION;
     else if (code == 'ROLE_CHANGE')
       return NotificationType.ROLE_CHANGE;
+    else if (code == 'KICKED')
+      return NotificationType.KICKED;
+    else if (code == 'CLASSROOM_DELETED')
+      return NotificationType.CLASSROOM_DELETED;
     else
-      return NotificationType.UNDEFINED;
+      return NotificationType.OTHERS;
   }
 }
 
@@ -49,12 +57,24 @@ class Notification {
       );
 
     invokeTime = json['invokeTime'];
-    if (json['notificationType'] == 'INVITATION') {
-      notificationType = NotificationType.INVITATION;
-      others['invitationStatus'] = json['invitationStatus'];
-    }
-    if (json['notificationType'] == 'ROLE_CHANGE') {
-      notificationType = NotificationType.ROLE_CHANGE;
+
+    this.notificationType = NotificationTypes.getType(json['notificationType']);
+    switch (this.notificationType) {
+      case NotificationType.INVITATION:
+        this.others['invitationStatus'] = json['invitationStatus'];
+        break;
+      case NotificationType.ROLE_CHANGE:
+        // TODO: Handle this case.
+        break;
+      case NotificationType.KICKED:
+        // TODO: Handle this case.
+        break;
+      case NotificationType.CLASSROOM_DELETED:
+        // TODO: Handle this case.
+        break;
+      case NotificationType.OTHERS:
+        // TODO: Handle this case.
+        break;
     }
   }
 }

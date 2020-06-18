@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:justclass/models/notification.dart';
+import 'package:justclass/models/notification.dart' as app;
+import 'package:justclass/models/user.dart';
 import 'package:justclass/providers/notification_manager.dart';
+import 'package:justclass/widgets/app_snack_bar.dart';
+import 'package:justclass/widgets/member_avatar.dart';
 import 'package:provider/provider.dart';
 
 import '../themes.dart';
@@ -12,22 +18,15 @@ class NotificationList extends StatefulWidget {
 }
 
 class _NotificationListState extends State<NotificationList> {
-  bool hasError = false;
-  bool didFirstLoad = false;
+  static const double padding = 15;
 
-  @override
-  void initState() {
-    super.initState();
+  Future<void> fetchMemberList(String uid) async {
+    try {
+      await Provider.of<NotificationManager>(context, listen: false).fetchNotificationList();
+    } catch (error) {
+      if (this.mounted) AppSnackBar.showError(context, message: error.toString());
+    }
   }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
-  Future<void> fetchMemberListFirstLoad(String uid) async {}
-
-  Future<void> fetchMemberList(String uid) async {}
 
   @override
   Widget build(BuildContext context) {
@@ -48,13 +47,99 @@ class _NotificationListState extends State<NotificationList> {
       child: ListView(
         children: <Widget>[
           const SizedBox(height: 20),
-          ...notMgr.notifications
-              .map((n) => ListTile(
-                    title: Text(n.classTitle),
-                  ))
-              .toList(),
+          ...notMgr.notifications.map((n) => buildInvitationTile(n)).toList(),
         ],
       ),
     );
+  }
+
+  Widget buildInvitationTile(app.Notification n) {
+    final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+
+    return Container(
+      margin: isPortrait
+          ? const EdgeInsets.symmetric(vertical: 6, horizontal: 15)
+          : const EdgeInsets.symmetric(vertical: 10, horizontal: 25),
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.grey.shade400, width: 0.7),
+        borderRadius: const BorderRadius.all(Radius.circular(5)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+//          buildNoteTopBar(n.invoker, n.invokeTime),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: padding),
+            child: buildNotificationContent(n),
+          ),
+          const SizedBox(height: 10),
+        ],
+      ),
+    );
+  }
+
+  Widget buildNoteTopBar(User invoker, num time) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Flexible(
+          child: ListTile(
+            leading: MemberAvatar(
+              photoUrl: invoker.photoUrl,
+              displayName: invoker.displayName,
+              color: Themes.primaryColor,
+            ),
+            title: Text(
+              invoker.displayName,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(fontSize: 15),
+            ),
+            subtitle: Text(
+              DateFormat('HH mm  MMM d yyyy').format(DateTime.fromMillisecondsSinceEpoch(time)),
+              style: const TextStyle(color: Colors.grey),
+            ),
+          ),
+        ),
+//        ClipRRect(
+//          borderRadius: const BorderRadius.all(Radius.circular(25)),
+//          child: SizedBox(
+//            width: 50,
+//            height: 50,
+//            child: Material(
+//              color: Colors.transparent,
+//              child: PopupMenuButton(
+//                offset: const Offset(0, 10),
+//                shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5))),
+//                icon: const Icon(Icons.more_vert, color: Colors.grey),
+//                tooltip: 'Options',
+//                itemBuilder: (_) => [
+//                  const PopupMenuItem(child: Text('Remove'), value: 'remove', height: 40),
+//                ],
+//                onSelected: (val) {
+//                  if (val == 'remove') {}
+//                },
+//              ),
+//            ),
+//          ),
+//        )
+      ],
+    );
+  }
+
+  Widget buildNotificationContent(app.Notification n) {
+    switch (n.notificationType) {
+      case NotificationType.INVITATION:
+        return Text('Invited');
+      case NotificationType.ROLE_CHANGE:
+
+      case NotificationType.KICKED:
+
+      case NotificationType.CLASSROOM_DELETED:
+        return Text('Deleted');
+      case NotificationType.OTHERS:
+      default:
+        return Container();
+    }
   }
 }

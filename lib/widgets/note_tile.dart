@@ -90,7 +90,7 @@ class NoteTile extends StatelessWidget {
               style: const TextStyle(fontSize: 15),
             ),
             subtitle: Text(
-              DateFormat('MMM d yyyy').format(DateTime.fromMillisecondsSinceEpoch(note.createdAt)),
+              DateFormat('HH:mm  MMM d yyyy').format(DateTime.fromMillisecondsSinceEpoch(note.createdAt)),
               style: const TextStyle(color: Colors.grey),
             ),
           ),

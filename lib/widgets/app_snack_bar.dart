@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:justclass/utils/app_context.dart';
 
 class AppSnackBar {
-  static const errorDuration = 5;
+  static const errorDuration = 30;
 
   static void showContextError(
     BuildContext context, {

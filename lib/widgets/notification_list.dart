@@ -79,62 +79,44 @@ class _NotificationListState extends State<NotificationList> {
   }
 
   Widget buildNoteTopBar(User invoker, num time) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Flexible(
-          child: ListTile(
-            leading: MemberAvatar(
-              photoUrl: invoker.photoUrl,
-              displayName: invoker.displayName,
-              color: Themes.primaryColor,
-            ),
-            title: Text(
-              invoker.displayName,
-              overflow: TextOverflow.ellipsis,
-              style: const TextStyle(fontSize: 15),
-            ),
-            subtitle: Text(
-              DateFormat('HH mm  MMM d yyyy').format(DateTime.fromMillisecondsSinceEpoch(time)),
-              style: const TextStyle(color: Colors.grey),
-            ),
-          ),
-        ),
-//        ClipRRect(
-//          borderRadius: const BorderRadius.all(Radius.circular(25)),
-//          child: SizedBox(
-//            width: 50,
-//            height: 50,
-//            child: Material(
-//              color: Colors.transparent,
-//              child: PopupMenuButton(
-//                offset: const Offset(0, 10),
-//                shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5))),
-//                icon: const Icon(Icons.more_vert, color: Colors.grey),
-//                tooltip: 'Options',
-//                itemBuilder: (_) => [
-//                  const PopupMenuItem(child: Text('Remove'), value: 'remove', height: 40),
-//                ],
-//                onSelected: (val) {
-//                  if (val == 'remove') {}
-//                },
-//              ),
-//            ),
-//          ),
-//        )
-      ],
+    return ListTile(
+      leading: MemberAvatar(
+        photoUrl: invoker.photoUrl,
+        displayName: invoker.displayName,
+        color: Themes.primaryColor,
+      ),
+      title: Text(
+        invoker.displayName,
+        overflow: TextOverflow.ellipsis,
+        style: const TextStyle(fontSize: 15),
+      ),
+      subtitle: Text(
+        DateFormat('HH mm  MMM d yyyy').format(DateTime.fromMillisecondsSinceEpoch(time)),
+        style: const TextStyle(color: Colors.grey),
+      ),
     );
   }
 
   Widget buildNotificationContent(app.Notification n) {
     switch (n.notificationType) {
       case NotificationType.INVITATION:
-        return Text('Invited');
+        return Column(
+          children: <Widget>[
+            Text('Invited'),
+            n.others['invitationStatus'] == 'PENDING'
+                ? Container(
+                    child: OutlineButton(
+                      child: Text('Accept'),
+                      onPressed: () {},
+                    ),
+                  )
+                : Container(),
+          ],
+        );
       case NotificationType.ROLE_CHANGE:
-
+        return Text('role changed');
       case NotificationType.KICKED:
-
+        return Text('kicked');
       case NotificationType.CLASSROOM_DELETED:
         return Text('Deleted');
       case NotificationType.OTHERS:

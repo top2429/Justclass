@@ -36,4 +36,15 @@ class NotificationManager extends ChangeNotifier {
       throw error;
     }
   }
+
+  Future<void> acceptInvitation(String notificationId) async {
+    try {
+      await ApiCall.acceptInvitation(uid, notificationId);
+      final not = this._notifications.firstWhere((n) => n.notificationId == notificationId);
+      not.others['invitationStatus'] = 'ACCEPTED';
+      notifyListeners();
+    } catch (error) {
+      throw error;
+    }
+  }
 }

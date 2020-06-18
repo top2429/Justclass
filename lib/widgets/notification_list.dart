@@ -60,6 +60,7 @@ class _NotificationListState extends State<NotificationList> {
         children: <Widget>[
           ListView(
             children: <Widget>[
+              if (notMgr.notifications.length == 0) buildEmptyBoard(),
               const SizedBox(height: 20),
               ...notMgr.notifications.map((n) => buildInvitationTile(n)).toList(),
               const SizedBox(height: 20),
@@ -69,6 +70,31 @@ class _NotificationListState extends State<NotificationList> {
         ],
       ),
     );
+  }
+
+  Widget buildEmptyBoard() {
+    final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+
+    return LayoutBuilder(builder: (context, constraint) {
+      return Container(
+        margin: isPortrait
+            ? const EdgeInsets.all(25)
+            : EdgeInsets.symmetric(horizontal: constraint.maxWidth * 0.2, vertical: 25),
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: Themes.primaryColor.withOpacity(0.05),
+          borderRadius: const BorderRadius.all(Radius.circular(5)),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Icon(isPortrait ? Icons.crop_portrait : Icons.crop_landscape, color: Themes.primaryColor, size: 30),
+            const SizedBox(width: 10),
+            const Text('Empty Board', style: TextStyle(fontSize: 16)),
+          ],
+        ),
+      );
+    });
   }
 
   Widget buildInvitationTile(app.Notification n) {

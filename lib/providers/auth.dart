@@ -30,7 +30,7 @@ extension AuthTypes on AuthType {
   }
 }
 
-class Auth with ChangeNotifier {
+class Auth extends ChangeNotifier {
   final _googleSignIn = GoogleSignIn(scopes: ['email']);
   User _user;
   AuthType _type;

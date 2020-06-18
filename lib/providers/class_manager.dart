@@ -4,12 +4,10 @@ import 'package:justclass/utils/api_call.dart';
 import 'package:justclass/widgets/class_list_view.dart';
 import 'package:justclass/widgets/create_class_form.dart';
 
-class ClassManager with ChangeNotifier {
+class ClassManager extends ChangeNotifier {
   List<Class> _classes = [];
 
-  String _uid;
-
-  set uid(String uid) => _uid = uid;
+  String uid;
 
   List<Class> get classes => [..._classes];
 
@@ -32,7 +30,7 @@ class ClassManager with ChangeNotifier {
 
   Future<void> add(CreateClassFormData data) async {
     try {
-      final newClass = await ApiCall.createClass(_uid, data);
+      final newClass = await ApiCall.createClass(uid, data);
       _classes.insert(0, newClass);
       notifyListeners();
     } catch (error) {
@@ -42,7 +40,7 @@ class ClassManager with ChangeNotifier {
 
   Future<void> fetchClassList() async {
     try {
-      _classes = await ApiCall.fetchClassList(_uid);
+      _classes = await ApiCall.fetchClassList(uid);
       notifyListeners();
     } catch (error) {
       throw error;
@@ -51,7 +49,7 @@ class ClassManager with ChangeNotifier {
 
   Future<void> joinClass(String publicCode) async {
     try {
-      final cls = await ApiCall.joinClassWithCode(_uid, publicCode);
+      final cls = await ApiCall.joinClassWithCode(uid, publicCode);
       _classes.insert(0, cls);
       notifyListeners();
     } catch (error) {
@@ -65,7 +63,7 @@ class ClassManager with ChangeNotifier {
     final cls = _classes.removeAt(index);
     notifyListeners();
     try {
-      await ApiCall.removeOwnedClass(_uid, cid);
+      await ApiCall.removeOwnedClass(uid, cid);
     } catch (error) {
       _classes.insert(index, cls);
       notifyListeners();
@@ -79,7 +77,7 @@ class ClassManager with ChangeNotifier {
     final cls = _classes.removeAt(index);
     notifyListeners();
     try {
-      await ApiCall.leaveCLass(_uid, cid);
+      await ApiCall.leaveCLass(uid, cid);
     } catch (error) {
       _classes.insert(index, cls);
       notifyListeners();

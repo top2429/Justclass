@@ -12,7 +12,9 @@ class NotificationManager extends ChangeNotifier {
 
   bool firstLoadSucceeded;
 
-  set uid(String uid) {
+  set uid(String uid) => this._uid = uid;
+
+  void setUid(String uid) {
     print("set uid");
     this._uid = uid;
     this.fetchNotificationListFirstLoad();

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:justclass/providers/auth.dart';
 import 'package:justclass/providers/class_manager.dart';
+import 'package:justclass/providers/notification_notifier.dart';
 import 'package:justclass/screens/auth_screen.dart';
 import 'package:justclass/screens/home_screen.dart';
 import 'package:justclass/screens/splash_screen.dart';
@@ -21,6 +22,13 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProxyProvider<Auth, ClassManager>(
           create: (_) => ClassManager(),
           update: (_, auth, classMgr) => classMgr..uid = auth.user.uid,
+        ),
+        ChangeNotifierProxyProvider<Auth, NotificationManager>(
+          create: (_) => NotificationManager(),
+          update: (_, auth, notMgr) {
+            // TODO: Try catch
+            return notMgr..uid = auth.user.uid;
+          },
         ),
       ],
       child: Consumer<Auth>(

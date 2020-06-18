@@ -42,7 +42,6 @@ class NoteManager extends ChangeNotifier {
     Map<String, String> newFiles,
   ) async {
     try {
-
       final data = await ApiCall.updateNote(
         uid,
         nid,

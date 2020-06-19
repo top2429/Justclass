@@ -89,8 +89,7 @@ class _NotificationListState extends State<NotificationList> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Icon(isPortrait ? Icons.crop_portrait : Icons.crop_landscape,
-                color: Themes.primaryColor, size: 30),
+            Icon(isPortrait ? Icons.crop_portrait : Icons.crop_landscape, color: Themes.primaryColor, size: 30),
             const SizedBox(width: 10),
             const Text('Empty Board', style: TextStyle(fontSize: 16)),
           ],
@@ -185,16 +184,22 @@ class _NotificationListState extends State<NotificationList> {
         // TODO: change later
         return Text('role changed');
       case NotificationType.KICKED:
-        // TODO: change later
-        return Text('You\'re kicked from the class ${n.classTitle}');
+        return RichText(
+          text: TextSpan(
+            children: <TextSpan>[
+              const TextSpan(text: 'You have got removed from the class '),
+              TextSpan(text: n.classTitle, style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.black87)),
+              const TextSpan(text: '.'),
+            ],
+            style: const TextStyle(color: Colors.black87, fontSize: 15, height: 1.5),
+          ),
+        );
       case NotificationType.CLASSROOM_DELETED:
         return RichText(
           text: TextSpan(
             children: <TextSpan>[
               const TextSpan(text: 'The class '),
-              TextSpan(
-                  text: n.classTitle,
-                  style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.black87)),
+              TextSpan(text: n.classTitle, style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.black87)),
               const TextSpan(text: ' has been removed.'),
             ],
             style: const TextStyle(color: Colors.black87, fontSize: 15, height: 1.5),

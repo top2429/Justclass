@@ -1,4 +1,5 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:justclass/widgets/app_snack_bar.dart';
 
 class NotificationObserver {
@@ -22,20 +23,22 @@ class NotificationObserver {
   }
 
   NotificationObserver._internal() {
+    debugPrint("Notification Observer internal");
     _messageInstance.requestNotificationPermissions();
     _messageInstance.configure(onMessage: (Map<String, dynamic> map) {
       Map<String, String> data = map["data"];
-      print(map);
+      print(123);
       String type = data["type"];
       String message = map["notification"]["body"];
 
       if (type == "CLASSROOM_DELETED" || type == "ROLE_CHANGE" || type == "KICKED") {
-        print('123');
-        AppSnackBar.showError(null, message: message);
+        debugPrint('123');
+//        AppSnackBar.showError(null, message: message);
       }
       if (type == "INVITATION") {
         String notificationId = data["notificationId"];
-        AppSnackBar.showSuccess(null, message: message);
+        debugPrint("invited");
+//        AppSnackBar.showSuccess(null, message: message);
       }
       return;
     });

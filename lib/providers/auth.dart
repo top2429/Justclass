@@ -73,7 +73,6 @@ class Auth extends ChangeNotifier {
       print('Auth Type: ${_type.name}');
 
       await _storeAuthData(user);
-      notifyListeners();
     } catch (error) {
       throw error;
     }
@@ -88,7 +87,6 @@ class Auth extends ChangeNotifier {
       print('Auth Type: ${_type.name}');
 
       await _storeAuthData(user);
-      notifyListeners();
     } catch (error) {
       throw error;
     }
@@ -103,7 +101,6 @@ class Auth extends ChangeNotifier {
       print('Auth Type: ${_type.name}');
 
       await _storeAuthData(user);
-      notifyListeners();
     } catch (error) {
       throw error;
     }

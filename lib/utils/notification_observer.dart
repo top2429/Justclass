@@ -21,6 +21,7 @@ class NotificationObserver {
   NotificationObserver._internal() {
     _messageInstance.requestNotificationPermissions();
     _messageInstance.configure(onMessage: (Map<String, dynamic> map) {
+      print(map['data']);
       Map<String, String> data = map["data"];
       String type = data["type"];
 

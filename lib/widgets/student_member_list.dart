@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:justclass/models/member.dart';
+import 'package:justclass/providers/auth.dart';
 import 'package:justclass/providers/class.dart';
 import 'package:justclass/providers/member_manager.dart';
 import 'package:justclass/screens/invite_student_screen.dart';
@@ -17,16 +18,27 @@ class StudentMemberList extends StatefulWidget {
 }
 
 class _StudentMemberListState extends State<StudentMemberList> {
-  void removeStudent(Member member) async {
-    final memberMgr = Provider.of<MemberManager>(context, listen: false);
-    final color = Themes.forClass(Provider.of<Class>(context, listen: false).theme).primaryColor;
+  void removeStudent(
+    Member member,
+    Color color,
+    MemberManager memberMgr,
+    String cid,
+  ) async {
     try {
-      final result = await showDialog(
+      var result = await showDialog(
         context: context,
-        builder: (context) => RemoveMemberDialog(title: 'STUDENT REMOVAL', member: member, color: color),
+        builder: (context) => RemoveMemberDialog(
+          title: 'STUDENT REMOVAL',
+          member: member,
+          color: color,
+        ),
       );
+      result ??= false;
 
-      if (result != null && result) await memberMgr.removeStudent(member);
+      if (result) {
+        final uid = Provider.of<Auth>(context, listen: false).user.uid;
+        await memberMgr.removeStudent(uid, cid, member.uid);
+      }
     } catch (error) {
       if (this.mounted) AppSnackBar.showContextError(context, message: error.toString());
     }
@@ -70,7 +82,7 @@ class _StudentMemberListState extends State<StudentMemberList> {
                 shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5))),
                 itemBuilder: (_) => [const PopupMenuItem(child: Text('Remove'), value: 'remove', height: 40)],
                 onSelected: (val) {
-                  if (val == 'remove') removeStudent(t);
+                  if (val == 'remove') removeStudent(t, color, memberMgr, cls.cid);
                 },
               ),
             ),

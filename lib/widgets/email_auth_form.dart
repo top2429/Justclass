@@ -120,7 +120,7 @@ class EmailAuthFormState extends State<EmailAuthForm> with SingleTickerProviderS
       this.widget.setLoadingStatus(true);
       final auth = Provider.of<Auth>(context, listen: false);
       await auth.signInEmailPasswordFirebase(
-        _emailController.text,
+        _emailController.text.trim(),
         _passwordController.text,
       );
       if (auth.user != null) _toHomeScreen(context);
@@ -138,7 +138,7 @@ class EmailAuthFormState extends State<EmailAuthForm> with SingleTickerProviderS
       this.widget.setLoadingStatus(true);
       final auth = Provider.of<Auth>(context, listen: false);
       await auth.signUpEmailPasswordFirebase(
-        _emailController.text,
+        _emailController.text.trim(),
         _passwordController.text,
       );
       if (auth.user != null) _toHomeScreen(context);

@@ -16,39 +16,38 @@ class MemberManager extends ChangeNotifier {
     students = members.where((m) => m.role == ClassRole.STUDENT).toList();
   }
 
-  Future<void> removeCollaborator(Member member) async {
-    final index = collaborators.indexOf(member);
-    collaborators.remove(member);
+  Future<void> removeCollaborator(String uid, String cid, String memberId) async {
+    final index = collaborators.indexWhere((c) => c.uid == memberId);
+    final removedMember = collaborators.removeAt(index);
     notifyListeners();
     try {
-      await ApiCall.removeCollaborator();
-      members.remove(member);
+      await ApiCall.removeMember(uid, cid, memberId, isStudent: false);
+      members.remove(removedMember);
     } catch (error) {
-      collaborators.insert(index, member);
-      throw error;
-    } finally {
+      collaborators.insert(index, removedMember);
       notifyListeners();
+      throw error;
     }
   }
 
-  Future<void> removeStudent(Member member) async {
-    final index = students.indexOf(member);
-    students.remove(member);
+  Future<void> removeStudent(String uid, String cid, String memberId) async {
+    final index = students.indexWhere((s) => s.uid == memberId);
+    final removedMember = students.removeAt(index);
     notifyListeners();
     try {
-      await ApiCall.removeStudent();
-      members.remove(member);
+      await ApiCall.removeMember(uid, cid, memberId);
+      members.remove(removedMember);
     } catch (error) {
-      students.insert(index, member);
-      throw error;
-    } finally {
+      students.insert(index, removedMember);
       notifyListeners();
+      throw error;
     }
   }
 
   Future<List<Member>> fetchSuggestedCollaborators(String uid, String cid, String keyword) async {
     try {
-      final collaborators = await ApiCall.fetchSuggestedMembers(uid, cid, ClassRole.COLLABORATOR, keyword);
+      final collaborators =
+          await ApiCall.fetchSuggestedMembers(uid, cid, ClassRole.COLLABORATOR, keyword);
       return collaborators;
     } catch (error) {
       throw error;

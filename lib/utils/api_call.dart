@@ -267,14 +267,23 @@ class ApiCall {
     }
   }
 
-  static Future<void> removeCollaborator() async {
-    await Future.delayed(Duration(seconds: 1));
-    throw HttpException(message: 'Collab cannot be removed');
-  }
+  static Future<void> removeMember(
+    String uid,
+    String cid,
+    String memberId, {
+    bool isStudent = true,
+  }) async {
+    try {
+      checkInternetConnection();
+      final url = 'https://justclass-da0b0.appspot.com/api/v1/classroom/members/$uid/$cid/$memberId';
+      final response = await http.delete(url, headers: _headers);
 
-  static Future<void> removeStudent() async {
-    await Future.delayed(Duration(seconds: 1));
-    throw HttpException(message: 'Student cannot be removed');
+      if (response.statusCode >= 400)
+        throw HttpException(
+            message: 'Unable to remove this ${isStudent ? 'student' : 'teacher'}! ${response.statusCode}');
+    } catch (error) {
+      throw error;
+    }
   }
 
   static Future<List<Member>> fetchSuggestedMembers(
@@ -298,23 +307,6 @@ class ApiCall {
                 photoUrl: u['photoUrl'],
               ))
           .toList();
-
-      // for testing purposes only
-//      members.addAll([
-//        Member(
-//          uid: '1',
-//          email: 'test@gmail.com',
-//          displayName: 'Test',
-//          photoUrl: 'https://placekitten.com/100/100',
-//        ),
-//        Member(
-//          uid: '2',
-//          email: 'bot@hsu.com',
-//          displayName: 'Bot',
-//          photoUrl: 'https://placekitten.com/101/101',
-//        ),
-//      ]);
-
       return members;
     } catch (error) {
       throw error;
@@ -458,7 +450,7 @@ class ApiCall {
 
       final strData = await response.stream.bytesToString();
       final data = json.decode(strData);
-//      print(data['attachments']);
+
       return {
         'attachments': data['attachments'],
         'content': data['content'],
@@ -506,7 +498,7 @@ class ApiCall {
       final url = 'https://justclass-da0b0.appspot.com/api/v1/classroom/accept/$uid/$notificationId';
       final response = await http.get(url, headers: _headers);
 
-      if (response.statusCode != 200)
+      if (response.statusCode >= 400)
         throw HttpException(message: "Unable to accept this invitation! ${response.statusCode}");
     } catch (error) {
       throw (error);

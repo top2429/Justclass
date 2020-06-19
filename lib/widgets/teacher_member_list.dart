@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:justclass/models/member.dart';
+import 'package:justclass/providers/auth.dart';
 import 'package:justclass/providers/class.dart';
 import 'package:justclass/providers/member_manager.dart';
 import 'package:justclass/screens/invite_collaborator_screen.dart';
@@ -17,13 +18,25 @@ class TeacherMemberList extends StatefulWidget {
 }
 
 class _TeacherMemberListState extends State<TeacherMemberList> {
-  void removeCollaborators(Member member, Color color, MemberManager memberMgr) async {
+  Future<void> removeCollaborators(
+    Member member,
+    Color color,
+    MemberManager memberMgr,
+    String cid,
+  ) async {
     try {
       final result = await showDialog(
         context: context,
-        builder: (context) => RemoveMemberDialog(title: 'TEACHER REMOVAL', member: member, color: color),
+        builder: (context) => RemoveMemberDialog(
+          title: 'TEACHER REMOVAL',
+          member: member,
+          color: color,
+        ),
       );
-      if (result != null && result) await memberMgr.removeCollaborator(member);
+      if (result != null && result) {
+        final uid = Provider.of<Auth>(context, listen: false).user.uid;
+        await memberMgr.removeCollaborator(uid, cid, member.uid);
+      }
     } catch (error) {
       if (this.mounted) AppSnackBar.showContextError(context, message: error.toString());
     }
@@ -72,15 +85,18 @@ class _TeacherMemberListState extends State<TeacherMemberList> {
           (t) => ListTile(
             contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 2),
             leading: MemberAvatar(photoUrl: t.photoUrl, displayName: t.displayName),
-            title: Text(t.displayName, overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 15)),
+            title: Text(t.displayName,
+                overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 15)),
             trailing: Padding(
               padding: const EdgeInsets.only(right: 4),
               child: PopupMenuButton(
                 elevation: 5,
-                shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5))),
-                itemBuilder: (_) => [const PopupMenuItem(child: Text('Remove'), value: 'remove', height: 40)],
+                shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(5))),
+                itemBuilder: (_) =>
+                    [const PopupMenuItem(child: Text('Remove'), value: 'remove', height: 40)],
                 onSelected: (val) {
-                  if (val == 'remove') removeCollaborators(t, color, memberMgr);
+                  if (val == 'remove') removeCollaborators(t, color, memberMgr, cls.cid);
                 },
               ),
             ),

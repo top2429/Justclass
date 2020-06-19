@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:justclass/models/member.dart';
 import 'package:justclass/providers/auth.dart';
 import 'package:justclass/providers/class.dart';
 import 'package:justclass/providers/member_manager.dart';

@@ -32,7 +32,8 @@ class AppSnackBar {
     Color bgColor = Colors.amberAccent,
   }) {
     if (context == null && AppContext.last == null) return;
-    if (context == null || context != AppContext.last) context = AppContext.last;
+    if (AppContext.last != null && context != AppContext.last) context = AppContext.last;
+
     Scaffold.of(context).hideCurrentSnackBar();
     Scaffold.of(context).showSnackBar(
       SnackBar(
@@ -58,7 +59,7 @@ class AppSnackBar {
   }) async {
     if (delay != null) await Future.delayed(delay);
     if (context == null && AppContext.last == null) return;
-    if (context == null || context != AppContext.last) context = AppContext.last;
+    if (AppContext.last != null && context != AppContext.last) context = AppContext.last;
 
     Scaffold.of(context).hideCurrentSnackBar();
     Scaffold.of(context).showSnackBar(

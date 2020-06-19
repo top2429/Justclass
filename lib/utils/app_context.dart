@@ -10,9 +10,9 @@ class ContextScreen {
 class AppContext {
   static final _contexts = Set<ContextScreen>();
 
-  static BuildContext get last => _contexts.last?.context;
+  static BuildContext get last => (_contexts.isEmpty) ? null : _contexts.last.context;
 
-  static String get name => _contexts.last?.routeName;
+  static String get name => (_contexts.isEmpty) ? null : _contexts.last.routeName;
 
   static void add(BuildContext context, [String routeName = 'some screen']) {
     _contexts.add(ContextScreen(routeName, context));

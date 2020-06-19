@@ -17,6 +17,7 @@ class NotificationObserver {
   }
 
   Future<void> signOut(String uid) {
+    print('Cloud messaging unsubscribed');
     return _messageInstance.unsubscribeFromTopic(uid);
   }
 
@@ -24,16 +25,16 @@ class NotificationObserver {
     _messageInstance.requestNotificationPermissions();
     _messageInstance.configure(onMessage: (Map<String, dynamic> map) {
       Map<String, String> data = map["data"];
-
-      print(data);
+      print(map);
       String type = data["type"];
+      String message = map["notification"]["body"];
 
       if (type == "CLASSROOM_DELETED" || type == "ROLE_CHANGE" || type == "KICKED") {
-        // TODO:
+        print('123');
+        AppSnackBar.showError(null, message: message);
       }
       if (type == "INVITATION") {
         String notificationId = data["notificationId"];
-        String message = map["notification"]["body"];
         AppSnackBar.showSuccess(null, message: message);
       }
       return;

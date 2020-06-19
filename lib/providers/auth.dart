@@ -65,6 +65,7 @@ class Auth extends ChangeNotifier {
 
   Future<void> signInGoogle() async {
     try {
+      await ApiCall.checkInternetConnection();
       final user = await _googleSignIn.signIn();
       if (user == null) return;
 
@@ -151,7 +152,6 @@ class Auth extends ChangeNotifier {
 
   Future<void> signOut() async {
     (await SharedPreferences.getInstance()).clear();
-    await NotificationObserver().signOut(_user.uid);
 
     try {
       switch (_type) {
@@ -164,7 +164,9 @@ class Auth extends ChangeNotifier {
           // TODO: Handle this case.
           break;
       }
-    } finally {
+
+      NotificationObserver().signOut(_user.uid);
+    } catch (error) {} finally {
       _user = null;
       _type = null;
     }

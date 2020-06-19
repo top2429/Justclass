@@ -481,7 +481,8 @@ class ApiCall {
       final url = "https://justclass-da0b0.appspot.com/api/v1/notification/$uid";
       final response = await http.get(url, headers: _headers);
 
-      if (response.statusCode >= 400) throw HttpException(message: "Unable to get notes! ${response.statusCode}");
+      if (response.statusCode >= 400)
+        throw HttpException(message: "Unable to get notifications! ${response.statusCode}");
 
       final List<Notification> notList = [];
       final notData = json.decode(response.body) as List<dynamic>;

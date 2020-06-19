@@ -1,4 +1,5 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:justclass/widgets/app_snack_bar.dart';
 
 class NotificationObserver {
   static NotificationObserver _instance;
@@ -11,6 +12,7 @@ class NotificationObserver {
   }
 
   Future<void> signIn(String uid) {
+    print('Cloud messaging subscribed');
     return _messageInstance.subscribeToTopic(uid);
   }
 
@@ -21,18 +23,18 @@ class NotificationObserver {
   NotificationObserver._internal() {
     _messageInstance.requestNotificationPermissions();
     _messageInstance.configure(onMessage: (Map<String, dynamic> map) {
-      print(map['data']);
       Map<String, String> data = map["data"];
+
+      print(data);
       String type = data["type"];
 
       if (type == "CLASSROOM_DELETED" || type == "ROLE_CHANGE" || type == "KICKED") {
-        String classroomId = data["classroomId"];
         // TODO:
       }
       if (type == "INVITATION") {
         String notificationId = data["notificationId"];
         String message = map["notification"]["body"];
-        // TODO:
+        AppSnackBar.showSuccess(null, message: message);
       }
       return;
     });

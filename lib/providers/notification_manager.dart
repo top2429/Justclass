@@ -33,6 +33,7 @@ class NotificationManager extends ChangeNotifier {
   Future<void> fetchNotificationList() async {
     try {
       _notifications = await ApiCall.getNotificationList(_uid);
+      firstLoadSucceeded = true;
       notifyListeners();
     } catch (error) {
       throw error;

@@ -40,14 +40,16 @@ class _NotificationScreenState extends State<NotificationScreen> {
     return Scaffold(
       backgroundColor: Themes.primaryColor,
       appBar: _buildTopBar(context),
-      floatingActionButton: const SizedBox(height: 50),
       body: SafeArea(
         child: ClipRRect(
           borderRadius: const BorderRadius.only(topLeft: Radius.circular(15), topRight: Radius.circular(15)),
           child: Container(
             color: Colors.white,
             height: double.infinity,
-            child: NotificationList(),
+            child: Builder(builder: (context) {
+              screenCtx = context;
+              return NotificationList();
+            }),
           ),
         ),
       ),

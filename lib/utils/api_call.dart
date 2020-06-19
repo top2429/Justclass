@@ -502,6 +502,7 @@ class ApiCall {
 
   static Future<void> acceptInvitation(String uid, String notificationId) async {
     try {
+      await checkInternetConnection();
       final url = 'https://justclass-da0b0.appspot.com/api/v1/classroom/accept/$uid/$notificationId';
       final response = await http.get(url, headers: _headers);
 

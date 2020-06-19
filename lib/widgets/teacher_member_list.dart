@@ -85,21 +85,20 @@ class _TeacherMemberListState extends State<TeacherMemberList> {
           (t) => ListTile(
             contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 2),
             leading: MemberAvatar(photoUrl: t.photoUrl, displayName: t.displayName),
-            title: Text(t.displayName,
-                overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 15)),
-            trailing: Padding(
-              padding: const EdgeInsets.only(right: 4),
-              child: PopupMenuButton(
-                elevation: 5,
-                shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(5))),
-                itemBuilder: (_) =>
-                    [const PopupMenuItem(child: Text('Remove'), value: 'remove', height: 40)],
-                onSelected: (val) {
-                  if (val == 'remove') removeCollaborators(t, color, memberMgr, cls.cid);
-                },
-              ),
-            ),
+            title: Text(t.displayName, overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 15)),
+            trailing: (cls.role != ClassRole.OWNER)
+                ? null
+                : Padding(
+                    padding: const EdgeInsets.only(right: 4),
+                    child: PopupMenuButton(
+                      elevation: 5,
+                      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5))),
+                      itemBuilder: (_) => [const PopupMenuItem(child: Text('Remove'), value: 'remove', height: 40)],
+                      onSelected: (val) {
+                        if (val == 'remove') removeCollaborators(t, color, memberMgr, cls.cid);
+                      },
+                    ),
+                  ),
           ),
         ),
       ],

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:justclass/utils/app_context.dart';
+import 'package:justclass/widgets/app_icon_button.dart';
 import 'package:justclass/widgets/notification_list.dart';
 
 import '../themes.dart';
@@ -61,6 +62,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
       elevation: 0,
       backgroundColor: Themes.primaryColor,
       automaticallyImplyLeading: false,
+      leading: AppIconButton.back(onPressed: () => Navigator.of(context).pop()),
       title: const Text('Notifications', style: TextStyle(fontWeight: FontWeight.bold)),
     );
   }

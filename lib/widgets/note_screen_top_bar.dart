@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:justclass/providers/class.dart';
+import 'package:justclass/screens/class_info_screen.dart';
 import 'package:justclass/screens/update_class_info_screen.dart';
 import 'package:justclass/utils/constants.dart';
 import 'package:provider/provider.dart';
@@ -10,7 +11,6 @@ import 'app_icon_button.dart';
 class NoteScreenTopBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-
     final cls = Provider.of<Class>(context);
     return SliverAppBar(
       elevation: 3,
@@ -54,15 +54,25 @@ class NoteScreenTopBar extends StatelessWidget {
       ),
       leading: AppIconButton.back(onPressed: () => Navigator.of(context).pop()),
       actions: <Widget>[
-        AppIconButton(
-          tooltip: 'Edit Class Info',
-          icon: const Icon(Icons.settings),
-          onPressed: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(builder: (_) => UpdateClassInfoScreen(cls: Provider.of<Class>(context))),
-            );
-          },
-        ),
+        (cls.role == ClassRole.OWNER)
+            ? AppIconButton(
+                tooltip: 'Edit Class Info',
+                icon: const Icon(Icons.settings),
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (_) => UpdateClassInfoScreen(cls: cls)),
+                  );
+                },
+              )
+            : AppIconButton(
+                tooltip: 'Class Info',
+                icon: const Icon(Icons.info),
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (_) => ClassInfoScreen(cls: cls)),
+                  );
+                },
+              ),
       ],
     );
   }

@@ -66,7 +66,7 @@ class _TeacherMemberListState extends State<TeacherMemberList> {
           color: color,
           title: 'Teachers',
           tooltip: 'Invite Teachers',
-          onPressed: () => addCollaborators(color, memberMgr, cls.cid),
+          onPressed: (cls.role != ClassRole.OWNER) ? null : () => addCollaborators(color, memberMgr, cls.cid),
         ),
         ListTile(
           contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 2),

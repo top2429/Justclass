@@ -25,19 +25,20 @@ class MemberRoleTitle extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            Text(
-              this.title,
-              style: TextStyle(
-                color: color,
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
+            Container(
+              height: 50,
+              alignment: Alignment.centerLeft,
+              child: Text(
+                this.title,
+                style: TextStyle(color: color, fontSize: 22, fontWeight: FontWeight.bold),
               ),
             ),
-            AppIconButton(
-              tooltip: tooltip,
-              icon: Icon(Icons.person_add, color: color),
-              onPressed: this.onPressed,
-            ),
+            if (onPressed != null)
+              AppIconButton(
+                tooltip: tooltip,
+                icon: Icon(Icons.person_add, color: color),
+                onPressed: this.onPressed,
+              ),
           ],
         ),
       ),

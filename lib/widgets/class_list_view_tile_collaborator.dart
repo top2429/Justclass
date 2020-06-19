@@ -87,7 +87,6 @@ class ClassListViewTileCollaborator extends StatelessWidget {
           icon: const Icon(Icons.more_vert, color: Colors.white),
           offset: const Offset(0, 40),
           itemBuilder: (_) => [
-            const PopupMenuItem(child: Text('Edit'), value: 'edit', height: 40),
             const PopupMenuItem(child: Text('Leave'), value: 'leave', height: 40),
           ],
           onSelected: (val) {},

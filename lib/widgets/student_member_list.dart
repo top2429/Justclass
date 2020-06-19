@@ -68,7 +68,7 @@ class _StudentMemberListState extends State<StudentMemberList> {
           color: color,
           title: 'Students',
           tooltip: 'Invite Students',
-          onPressed: () => addStudent(color, memberMgr, cls.cid),
+          onPressed: (cls.role == ClassRole.STUDENT) ? null : () => addStudent(color, memberMgr, cls.cid),
         ),
         ...memberMgr.students.map(
           (t) => ListTile(

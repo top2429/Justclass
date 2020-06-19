@@ -37,4 +37,15 @@ class NotificationObserver {
       return;
     });
   }
+
+//  {
+//    subject: abc,
+//    role: COLLABORATOR,
+//    type: INVITATION,
+//    title: Dancing 101,
+//    classroomId: QgsIvSxJUAlB8StaoEvv,
+//    notificationId: FC3trPlPcgUpKIPbkl2G,
+//    invokerName: HIEU.PV0054 2170054,
+//    invokeTime: 1592551111403
+//  }
 }

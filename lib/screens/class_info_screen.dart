@@ -28,10 +28,10 @@ class ClassInfoScreen extends StatelessWidget {
                 physics: ClampingScrollPhysics(),
                 children: <Widget>[
                   _buildTile('Title', cls.title, color),
-                  _buildTile('Subject', cls.subject, color),
-                  _buildTile('Room', cls.room, color),
-                  _buildTile('Section', cls.section, color),
-                  _buildTile('Description', cls.description, color),
+                  if (cls.subject != null && cls.subject.length > 0) _buildTile('Subject', cls.subject, color),
+                  if (cls.subject != null && cls.subject.length > 0) _buildTile('Room', cls.room, color),
+                  if (cls.subject != null && cls.subject.length > 0) _buildTile('Section', cls.section, color),
+                  if (cls.subject != null && cls.subject.length > 0) _buildTile('Description', cls.description, color),
                 ],
               );
             }),

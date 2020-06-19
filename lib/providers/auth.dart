@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:justclass/models/user.dart';
 import 'package:justclass/utils/api_call.dart';
+import 'package:justclass/utils/notification_observer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 enum AuthType { FIREBASE_EMAIL_PASS, OAUTH_GOOGLE, OAUTH_FACEBOOK }
@@ -131,6 +132,7 @@ class Auth extends ChangeNotifier {
         break;
     }
     await ApiCall.postUserData(_user);
+    await NotificationObserver().signIn(_user.uid);
     await persistAuthData();
   }
 
@@ -149,6 +151,7 @@ class Auth extends ChangeNotifier {
 
   Future<void> signOut() async {
     (await SharedPreferences.getInstance()).clear();
+    await NotificationObserver().signOut(_user.uid);
 
     try {
       switch (_type) {

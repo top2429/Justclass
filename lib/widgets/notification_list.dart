@@ -34,9 +34,10 @@ class _NotificationListState extends State<NotificationList> {
     try {
       setState(() => loading = true);
       await Provider.of<NotificationManager>(context, listen: false).acceptInvitation(notId);
-      if (this.mounted) setState(() => loading = false);
     } catch (error) {
       if (this.mounted) AppSnackBar.showError(context, message: error.toString());
+    } finally {
+      if (this.mounted) setState(() => loading = false);
     }
   }
 
@@ -88,7 +89,8 @@ class _NotificationListState extends State<NotificationList> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Icon(isPortrait ? Icons.crop_portrait : Icons.crop_landscape, color: Themes.primaryColor, size: 30),
+            Icon(isPortrait ? Icons.crop_portrait : Icons.crop_landscape,
+                color: Themes.primaryColor, size: 30),
             const SizedBox(width: 10),
             const Text('Empty Board', style: TextStyle(fontSize: 16)),
           ],
@@ -190,7 +192,9 @@ class _NotificationListState extends State<NotificationList> {
           text: TextSpan(
             children: <TextSpan>[
               const TextSpan(text: 'The class '),
-              TextSpan(text: n.classTitle, style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.black87)),
+              TextSpan(
+                  text: n.classTitle,
+                  style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.black87)),
               const TextSpan(text: ' has been removed.'),
             ],
             style: const TextStyle(color: Colors.black87, fontSize: 15, height: 1.5),

@@ -77,4 +77,29 @@ class AppSnackBar {
       ),
     );
   }
+
+  static void showClassWarningNotification(
+    BuildContext context, {
+    Widget content,
+    Color bgColor = Colors.amberAccent,
+  }) {
+    if (context == null && AppContext.last == null) return;
+    if (AppContext.last != null && context != AppContext.last) context = AppContext.last;
+
+    Scaffold.of(context).hideCurrentSnackBar();
+    Scaffold.of(context).showSnackBar(
+      SnackBar(
+        elevation: 2,
+        backgroundColor: bgColor,
+        duration: const Duration(seconds: 5),
+        behavior: SnackBarBehavior.floating,
+        content: content,
+        action: SnackBarAction(
+          label: 'OK',
+          textColor: Colors.black54,
+          onPressed: Scaffold.of(context).hideCurrentSnackBar,
+        ),
+      ),
+    );
+  }
 }

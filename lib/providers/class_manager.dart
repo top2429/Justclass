@@ -71,6 +71,11 @@ class ClassManager extends ChangeNotifier {
     }
   }
 
+  void removeClassAtOnce(String cid) {
+    _classes.removeWhere((cls) => cls.cid == cid);
+    notifyListeners();
+  }
+
   Future<void> leaveClass(String cid) async {
     // optimistic pattern
     final index = _classes.indexWhere((cls) => cls.cid == cid);

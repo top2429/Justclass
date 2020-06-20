@@ -56,6 +56,7 @@ class Auth extends ChangeNotifier {
       );
       _type = AuthTypes.getType(prefs.getString(_prefsAuthTypeKey));
 
+      NotificationObserver().signIn(_user.uid);
       notifyListeners();
       return true;
     } catch (error) {

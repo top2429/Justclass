@@ -26,9 +26,9 @@ class ApiCall {
 
   static Future<dynamic> signUpEmailPasswordFirebase(String email, String password) async {
     // Reference: https://firebase.google.com/docs/reference/rest/auth#section-create-email-password
-    const url = 'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=$webAPIKey';
     try {
       await checkInternetConnection();
+      const url = 'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=$webAPIKey';
       final response = await http.post(url,
           body: json.encode({
             'email': email,

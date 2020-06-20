@@ -1,57 +1,96 @@
+import 'package:flutter/material.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/foundation.dart';
+import 'package:justclass/providers/class_manager.dart';
+import 'package:justclass/screens/home_screen.dart';
+import 'package:justclass/utils/app_context.dart';
 import 'package:justclass/widgets/app_snack_bar.dart';
+import 'package:provider/provider.dart';
 
 class NotificationObserver {
-  static NotificationObserver _instance;
+  static final NotificationObserver _instance = NotificationObserver._internal();
+
+  factory NotificationObserver() => _instance;
 
   final FirebaseMessaging _messageInstance = FirebaseMessaging();
 
-  factory NotificationObserver() {
-    _instance ??= NotificationObserver._internal();
-    return _instance;
-  }
-
-  Future<void> signIn(String uid) {
+  Future<void> signIn(String uid) async {
     print('FCM subscribed');
-    return _messageInstance.subscribeToTopic(uid);
+    await _messageInstance.subscribeToTopic(uid);
   }
 
-  Future<void> signOut(String uid) {
+  Future<void> signOut(String uid) async {
     print('FCM unsubscribed');
-    return _messageInstance.unsubscribeFromTopic(uid);
+    await _messageInstance.unsubscribeFromTopic(uid);
   }
 
   NotificationObserver._internal() {
-    debugPrint("Notification Observer internal");
-    _messageInstance.requestNotificationPermissions();
-    _messageInstance.configure(onMessage: (Map<String, dynamic> map) {
-      Map<String, String> data = map["data"];
-      print(123);
-      String type = data["type"];
+    _messageInstance.configure(
+      onMessage: (Map<String, dynamic> mes) async {
+//      {
+//        notification: {
+//          title: 'Dancing 101',
+//          body: 'You were remove by [HIEU.PV0054 2170054].'
+//        },
+//        data: {
+//            subject: '',
+//            type: 'KICKED',
+//            title: 'Dancing 101',
+//            classroomId: 'QgsIvSxJUAlB8StaoEvv',
+//            notificationId: 'zwAsa0LPMuHmb2z3rPyT',
+//            invokerName: 'HIEU.PV0054 2170054',
+//            invokeTime: 1592645680932
+//        }
+//      }
+        final data = mes['data'];
+        final type = data['type'];
+        final title = data['title'];
+        final cid = data["classroomId"];
 
-      if (type == "CLASSROOM_DELETED" || type == "ROLE_CHANGE" || type == "KICKED") {
-        debugPrint('123');
-//        AppSnackBar.showError(null, message: message);
-      }
-      if (type == "INVITATION") {
-        String message = map["notification"]["body"];
-        String notificationId = data["notificationId"];
-        debugPrint("invited");
-//        AppSnackBar.showSuccess(null, message: message);
-      }
-      return;
-    });
+        if (type == "INVITATION") {
+          AppSnackBar.showSuccess(null, message: 'You are invited to the class $title.');
+        }
+        if (type == "CLASSROOM_DELETED") {
+          await onRemoveClassAndPopOutOfClassScreen(cid);
+          AppSnackBar.showClassWarningNotification(
+            null,
+            content: RichText(
+              text: TextSpan(
+                children: <TextSpan>[
+                  const TextSpan(text: 'The class '),
+                  TextSpan(text: title, style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.black87)),
+                  const TextSpan(text: ' has been deleted.'),
+                ],
+              ),
+            ),
+          );
+        }
+        if (type == "KICKED") {
+          await onRemoveClassAndPopOutOfClassScreen(cid);
+          AppSnackBar.showClassWarningNotification(
+            null,
+            content: RichText(
+              text: TextSpan(
+                children: <TextSpan>[
+                  const TextSpan(text: 'You are removed from the class '),
+                  TextSpan(text: title, style: const TextStyle(fontWeight: FontWeight.bold)),
+                  const TextSpan(text: '.'),
+                ],
+                style: const TextStyle(color: Colors.black87),
+              ),
+            ),
+          );
+        }
+        if (type == "ROLE_CHANGE") {}
+      },
+    );
   }
 
-//  {
-//    subject: abc,
-//    role: COLLABORATOR,
-//    type: INVITATION,
-//    title: Dancing 101,
-//    classroomId: QgsIvSxJUAlB8StaoEvv,
-//    notificationId: FC3trPlPcgUpKIPbkl2G,
-//    invokerName: HIEU.PV0054 2170054,
-//    invokeTime: 1592551111403
-//  }
+  Future<void> onRemoveClassAndPopOutOfClassScreen(String cid) async {
+    //class code: 3484385f
+    Provider.of<ClassManager>(AppContext.last, listen: false).removeClassAtOnce(cid);
+    if (AppContext.name.contains(cid)) {
+      Navigator.popUntil(AppContext.last, (route) => route.isFirst);
+      await Future.delayed(const Duration(seconds: 1));
+    }
+  }
 }

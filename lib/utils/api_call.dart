@@ -130,9 +130,9 @@ class ApiCall {
         headers: _headers,
         body: json.encode({
           'title': data.title.trim(),
-          'section': data.section.trim(),
-          'subject': data.subject.trim(),
-          'room': data.room.trim(),
+          'section': data.section?.trim(),
+          'subject': data.subject?.trim(),
+          'room': data.room?.trim(),
           'theme': data.theme,
         }),
       );
@@ -201,11 +201,11 @@ class ApiCall {
           body: json.encode({
             'classroomId': cid,
             'title': data.title.trim(),
-            'subject': data.subject.trim(),
-            'section': data.section.trim(),
-            'room': data.room.trim(),
+            'subject': data.subject?.trim(),
+            'section': data.section?.trim(),
+            'room': data.room?.trim(),
             'theme': data.theme,
-            'description': data.description.trim(),
+            'description': data.description?.trim(),
             'studentsNotePermission': data.permissionCode.name,
           }));
       if (response.statusCode >= 400)

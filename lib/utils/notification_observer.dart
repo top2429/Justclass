@@ -13,12 +13,12 @@ class NotificationObserver {
   }
 
   Future<void> signIn(String uid) {
-    print('Cloud messaging subscribed');
+    print('FCM subscribed');
     return _messageInstance.subscribeToTopic(uid);
   }
 
   Future<void> signOut(String uid) {
-    print('Cloud messaging unsubscribed');
+    print('FCM unsubscribed');
     return _messageInstance.unsubscribeFromTopic(uid);
   }
 
@@ -29,13 +29,13 @@ class NotificationObserver {
       Map<String, String> data = map["data"];
       print(123);
       String type = data["type"];
-      String message = map["notification"]["body"];
 
       if (type == "CLASSROOM_DELETED" || type == "ROLE_CHANGE" || type == "KICKED") {
         debugPrint('123');
 //        AppSnackBar.showError(null, message: message);
       }
       if (type == "INVITATION") {
+        String message = map["notification"]["body"];
         String notificationId = data["notificationId"];
         debugPrint("invited");
 //        AppSnackBar.showSuccess(null, message: message);

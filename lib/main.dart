@@ -27,23 +27,23 @@ class MyApp extends StatelessWidget {
           update: (_, auth, notMgr) => notMgr..uid = auth.user.uid,
         ),
       ],
-      child: Consumer<Auth>(
-        builder: (_, auth, __) {
-          return MaterialApp(
-            title: 'JustClass',
-            theme: Themes.forApp,
-            home: _buildFirstScreen(auth),
-            routes: {
-              AuthScreen.routeName: (_) => AuthScreen(),
-              HomeScreen.routeName: (_) => HomeScreen(),
-            },
-          );
+      child: MaterialApp(
+        title: 'JustClass',
+        theme: Themes.forApp,
+        home: FirstScreen(),
+        routes: {
+          AuthScreen.routeName: (_) => AuthScreen(),
+          HomeScreen.routeName: (_) => HomeScreen(),
         },
       ),
     );
   }
+}
 
-  Widget _buildFirstScreen(Auth auth) {
+class FirstScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final auth = Provider.of<Auth>(context);
     return (auth.user == null)
         ? FutureBuilder(
             future: auth.tryAutoSignIn(),

@@ -73,6 +73,7 @@ class Auth extends ChangeNotifier {
       print('Auth Type: ${_type.name}');
 
       await _storeAuthData(user);
+      notifyListeners();
     } catch (error) {
       throw error;
     }
@@ -87,6 +88,7 @@ class Auth extends ChangeNotifier {
       print('Auth Type: ${_type.name}');
 
       await _storeAuthData(user);
+      notifyListeners();
     } catch (error) {
       throw error;
     }
@@ -101,6 +103,7 @@ class Auth extends ChangeNotifier {
       print('Auth Type: ${_type.name}');
 
       await _storeAuthData(user);
+      notifyListeners();
     } catch (error) {
       throw error;
     }
@@ -129,9 +132,9 @@ class Auth extends ChangeNotifier {
         // TODO: Handle this case.
         break;
     }
-    await ApiCall.postUserData(_user);
-    await NotificationObserver().signIn(_user.uid);
     await persistAuthData();
+    ApiCall.postUserData(_user);
+    NotificationObserver().signIn(_user.uid);
   }
 
   Future<void> persistAuthData() async {
@@ -161,7 +164,6 @@ class Auth extends ChangeNotifier {
           // TODO: Handle this case.
           break;
       }
-
       NotificationObserver().signOut(_user.uid);
     } catch (error) {} finally {
       _user = null;

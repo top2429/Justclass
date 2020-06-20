@@ -26,21 +26,6 @@ class NotificationObserver {
   NotificationObserver._internal() {
     _messageInstance.configure(
       onMessage: (Map<String, dynamic> mes) async {
-//      {
-//        notification: {
-//          title: 'Dancing 101',
-//          body: 'You were remove by [HIEU.PV0054 2170054].'
-//        },
-//        data: {
-//            subject: '',
-//            type: 'KICKED',
-//            title: 'Dancing 101',
-//            classroomId: 'QgsIvSxJUAlB8StaoEvv',
-//            notificationId: 'zwAsa0LPMuHmb2z3rPyT',
-//            invokerName: 'HIEU.PV0054 2170054',
-//            invokeTime: 1592645680932
-//        }
-//      }
         final data = mes['data'];
         final type = data['type'];
         final title = data['title'];
@@ -80,7 +65,6 @@ class NotificationObserver {
   }
 
   Future<void> onRemoveClassAndPopOutOfClassScreen(String cid) async {
-    //class code: 8c357f68
     Provider.of<ClassManager>(AppContext.last, listen: false).removeClassAtOnce(cid);
     if (AppContext.name.contains(cid)) {
       Navigator.popUntil(AppContext.last, (route) => route.isFirst);
@@ -88,3 +72,19 @@ class NotificationObserver {
     }
   }
 }
+
+//      {
+//        notification: {
+//          title: 'Dancing 101',
+//          body: 'You were remove by [HIEU.PV0054 2170054].'
+//        },
+//        data: {
+//            subject: '',
+//            type: 'KICKED',
+//            title: 'Dancing 101',
+//            classroomId: 'QgsIvSxJUAlB8StaoEvv',
+//            notificationId: 'zwAsa0LPMuHmb2z3rPyT',
+//            invokerName: 'HIEU.PV0054 2170054',
+//            invokeTime: 1592645680932
+//        }
+//      }

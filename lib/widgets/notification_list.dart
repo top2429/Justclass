@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:justclass/models/notification.dart';
 import 'package:justclass/models/notification.dart' as app;
 import 'package:justclass/models/user.dart';
+import 'package:justclass/providers/class_manager.dart';
 import 'package:justclass/providers/notification_manager.dart';
 import 'package:justclass/widgets/app_snack_bar.dart';
 import 'package:justclass/widgets/member_avatar.dart';
@@ -34,6 +35,7 @@ class _NotificationListState extends State<NotificationList> {
     try {
       setState(() => loading = true);
       await Provider.of<NotificationManager>(context, listen: false).acceptInvitation(notId);
+      Provider.of<ClassManager>(context, listen: false).fetchClassList();
     } catch (error) {
       if (this.mounted) AppSnackBar.showError(context, message: error.toString());
     } finally {

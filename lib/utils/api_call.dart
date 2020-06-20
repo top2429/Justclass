@@ -153,8 +153,7 @@ class ApiCall {
       await checkInternetConnection();
       final url = 'https://justclass-da0b0.appspot.com/api/v1/classroom/$uid';
       final response = await http.get(url, headers: _headers);
-      if (response.statusCode >= 400)
-        throw HttpException(message: 'Unable to fetch class data! ${response.statusCode}');
+      if (response.statusCode >= 400) throw HttpException(message: 'Unable to fetch classes! ${response.statusCode}');
 
       final List<Class> classList = [];
       final classesData = json.decode(response.body) as List<dynamic>;

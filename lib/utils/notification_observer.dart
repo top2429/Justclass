@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:justclass/providers/class_manager.dart';
-import 'package:justclass/screens/home_screen.dart';
+import 'package:justclass/providers/notification_manager.dart';
 import 'package:justclass/utils/app_context.dart';
 import 'package:justclass/widgets/app_snack_bar.dart';
 import 'package:provider/provider.dart';
@@ -47,50 +47,44 @@ class NotificationObserver {
         final cid = data["classroomId"];
 
         if (type == "INVITATION") {
-          AppSnackBar.showSuccess(null, message: 'You are invited to the class $title.');
+          AppSnackBar.showClassInvitationNotification(
+            null,
+            begin: 'You have been invited to the class ',
+            middle: title,
+            end: ' as a ${data['role'].toString().toLowerCase()}.',
+          );
         }
         if (type == "CLASSROOM_DELETED") {
           await onRemoveClassAndPopOutOfClassScreen(cid);
           AppSnackBar.showClassWarningNotification(
             null,
-            content: RichText(
-              text: TextSpan(
-                children: <TextSpan>[
-                  const TextSpan(text: 'The class '),
-                  TextSpan(text: title, style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.black87)),
-                  const TextSpan(text: ' has been deleted.'),
-                ],
-              ),
-            ),
+            begin: 'The class ',
+            middle: title,
+            end: ' has been deleted.',
           );
         }
         if (type == "KICKED") {
           await onRemoveClassAndPopOutOfClassScreen(cid);
           AppSnackBar.showClassWarningNotification(
             null,
-            content: RichText(
-              text: TextSpan(
-                children: <TextSpan>[
-                  const TextSpan(text: 'You are removed from the class '),
-                  TextSpan(text: title, style: const TextStyle(fontWeight: FontWeight.bold)),
-                  const TextSpan(text: '.'),
-                ],
-                style: const TextStyle(color: Colors.black87),
-              ),
-            ),
+            begin: 'You have got removed from the class ',
+            middle: title,
+            end: '.',
           );
         }
         if (type == "ROLE_CHANGE") {}
+
+        Provider.of<NotificationManager>(AppContext.last, listen: false).fetchNotificationList();
       },
     );
   }
 
   Future<void> onRemoveClassAndPopOutOfClassScreen(String cid) async {
-    //class code: 3484385f
+    //class code: 8c357f68
     Provider.of<ClassManager>(AppContext.last, listen: false).removeClassAtOnce(cid);
     if (AppContext.name.contains(cid)) {
       Navigator.popUntil(AppContext.last, (route) => route.isFirst);
-      await Future.delayed(const Duration(seconds: 1));
+      await Future.delayed(const Duration(milliseconds: 500));
     }
   }
 }

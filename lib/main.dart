@@ -30,6 +30,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'JustClass',
         theme: Themes.forApp,
+        debugShowCheckedModeBanner: false,
         home: FirstScreen(),
         routes: {
           AuthScreen.routeName: (_) => AuthScreen(),

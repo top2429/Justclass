@@ -74,7 +74,7 @@ class NoteTile extends StatelessWidget {
 
   Widget buildNoteTopBar(BuildContext context) {
     final uid = Provider.of<Auth>(context, listen: false).user.uid;
-    final ownerId = Provider.of<Class>(context, listen: false).ownerUid;
+    final role = Provider.of<Class>(context, listen: false).role;
     final User author = note.author;
 
     return Row(
@@ -95,7 +95,7 @@ class NoteTile extends StatelessWidget {
             ),
           ),
         ),
-        if (uid == author.uid || uid == ownerId)
+        if (uid == author.uid || role == ClassRole.OWNER || role == ClassRole.COLLABORATOR)
           ClipRRect(
             borderRadius: const BorderRadius.all(Radius.circular(25)),
             child: SizedBox(

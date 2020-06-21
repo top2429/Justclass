@@ -95,7 +95,7 @@ class NoteTile extends StatelessWidget {
             ),
           ),
         ),
-        if (uid == author.uid || role == ClassRole.OWNER || role == ClassRole.COLLABORATOR)
+        if (uid == author.uid || role == ClassRole.OWNER)
           ClipRRect(
             borderRadius: const BorderRadius.all(Radius.circular(25)),
             child: SizedBox(

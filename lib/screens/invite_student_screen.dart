@@ -78,7 +78,8 @@ class _InviteStudentScreenState extends State<InviteStudentScreen> {
     super.dispose();
   }
 
-  void onInputChange(String val) {
+  void onInputChange(String input) {
+    final val = input.trim();
     if (val == '')
       backToFirstMode();
     else {
@@ -116,7 +117,7 @@ class _InviteStudentScreenState extends State<InviteStudentScreen> {
       final uid = Provider.of<Auth>(context, listen: false).user.uid;
       final suggestedMembers = await widget.memberMgr.fetchSuggestedStudents(uid, widget.cid, val);
 
-      // only the result of last request is assigned
+      // only the result of the last request is assigned
       if (index == requestCount && !nothingView && suggesting && this.mounted)
         setState(() => members = suggestedMembers);
     } catch (error) {
@@ -193,7 +194,7 @@ class _InviteStudentScreenState extends State<InviteStudentScreen> {
                             _buildTextField(),
                             _buildLoadingIndicator(),
                             if (members != null) _buildSuggestedMemberList(),
-                            if (members == null && !suggesting) _buildRecipientBtn(inputCtrl.text),
+                            if (members == null && !suggesting) _buildRecipientBtn(inputCtrl.text.trim()),
                           ],
                         ),
                       ),

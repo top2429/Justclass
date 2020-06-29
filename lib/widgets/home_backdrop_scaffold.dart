@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:justclass/widgets/app_icon_button.dart';
+import 'package:justclass/widgets/home_screen_front_layer.dart';
 
 class HomeBackdropScaffold extends StatefulWidget {
   final Widget leading;
@@ -47,20 +48,24 @@ class HomeBackdropScaffoldState extends State<HomeBackdropScaffold> with SingleT
     super.dispose();
   }
 
+  void forward() {
+    _controller.forward();
+    _frontLayerKey.currentState.toOffstage();
+  }
+
+  void reserve() {
+    _controller.reverse();
+    _frontLayerKey.currentState.toStage();
+  }
+
   void swap() {
-    if (_controller.isDismissed) {
-      _controller.forward();
-      _frontLayerKey.currentState.toOffstage();
-    } else {
-      _controller.reverse();
-      _frontLayerKey.currentState.toStage();
-    }
+    _controller.isDismissed ? forward() : reserve();
   }
 
   Future<bool> _onWillPopScope() async {
     if (_frontLayerKey.currentState.isOffstage) {
       swap();
-      return null;
+      return false;
     }
     return true;
   }
@@ -115,53 +120,6 @@ class HomeBackdropScaffoldState extends State<HomeBackdropScaffold> with SingleT
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-class HomeFrontLayer extends StatefulWidget {
-  final Widget frontLayer;
-  final Function reverse;
-
-  const HomeFrontLayer({Key key, this.frontLayer, this.reverse}) : super(key: key);
-
-  @override
-  HomeFrontLayerState createState() => HomeFrontLayerState();
-}
-
-class HomeFrontLayerState extends State<HomeFrontLayer> {
-  bool isOffstage = false;
-
-  void toOffstage() {
-    setState(() => isOffstage = true);
-  }
-
-  void toStage() {
-    setState(() => isOffstage = false);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: (isOffstage) ? widget.reverse : null,
-      child: Stack(
-        children: <Widget>[
-          Container(
-            color: Colors.white,
-            width: double.infinity,
-            height: double.infinity,
-            child: widget.frontLayer,
-          ),
-          IgnorePointer(
-            ignoring: !isOffstage,
-            child: AnimatedOpacity(
-              duration: const Duration(milliseconds: 400),
-              opacity: isOffstage ? 1 : 0,
-              child: Container(color: Colors.black12),
-            ),
-          )
-        ],
       ),
     );
   }

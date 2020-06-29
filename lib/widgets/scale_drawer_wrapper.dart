@@ -23,7 +23,7 @@ class ScaleDrawerWrapperState extends State<ScaleDrawerWrapper> with SingleTicke
 
   bool _canBeDragged = true;
 
-//  bool _isOffScreen = false;
+  bool _isOffScreen = false;
 
   @override
   void initState() {
@@ -44,48 +44,56 @@ class ScaleDrawerWrapperState extends State<ScaleDrawerWrapper> with SingleTicke
   }
 
   void open() {
-//    setState(() => _isOffScreen = true);
+    setState(() => _isOffScreen = true);
     _controller.forward();
   }
 
   void close() {
     _controller.reverse();
-//    _controller.reverse().then((_) {
-//      setState(() => _isOffScreen = false);
-//    });
+    _controller.reverse().then((_) {
+      setState(() => _isOffScreen = false);
+    });
   }
 
   void swap() {
     (_controller.isCompleted) ? close() : open();
   }
 
-  Future<bool> _onWillPop() {
+  Future<bool> _onWillPop() async {
     if (!_controller.isDismissed) {
       close();
-      return Future.value(false);
+      return false;
     }
-    return Future.value(true);
+    return true;
   }
 
   void _onHorizontalDragStart(DragStartDetails details) {
     bool isDragOpenFromLeft = _controller.isDismissed && details.globalPosition.dx < 50;
     bool isDragOpenFromRight = _controller.isCompleted && details.globalPosition.dx > _drawerWidth;
     _canBeDragged = isDragOpenFromLeft || isDragOpenFromRight;
+    if (isDragOpenFromLeft && !_isOffScreen) setState(() => _isOffScreen = true);
   }
 
   void _onHorizontalDragUpdate(DragUpdateDetails details) {
     if (_canBeDragged) {
       double delta = details.primaryDelta / 300;
       _controller.value += delta;
+
+      if (_controller.value > 0 && !_isOffScreen) setState(() => _isOffScreen = true);
+      if (_controller.value == 0) setState(() => _isOffScreen = false);
     }
   }
 
   void _onHorizontalDragEnd(DragEndDetails details) {
     if (_controller.isCompleted || _controller.isDismissed) return;
-    if (details.velocity.pixelsPerSecond.dx.abs() >= 365) {
+    final velocity = details.velocity.pixelsPerSecond.dx;
+    if (velocity.abs() >= 365) {
       final width = MediaQuery.of(context).size.width;
-      double visualVelocity = details.velocity.pixelsPerSecond.dx / width;
-      _controller.fling(velocity: visualVelocity);
+      double visualVelocity = velocity / width;
+      _controller.fling(velocity: visualVelocity)
+        ..then((_) {
+          if (velocity < 0) setState(() => _isOffScreen = false);
+        });
     } else if (_controller.value < 0.5) {
       close();
     } else {
@@ -100,7 +108,7 @@ class ScaleDrawerWrapperState extends State<ScaleDrawerWrapper> with SingleTicke
       onHorizontalDragUpdate: _onHorizontalDragUpdate,
       onHorizontalDragEnd: _onHorizontalDragEnd,
       child: WillPopScope(
-        onWillPop: () => _onWillPop(),
+        onWillPop: _onWillPop,
         child: Stack(
           children: <Widget>[
             Positioned(
@@ -121,16 +129,16 @@ class ScaleDrawerWrapperState extends State<ScaleDrawerWrapper> with SingleTicke
               child: GestureDetector(
                 onTap: close,
                 child: Container(
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                     color: Colors.transparent,
-                    boxShadow: [BoxShadow(color: Colors.black38, blurRadius: 15, offset: Offset(3, 3))],
-//                    borderRadius: !_isOffScreen ? BorderRadius.zero : BorderRadius.circular(15),
+                    boxShadow: const [BoxShadow(color: Colors.black38, blurRadius: 15, offset: Offset(3, 3))],
+                    borderRadius: !_isOffScreen ? BorderRadius.zero : const BorderRadius.all(Radius.circular(15)),
                   ),
-//                  child: ClipRRect(
-//                    borderRadius: !_isOffScreen ? BorderRadius.zero : BorderRadius.circular(15),
-//                  child: IgnorePointer(ignoring: !_controller.isDismissed, child: widget.scaffold),
-//                  ),
-                  child: ClipRRect(child: widget.topScaffold),
+                  child: ClipRRect(
+                    borderRadius: !_isOffScreen ? BorderRadius.zero : const BorderRadius.all(Radius.circular(15)),
+                    child: IgnorePointer(ignoring: _isOffScreen, child: widget.topScaffold),
+                  ),
+//                  child: ClipRRect(child: widget.topScaffold),
                 ),
               ),
             ),

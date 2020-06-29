@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:justclass/utils/validator.dart';
+import 'package:justclass/utils/validators.dart';
 
 class CreateClassFormData {
   String title;

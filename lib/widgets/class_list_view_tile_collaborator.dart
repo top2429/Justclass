@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:justclass/providers/class.dart';
+import 'package:justclass/providers/class_manager.dart';
 import 'package:justclass/screens/class_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../themes.dart';
+import 'app_snack_bar.dart';
+import 'leave_class_alert_dialog.dart';
 
 class ClassListViewTileCollaborator extends StatelessWidget {
   final BuildContext context;
@@ -11,6 +14,20 @@ class ClassListViewTileCollaborator extends StatelessWidget {
   ClassListViewTileCollaborator({@required this.context});
 
   static const _radius = BorderRadius.all(Radius.circular(8));
+
+  void _leaveClass(String cid, String classTitle, BuildContext context) async {
+    try {
+      var result = await showDialog(
+        context: context,
+        builder: (context) => LeaveClassAlertDialog(context: context, classTitle: classTitle),
+      );
+
+      result ??= false;
+      if (result) await Provider.of<ClassManager>(context, listen: false).leaveClass(cid);
+    } catch (error) {
+      AppSnackBar.showError(context, message: error.toString());
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -73,7 +90,17 @@ class ClassListViewTileCollaborator extends StatelessWidget {
                             ),
                           ),
                         ),
-                        child,
+                        PopupMenuButton(
+                          shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4))),
+                          icon: const Icon(Icons.more_vert, color: Colors.white),
+                          offset: const Offset(0, 40),
+                          itemBuilder: (_) => [
+                            const PopupMenuItem(child: Text('Leave'), value: 'leave', height: 40),
+                          ],
+                          onSelected: (val) {
+                            if (val == 'leave') _leaveClass(cls.cid, cls.title, context);
+                          },
+                        ),
                       ],
                     ),
                   ),
@@ -82,16 +109,6 @@ class ClassListViewTileCollaborator extends StatelessWidget {
             ],
           );
         },
-        child: PopupMenuButton(
-          shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4))),
-          icon: const Icon(Icons.more_vert, color: Colors.white),
-          offset: const Offset(0, 40),
-          itemBuilder: (_) => [
-            const PopupMenuItem(child: Text('Edit'), value: 'edit', height: 40),
-            const PopupMenuItem(child: Text('Leave'), value: 'leave', height: 40),
-          ],
-          onSelected: (val) {},
-        ),
       ),
     );
   }

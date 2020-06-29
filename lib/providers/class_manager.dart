@@ -1,16 +1,13 @@
 import 'package:flutter/foundation.dart';
 import 'package:justclass/providers/class.dart';
 import 'package:justclass/utils/api_call.dart';
-import 'package:justclass/utils/test.dart';
 import 'package:justclass/widgets/class_list_view.dart';
 import 'package:justclass/widgets/create_class_form.dart';
 
-class ClassManager with ChangeNotifier {
+class ClassManager extends ChangeNotifier {
   List<Class> _classes = [];
 
-  String _uid;
-
-  set uid(String uid) => _uid = uid;
+  String uid;
 
   List<Class> get classes => [..._classes];
 
@@ -33,7 +30,7 @@ class ClassManager with ChangeNotifier {
 
   Future<void> add(CreateClassFormData data) async {
     try {
-      final newClass = await ApiCall.createClass(_uid, data);
+      final newClass = await ApiCall.createClass(uid, data);
       _classes.insert(0, newClass);
       notifyListeners();
     } catch (error) {
@@ -43,7 +40,7 @@ class ClassManager with ChangeNotifier {
 
   Future<void> fetchClassList() async {
     try {
-      _classes = await ApiCall.fetchClassList(_uid);
+      _classes = await ApiCall.fetchClassList(uid);
       notifyListeners();
     } catch (error) {
       throw error;
@@ -52,8 +49,7 @@ class ClassManager with ChangeNotifier {
 
   Future<void> joinClass(String publicCode) async {
     try {
-      final cls = await ApiCall.joinClassWithCode(_uid, publicCode);
-      // TODO: insert class to class list
+      final cls = await ApiCall.joinClassWithCode(uid, publicCode);
       _classes.insert(0, cls);
       notifyListeners();
     } catch (error) {
@@ -67,7 +63,7 @@ class ClassManager with ChangeNotifier {
     final cls = _classes.removeAt(index);
     notifyListeners();
     try {
-      await ApiCall.removeOwnedClass(_uid, cid);
+      await ApiCall.removeOwnedClass(uid, cid);
     } catch (error) {
       _classes.insert(index, cls);
       notifyListeners();
@@ -75,49 +71,22 @@ class ClassManager with ChangeNotifier {
     }
   }
 
-//  static final testData = [
-//    Class(
-//      cid: '0',
-//      title: 'KTPM_1234 co title rat chi la dai do',
-//      publicCode: '010ax31',
-//      role: ClassRole.OWNER,
-//      theme: 0,
-//      studentCount: 12,
-//      section: 'Môn: Kiến trúc phần mềm',
-//    ),
-//    Class(
-//      cid: '2',
-//      title: 'THCNTT3_100 co title ra chi la dai do',
-//      publicCode: '010ax31',
-//      role: ClassRole.STUDENT,
-//      theme: 2,
-//      ownerName: 'Hieu Pham',
-//    ),
-//    Class(
-//      cid: '1',
-//      title: 'PPHDH_1996 day la ',
-//      publicCode: '010ax31',
-//      role: ClassRole.COLLABORATOR,
-//      theme: 1,
-//      subject: 'Môn: Phương pháp học đại học, nhung chua du dau, phai dai hon nua',
-//      ownerName: 'Minh Ngoc',
-//    ),
-//    Class(
-//      cid: '3',
-//      title: 'THCNTT3_100',
-//      publicCode: '010ax31',
-//      role: ClassRole.OWNER,
-//      theme: 3,
-//      studentCount: 1,
-//      ownerName: 'Hieu Pham',
-//    ),
-//    Class(
-//      cid: '4',
-//      title: 'Because I\'m Batman',
-//      publicCode: '010ax31',
-//      role: ClassRole.STUDENT,
-//      theme: 4,
-//      ownerName: 'Bruce Wayne',
-//    ),
-//  ];
+  void removeClassAtOnce(String cid) {
+    _classes.removeWhere((cls) => cls.cid == cid);
+    notifyListeners();
+  }
+
+  Future<void> leaveClass(String cid) async {
+    // optimistic pattern
+    final index = _classes.indexWhere((cls) => cls.cid == cid);
+    final cls = _classes.removeAt(index);
+    notifyListeners();
+    try {
+      await ApiCall.leaveCLass(uid, cid);
+    } catch (error) {
+      _classes.insert(index, cls);
+      notifyListeners();
+      throw error;
+    }
+  }
 }

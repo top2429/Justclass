@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:justclass/models/user.dart';
 import 'package:justclass/utils/api_call.dart';
-import 'package:justclass/utils/test.dart';
+import 'package:justclass/utils/notification_observer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 enum AuthType { FIREBASE_EMAIL_PASS, OAUTH_GOOGLE, OAUTH_FACEBOOK }
@@ -19,7 +19,7 @@ extension AuthTypes on AuthType {
       case AuthType.OAUTH_FACEBOOK:
         return 'Facebook Account';
       default:
-        return "";
+        return '';
     }
   }
 
@@ -31,7 +31,7 @@ extension AuthTypes on AuthType {
   }
 }
 
-class Auth with ChangeNotifier {
+class Auth extends ChangeNotifier {
   final _googleSignIn = GoogleSignIn(scopes: ['email']);
   User _user;
   AuthType _type;
@@ -56,10 +56,7 @@ class Auth with ChangeNotifier {
       );
       _type = AuthTypes.getType(prefs.getString(_prefsAuthTypeKey));
 
-//      // re-connect to google
-//      final val = await _googleSignIn.isSignedIn();
-//      await _googleSignIn.signInSilently();
-
+      NotificationObserver().signIn(_user.uid);
       notifyListeners();
       return true;
     } catch (error) {
@@ -69,10 +66,41 @@ class Auth with ChangeNotifier {
 
   Future<void> signInGoogle() async {
     try {
+      await ApiCall.checkInternetConnection();
       final user = await _googleSignIn.signIn();
       if (user == null) return;
 
       _type = AuthType.OAUTH_GOOGLE;
+      print('Auth Type: ${_type.name}');
+
+      await _storeAuthData(user);
+      notifyListeners();
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  Future<void> signUpEmailPasswordFirebase(String email, String password) async {
+    try {
+      final user = await ApiCall.signUpEmailPasswordFirebase(email, password);
+      if (user == null) return;
+
+      _type = AuthType.FIREBASE_EMAIL_PASS;
+      print('Auth Type: ${_type.name}');
+
+      await _storeAuthData(user);
+      notifyListeners();
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  Future<void> signInEmailPasswordFirebase(String email, String password) async {
+    try {
+      final user = await ApiCall.signInEmailPasswordFirebase(email, password);
+      if (user == null) return;
+
+      _type = AuthType.FIREBASE_EMAIL_PASS;
       print('Auth Type: ${_type.name}');
 
       await _storeAuthData(user);
@@ -94,14 +122,20 @@ class Auth with ChangeNotifier {
         );
         break;
       case AuthType.FIREBASE_EMAIL_PASS:
-        // TODO: Handle this case.
+        _user = User(
+          uid: anyUser['localId'],
+          email: anyUser['email'],
+          displayName: anyUser['email'],
+          photoUrl: null,
+        );
         break;
       case AuthType.OAUTH_FACEBOOK:
         // TODO: Handle this case.
         break;
     }
-    await ApiCall.postUserData(_user);
     await persistAuthData();
+    ApiCall.postUserData(_user);
+    NotificationObserver().signIn(_user.uid);
   }
 
   Future<void> persistAuthData() async {
@@ -126,15 +160,13 @@ class Auth with ChangeNotifier {
           await _googleSignIn.signOut();
           break;
         case AuthType.FIREBASE_EMAIL_PASS:
-          // TODO: Handle this case.
           break;
         case AuthType.OAUTH_FACEBOOK:
           // TODO: Handle this case.
           break;
-        default:
-          return;
       }
-    } finally {
+      NotificationObserver().signOut(_user.uid);
+    } catch (error) {} finally {
       _user = null;
       _type = null;
     }

@@ -5,30 +5,34 @@ import 'package:justclass/widgets/app_snack_bar.dart';
 import 'package:provider/provider.dart';
 
 class OAuthRow extends StatelessWidget {
-  final Function _changeLoadingStatus;
+  final Function _setLoadingStatus;
 
-  OAuthRow(this._changeLoadingStatus);
+  OAuthRow(this._setLoadingStatus);
 
   void _toHomeScreen(BuildContext context) {
     Navigator.of(context).pushReplacementNamed(HomeScreen.routeName);
   }
 
   void _signInFacebook(Auth auth, BuildContext context) async {
-    _changeLoadingStatus(true);
-    try {} catch (error) {} finally {
-      _changeLoadingStatus(false);
+    _setLoadingStatus(true);
+    try {
+      // TODO: sign in with FB account
+    } catch (error) {
+      AppSnackBar.showError(context, message: error.toString());
+    } finally {
+      _setLoadingStatus(false);
     }
   }
 
   void _signInGoogle(Auth auth, BuildContext context) async {
-    _changeLoadingStatus(true);
+    _setLoadingStatus(true);
     try {
       await auth.signInGoogle();
       if (auth.user != null) _toHomeScreen(context);
     } catch (error) {
-      AppSnackBar.showError(context, message: error.toString(),bgColor: Colors.white.withOpacity(0.9));
+      AppSnackBar.showError(context, message: error.toString());
     } finally {
-      _changeLoadingStatus(false);
+      _setLoadingStatus(false);
     }
   }
 

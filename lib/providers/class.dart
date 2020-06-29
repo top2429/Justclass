@@ -1,15 +1,28 @@
 import 'package:flutter/foundation.dart';
 import 'package:justclass/models/class_details_data.dart';
-import 'package:justclass/themes.dart';
+import 'package:justclass/models/member.dart';
+import 'package:justclass/models/note.dart';
 import 'package:justclass/utils/api_call.dart';
 
 enum ClassRole { OWNER, COLLABORATOR, STUDENT }
 
 extension ClassRoles on ClassRole {
+  String get name {
+    switch (this) {
+      case ClassRole.OWNER:
+        return 'OWNER';
+      case ClassRole.COLLABORATOR:
+        return 'COLLABORATOR';
+      case ClassRole.STUDENT:
+      default:
+        return 'STUDENT';
+    }
+  }
+
   static ClassRole getType(String role) {
     if (role == 'OWNER')
       return ClassRole.OWNER;
-    else if (role == 'TEACHER')
+    else if (role == 'COLLABORATOR')
       return ClassRole.COLLABORATOR;
     else if (role == 'STUDENT')
       return ClassRole.STUDENT;
@@ -57,9 +70,14 @@ class Class with ChangeNotifier {
   PermissionCode permissionCode;
   int studentCount;
   String ownerName;
+  String ownerUid;
   int theme;
   int createdTimestamp;
   int lastEdit;
+
+  List<Member> _members;
+
+  List<Note> _notes;
 
   Class({
     @required this.cid,
@@ -74,6 +92,7 @@ class Class with ChangeNotifier {
     this.description = '',
     this.room = '',
     this.ownerName = '',
+    this.ownerUid = '',
     this.createdTimestamp = 0,
     this.lastEdit = 0,
   });
@@ -87,12 +106,18 @@ class Class with ChangeNotifier {
     this.description = json['description'];
     this.role = ClassRoles.getType(json['role']);
     this.theme = json['theme'];
+    this.publicCode = json['publicCode'];
     this.studentCount = json['studentsCount'] ?? 0;
-    this.ownerName = json['owner'] != null ? json['owner']['displayName'] : 'Me';
+    this.ownerName = json['owner'] != null ? json['owner']['displayName'] : '';
+    this.ownerUid = json['owner'] != null ? json['owner']['localId'] : '';
     this.permissionCode = PermissionCodes.getType(json['studentsNotePermission']);
     this.createdTimestamp = json['createdTimestamp'];
     this.lastEdit = json['lastEdit'];
   }
+
+  List<Member> get members => _members;
+
+  List<Note> get notes => _notes;
 
   Future<void> fetchDetails() async {
     try {
@@ -120,8 +145,31 @@ class Class with ChangeNotifier {
     }
   }
 
-  void changeTheme() {
-    theme = Themes.getRandomTheme();
-    notifyListeners();
+  Future<String> resetClassCode(String uid) async {
+    try {
+      final code = await ApiCall.requestNewPublicCode(uid, cid);
+      publicCode = code;
+      return code;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  Future<void> fetchMemberList(String uid) async {
+    try {
+      _members = await ApiCall.fetchMemberList(uid, cid);
+      notifyListeners();
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  Future<void> fetchNoteList() async {
+    try {
+      _notes = await ApiCall.fetchNotes(cid);
+      notifyListeners();
+    } catch (error) {
+      throw error;
+    }
   }
 }

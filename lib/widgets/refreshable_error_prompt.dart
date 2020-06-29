@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:justclass/themes.dart';
 
 class RefreshableErrorPrompt extends StatelessWidget {
   final String message;
   final Function onRefresh;
+  final Color color;
 
-  RefreshableErrorPrompt({this.message, @required this.onRefresh});
+  RefreshableErrorPrompt({this.message, @required this.onRefresh, this.color = Themes.primaryColor});
 
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (_, constraints) {
         return RefreshIndicator(
+          color: color,
           onRefresh: onRefresh,
           child: ListView(
             children: <Widget>[

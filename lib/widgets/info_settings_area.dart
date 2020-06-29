@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:justclass/models/class_details_data.dart';
+import 'package:justclass/providers/auth.dart';
+import 'package:justclass/widgets/app_snack_bar.dart';
+import 'package:provider/provider.dart';
 
 import '../themes.dart';
 
 class InfoSettingsArea extends StatefulWidget {
   final int theme;
   final ClassDetailsData input;
+  final Function resetClassCode;
 
-  InfoSettingsArea({this.theme, this.input});
+  InfoSettingsArea({this.theme, this.input, this.resetClassCode});
 
   @override
   _InfoSettingsAreaState createState() => _InfoSettingsAreaState();
@@ -16,14 +21,24 @@ class InfoSettingsArea extends StatefulWidget {
 class _InfoSettingsAreaState extends State<InfoSettingsArea> {
   int inputTheme;
 
-  initState() {
+  @override
+  void initState() {
     inputTheme = widget.theme;
-
     super.initState();
   }
 
-  _onPickTheme(BuildContext context) async {
-    const borderRadius = const BorderRadius.only(
+  void _resetClassCode(BuildContext context) async {
+    final uid = Provider.of<Auth>(context, listen: false).user.uid;
+    try {
+      final code = await widget.resetClassCode(uid);
+      setState(() => widget.input.classCode = code);
+    } catch (error) {
+      if (this.mounted) AppSnackBar.showError(context, message: error.toString());
+    }
+  }
+
+  void _onPickTheme(BuildContext context) async {
+    const borderRadius = BorderRadius.only(
       topLeft: Radius.circular(15),
       topRight: Radius.circular(15),
     );
@@ -83,6 +98,7 @@ class _InfoSettingsAreaState extends State<InfoSettingsArea> {
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         Padding(
           padding: const EdgeInsets.only(bottom: 5),
@@ -109,11 +125,11 @@ class _InfoSettingsAreaState extends State<InfoSettingsArea> {
               subtitle: Text('Theme ${inputTheme + 1}'),
               trailing: Container(
                 width: 150,
-                height: double.infinity,
+                height: 60,
                 child: ClipRRect(
                   borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(8),
-                    bottomLeft: Radius.circular(8),
+                    topLeft: Radius.circular(30),
+                    bottomLeft: Radius.circular(30),
                   ),
                   child: Image.asset(
                     Themes.forClass(inputTheme).imageUrl,
@@ -124,6 +140,35 @@ class _InfoSettingsAreaState extends State<InfoSettingsArea> {
             ),
           ),
         ),
+        ListTile(
+          onTap: () {
+            Clipboard.setData(ClipboardData(text: widget.input.classCode));
+            Scaffold.of(context).showSnackBar(SnackBar(
+              behavior: SnackBarBehavior.floating,
+              elevation: 2,
+              backgroundColor: Themes.forClass(widget.theme).primaryColor,
+              duration: const Duration(seconds: 1),
+              content: const Text('Class code copied.'),
+            ));
+          },
+          contentPadding: const EdgeInsets.only(left: 20),
+          title: Text('Class Code'),
+          subtitle: Text(widget.input.classCode),
+          trailing: PopupMenuButton(
+            tooltip: 'Code Settings',
+            shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5))),
+            offset: const Offset(0, 40),
+            itemBuilder: (_) {
+              return [
+                PopupMenuItem(child: Text('Reset class code'), height: 40, value: 'reset'),
+              ];
+            },
+            onSelected: (val) {
+              FocusScope.of(context).requestFocus(FocusNode());
+              if (val == 'reset') _resetClassCode(context);
+            },
+          ),
+        )
       ],
     );
   }

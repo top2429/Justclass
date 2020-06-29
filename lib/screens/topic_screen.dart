@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:justclass/providers/class.dart';
-import 'package:justclass/screens/teacher_floating_action_button.dart';
 import 'package:justclass/utils/constants.dart';
+import 'package:justclass/widgets/teacher_floating_action_button.dart';
 import 'package:provider/provider.dart';
 
 import '../themes.dart';
@@ -39,7 +39,16 @@ class TopicScreen extends StatelessWidget {
         ],
       ),
       body: SafeArea(
-        child: Container(),
+        child: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: const <Widget>[
+              Icon(Icons.build),
+              SizedBox(height: 10),
+              Text('Under Construction!'),
+            ],
+          ),
+        ),
       ),
     );
   }

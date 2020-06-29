@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:justclass/models/class_details_data.dart';
 import 'package:justclass/themes.dart';
-import 'package:justclass/utils/validator.dart';
+import 'package:justclass/utils/validators.dart';
 
 class AboutClassArea extends StatelessWidget {
   final ClassDetailsData data;

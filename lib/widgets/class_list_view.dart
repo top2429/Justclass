@@ -41,33 +41,35 @@ class ClassListViewState extends State<ClassListView> {
   bool _hasError = false;
   bool _didFirstLoad = false;
 
+  ViewType get viewType => _type;
+
   set viewType(ViewType type) => setState(() => _type = type);
 
   @override
   void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((_) => _onRefreshWhenWithoutDataLoaded());
+    WidgetsBinding.instance.addPostFrameCallback((_) => _fetchClassListFirstLoad());
     super.initState();
   }
 
-  Future<void> _onRefreshWhenWithoutDataLoaded() async {
+  Future<void> _fetchClassListFirstLoad() async {
     try {
       await Provider.of<ClassManager>(context, listen: false).fetchClassList();
-      setState(() {
-        _didFirstLoad = true;
-        _hasError = false;
-      });
+      if (this.mounted) setState(() => _didFirstLoad = true);
     } catch (error) {
-      setState(() {
-        _didFirstLoad = true;
-        _hasError = true;
-      });
       AppSnackBar.showError(context, message: error.toString());
+      if (this.mounted) {
+        setState(() {
+          _didFirstLoad = true;
+          _hasError = true;
+        });
+      }
     }
   }
 
-  Future<void> _onRefreshWithDataLoaded() async {
+  Future<void> _fetchClassList() async {
     try {
       await Provider.of<ClassManager>(context, listen: false).fetchClassList();
+      if (this.mounted) setState(() => _hasError = false);
     } catch (error) {
       AppSnackBar.showError(context, message: error.toString());
     }
@@ -75,10 +77,13 @@ class ClassListViewState extends State<ClassListView> {
 
   @override
   Widget build(BuildContext context) {
-    if (!_didFirstLoad) return FetchProgressIndicator();
-    if (_hasError) return RefreshableErrorPrompt(onRefresh: _onRefreshWhenWithoutDataLoaded);
+    if (!_didFirstLoad) {
+      _fetchClassListFirstLoad();
+      return FetchProgressIndicator();
+    }
+    if (_hasError) return RefreshableErrorPrompt(onRefresh: _fetchClassList);
     return RefreshIndicator(
-      onRefresh: _onRefreshWithDataLoaded,
+      onRefresh: _fetchClassList,
       child: Consumer<ClassManager>(
         builder: (_, classMgr, __) {
           final classes = classMgr.getClassesOnViewType(_type);
@@ -92,7 +97,7 @@ class ClassListViewState extends State<ClassListView> {
                         value: cls,
                         child: _buildTile(cls.role),
                       ))
-                  .toList()
+                  .toList(),
             ],
           );
         },

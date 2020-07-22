@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:justclass/providers/class_manager.dart';
 import 'package:justclass/providers/notification_manager.dart';
+import 'package:justclass/screens/notification_screen.dart';
 import 'package:justclass/utils/app_context.dart';
 import 'package:justclass/widgets/app_snack_bar.dart';
 import 'package:provider/provider.dart';
@@ -60,6 +61,19 @@ class NotificationObserver {
         if (type == "ROLE_CHANGE") {}
 
         Provider.of<NotificationManager>(AppContext.last, listen: false).fetchNotificationList();
+      },
+      onResume: (Map<String, dynamic> message) async {
+        print('onResume 1');
+        await Future.delayed(const Duration(milliseconds: 100));
+        if (!AppContext.name.contains(NotificationScreen.routeName)) {
+          print('onResume 2');
+          Navigator.of(AppContext.last).push(MaterialPageRoute(builder: (_) => NotificationScreen()));
+        }
+      },
+      onLaunch: (Map<String, dynamic> message) async {
+        print('onLaunch');
+        await Future.delayed(const Duration(milliseconds: 100));
+        Navigator.of(AppContext.last).push(MaterialPageRoute(builder: (_) => NotificationScreen()));
       },
     );
   }

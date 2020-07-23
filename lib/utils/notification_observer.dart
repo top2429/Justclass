@@ -63,16 +63,15 @@ class NotificationObserver {
         Provider.of<NotificationManager>(AppContext.last, listen: false).fetchNotificationList();
       },
       onResume: (Map<String, dynamic> message) async {
-        print('onResume 1');
         await Future.delayed(const Duration(milliseconds: 100));
+        Provider.of<NotificationManager>(AppContext.last, listen: false).fetchNotificationList();
         if (!AppContext.name.contains(NotificationScreen.routeName)) {
-          print('onResume 2');
           Navigator.of(AppContext.last).push(MaterialPageRoute(builder: (_) => NotificationScreen()));
         }
       },
       onLaunch: (Map<String, dynamic> message) async {
-        print('onLaunch');
-        await Future.delayed(const Duration(milliseconds: 100));
+        await Future.delayed(const Duration(milliseconds: 300));
+        Provider.of<NotificationManager>(AppContext.last, listen: false).fetchNotificationList();
         Navigator.of(AppContext.last).push(MaterialPageRoute(builder: (_) => NotificationScreen()));
       },
     );

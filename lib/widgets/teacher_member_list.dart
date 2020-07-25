@@ -84,7 +84,7 @@ class _TeacherMemberListState extends State<TeacherMemberList> {
         ...memberMgr.collaborators.map(
           (t) => ListTile(
             contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 2),
-            leading: MemberAvatar(photoUrl: t.photoUrl, displayName: t.displayName),
+            leading: MemberAvatar(photoUrl: t.photoUrl, displayName: t.displayName, color: color),
             title: Text(t.displayName, overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 15)),
             trailing: (cls.role != ClassRole.OWNER)
                 ? null

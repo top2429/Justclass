@@ -71,7 +71,7 @@ class NotificationObserver {
       },
       onLaunch: (Map<String, dynamic> message) async {
         await Future.delayed(const Duration(milliseconds: 300));
-        Provider.of<NotificationManager>(AppContext.last, listen: false).fetchNotificationList();
+//        Provider.of<NotificationManager>(AppContext.last, listen: false).fetchNotificationList();
         Navigator.of(AppContext.last).push(MaterialPageRoute(builder: (_) => NotificationScreen()));
       },
     );

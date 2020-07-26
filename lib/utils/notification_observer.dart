@@ -41,7 +41,8 @@ class NotificationObserver {
           );
         }
         if (type == "CLASSROOM_DELETED") {
-          await onRemoveClassAndPopOutOfClassScreen(cid);
+          onRemoveClassAndPopOutOfClassScreen(cid);
+          await Future.delayed(const Duration(milliseconds: 500));
           AppSnackBar.showClassWarningNotification(
             null,
             begin: 'The class ',
@@ -50,7 +51,8 @@ class NotificationObserver {
           );
         }
         if (type == "KICKED") {
-          await onRemoveClassAndPopOutOfClassScreen(cid);
+          onRemoveClassAndPopOutOfClassScreen(cid);
+          await Future.delayed(const Duration(milliseconds: 500));
           AppSnackBar.showClassWarningNotification(
             null,
             begin: 'You have got removed from the class ',
@@ -65,6 +67,14 @@ class NotificationObserver {
       onResume: (Map<String, dynamic> message) async {
         await Future.delayed(const Duration(milliseconds: 100));
         Provider.of<NotificationManager>(AppContext.last, listen: false).fetchNotificationList();
+
+        final data = message['data'];
+        final type = data['type'];
+        final cid = data["classroomId"];
+        if (type == "CLASSROOM_DELETED" || type == "KICKED") {
+          onRemoveClassAndPopOutOfClassScreen(cid);
+        }
+
         if (!AppContext.name.contains(NotificationScreen.routeName)) {
           Navigator.of(AppContext.last).push(MaterialPageRoute(builder: (_) => NotificationScreen()));
         }
@@ -77,11 +87,10 @@ class NotificationObserver {
     );
   }
 
-  Future<void> onRemoveClassAndPopOutOfClassScreen(String cid) async {
+  onRemoveClassAndPopOutOfClassScreen(String cid) {
     Provider.of<ClassManager>(AppContext.last, listen: false).removeClassAtOnce(cid);
     if (AppContext.name.contains(cid)) {
       Navigator.popUntil(AppContext.last, (route) => route.isFirst);
-      await Future.delayed(const Duration(milliseconds: 500));
     }
   }
 }

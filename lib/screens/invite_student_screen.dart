@@ -63,10 +63,19 @@ class _InviteStudentScreenState extends State<InviteStudentScreen> {
   // a flag indicating if invitations are being sent or not
   bool sending = false;
 
+  // screen waits for a short time before focusing the input and showing the soft keyboard
+  final _inputFocusNode = FocusNode();
+  Timer _showKeyboardTimer;
+
   @override
   void initState() {
-    WidgetsBinding.instance
-        .addPostFrameCallback((_) => AppContext.add(screenCtx, '${InviteStudentScreen.routeName} ${widget.cid}'));
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      AppContext.add(screenCtx, '${InviteStudentScreen.routeName} ${widget.cid}');
+
+      _showKeyboardTimer = Timer(const Duration(milliseconds: 300), () {
+        FocusScope.of(context).requestFocus(_inputFocusNode);
+      });
+    });
     super.initState();
   }
 
@@ -74,6 +83,7 @@ class _InviteStudentScreenState extends State<InviteStudentScreen> {
   void dispose() {
     debounce?.cancel();
     inputCtrl.dispose();
+    _showKeyboardTimer?.cancel();
     AppContext.pop();
     super.dispose();
   }
@@ -281,14 +291,15 @@ class _InviteStudentScreenState extends State<InviteStudentScreen> {
   Widget _buildTextField() {
     return TextField(
       controller: inputCtrl,
-      autofocus: true,
+      autofocus: false,
+      focusNode: _inputFocusNode,
       keyboardType: TextInputType.emailAddress,
       decoration: InputDecoration(
         contentPadding: const EdgeInsets.all(20),
         enabledBorder: const OutlineInputBorder(borderSide: BorderSide(color: Colors.transparent)),
         focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: Colors.transparent)),
         labelText: 'Name or email address',
-        hasFloatingPlaceholder: false,
+        floatingLabelBehavior: FloatingLabelBehavior.never,
       ),
       onChanged: onInputChange,
     );

@@ -81,7 +81,11 @@ class _NoteFileChipState extends State<NoteFileChip> {
               ),
             const SizedBox(width: 5),
             Flexible(
-              child: Text(widget.attachment.name, overflow: TextOverflow.ellipsis),
+              child: Text(
+                widget.attachment.name,
+                overflow: TextOverflow.fade,
+                softWrap: false,
+              ),
             ),
           ],
         ),

@@ -30,15 +30,14 @@ class HomeBackdropScaffold extends StatefulWidget {
 
 class HomeBackdropScaffoldState extends State<HomeBackdropScaffold> with SingleTickerProviderStateMixin {
   AnimationController _controller;
-  Animation<double> _rotateAnim;
-  Animation<Offset> _translateAnim;
+  Animation<double> rotateAnim;
+  Animation<Offset> translateAnim;
 
   final _frontLayerKey = GlobalKey<HomeFrontLayerState>();
 
   @override
   void initState() {
     _controller = AnimationController(duration: const Duration(milliseconds: 200), vsync: this);
-
     super.initState();
   }
 
@@ -72,8 +71,8 @@ class HomeBackdropScaffoldState extends State<HomeBackdropScaffold> with SingleT
 
   @override
   Widget build(BuildContext context) {
-    _rotateAnim = Tween<double>(begin: 0, end: -0.75 * pi).animate(_controller);
-    _translateAnim = Tween<Offset>(begin: Offset.zero, end: Offset(0, widget.dropDistance)).animate(
+    rotateAnim = Tween<double>(begin: 0, end: -0.75 * pi).animate(_controller);
+    translateAnim = Tween<Offset>(begin: Offset.zero, end: Offset(0, widget.dropDistance)).animate(
       CurvedAnimation(
         parent: _controller,
         curve: Curves.easeInOutQuad,
@@ -91,7 +90,7 @@ class HomeBackdropScaffoldState extends State<HomeBackdropScaffold> with SingleT
           actions: [
             AnimatedBuilder(
               animation: _controller,
-              builder: (_, child) => Transform.rotate(angle: _rotateAnim.value, child: child),
+              builder: (_, child) => Transform.rotate(angle: rotateAnim.value, child: child),
               child: AppIconButton(icon: const Icon(Icons.add, size: 30), onPressed: swap, tooltip: 'New Class'),
             ),
             ...widget.actions
@@ -108,11 +107,11 @@ class HomeBackdropScaffoldState extends State<HomeBackdropScaffold> with SingleT
               ),
               AnimatedBuilder(
                 animation: _controller,
-                builder: (_, child) => Transform.translate(offset: _translateAnim.value, child: child),
+                builder: (_, child) => Transform.translate(offset: translateAnim.value, child: child),
                 child: ClipRRect(
                   borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(20),
-                    topRight: Radius.circular(20),
+                    topLeft: Radius.circular(15),
+                    topRight: Radius.circular(15),
                   ),
                   child: HomeFrontLayer(key: _frontLayerKey, frontLayer: widget.frontLayer, reverse: swap),
                 ),

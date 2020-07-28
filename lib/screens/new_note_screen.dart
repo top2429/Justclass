@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:justclass/providers/note_manager.dart';
@@ -40,16 +42,26 @@ class _NewNoteScreenState extends State<NewNoteScreen> {
   // storing the user input
   String content;
 
+  // screen waits for a short time before focusing the input and showing the soft keyboard
+  final _inputFocusNode = FocusNode();
+  Timer _showKeyboardTimer;
+
   @override
   void initState() {
-    WidgetsBinding.instance
-        .addPostFrameCallback((_) => AppContext.add(screenCtx, '${NewNoteScreen.routeName} ${widget.cid}'));
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      AppContext.add(screenCtx, '${NewNoteScreen.routeName} ${widget.cid}');
+
+      _showKeyboardTimer = Timer(const Duration(milliseconds: 300), () {
+        FocusScope.of(context).requestFocus(_inputFocusNode);
+      });
+    });
     super.initState();
   }
 
   @override
   void dispose() {
     AppContext.pop();
+    _showKeyboardTimer?.cancel();
     super.dispose();
   }
 
@@ -164,9 +176,10 @@ class _NewNoteScreenState extends State<NewNoteScreen> {
     return Padding(
       padding: const EdgeInsets.only(left: 15, right: 15, top: 20, bottom: 10),
       child: TextFormField(
+        focusNode: _inputFocusNode,
         minLines: 1,
         maxLines: 5,
-        autofocus: true,
+        autofocus: false,
         keyboardType: TextInputType.multiline,
         textInputAction: TextInputAction.newline,
         decoration: const InputDecoration(labelText: 'Share with your class'),

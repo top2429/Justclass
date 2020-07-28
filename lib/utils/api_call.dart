@@ -122,7 +122,6 @@ class ApiCall {
 
   static Future<Class> createClass(String uid, CreateClassFormData data) async {
     try {
-      await Future.delayed(Duration(seconds: 5));
       await checkInternetConnection();
       final url = 'https://justclass-da0b0.appspot.com/api/v1/classroom/$uid';
       final response = await http.post(

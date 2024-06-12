@@ -1,0 +1,7 @@
+- name: Commit and push changes
+  run: |
+    git config --global user.name 'top2429'
+    git config --global user.email 'top2429@outlook.com'
+    git add .
+    git commit -m "Update the features"
+    git push
